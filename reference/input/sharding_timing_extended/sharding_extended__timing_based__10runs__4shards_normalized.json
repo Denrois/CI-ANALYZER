@@ -1,0 +1,4182 @@
+[
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9756,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_01",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11080,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_01",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11393,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_01",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 10479,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_01",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9151,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_02",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11790,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_02",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 10970,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_02",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 12250,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_02",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9528,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_03",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11760,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_03",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11129,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_03",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 11610,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_03",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9725,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_04",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 12007,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_04",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 9490,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_04",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 10623,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_04",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9131,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_05",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11720,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_05",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11229,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_05",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 11436,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_05",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9755,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_06",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11755,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_06",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11396,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_06",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 10622,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_06",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9683,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_07",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11965,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_07",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11091,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_07",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 11443,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_07",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 8716,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_08",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11568,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_08",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 10361,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_08",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 10379,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_08",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9768,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_09",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11667,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_09",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 11700,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_09",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 10714,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_09",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "1",
+    "shard_duration_ms": 9301,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/experimental/test_workload_03_extended.py",
+      "tests/experimental/test_users_password_extended.py",
+      "tests/experimental/test_items_listing_pagination_extended.py",
+      "tests/experimental/test_workload_01_extended.py",
+      "tests/experimental/test_password_recovery_html_extended.py",
+      "tests/experimental/test_users_admin_extended.py",
+      "tests/experimental/test_api_schema_extended.py",
+      "tests/experimental/test_email_templates_extended.py",
+      "tests/experimental/test_models_validation_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_10",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 1,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "2",
+    "shard_duration_ms": 11008,
+    "tests": [
+      "tests/api/routes/test_users.py",
+      "tests/experimental/test_workload_08_extended.py",
+      "tests/experimental/test_security_passwords_extended.py",
+      "tests/experimental/test_workload_06_extended.py",
+      "tests/experimental/test_workload_05_extended.py",
+      "tests/experimental/test_crud_users_extended.py",
+      "tests/experimental/test_utils_routes_extended.py",
+      "tests/api/routes/test_private.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_10",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 2,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "3",
+    "shard_duration_ms": 10810,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/experimental/test_workload_04_extended.py",
+      "tests/experimental/test_users_me_extended.py",
+      "tests/experimental/test_workload_02_extended.py",
+      "tests/experimental/test_users_admin_update_extended.py",
+      "tests/experimental/test_items_create_read_extended.py",
+      "tests/experimental/test_password_recovery_extended.py",
+      "tests/experimental/test_crud_items_extended.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_10",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 3,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  },
+  {
+    "mode": "timing",
+    "shard_id": "4",
+    "shard_duration_ms": 11326,
+    "tests": [
+      "tests/crud/test_user.py",
+      "tests/experimental/test_items_update_extended.py",
+      "tests/experimental/test_workload_07_extended.py",
+      "tests/experimental/test_items_delete_permissions_extended.py",
+      "tests/experimental/test_users_delete_extended.py",
+      "tests/experimental/test_login_access_extended.py",
+      "tests/experimental/test_users_registration_extended.py",
+      "tests/experimental/test_login_token_identity_extended.py",
+      "tests/experimental/test_private_route_extended.py",
+      "tests/experimental/test_security_tokens_extended.py"
+    ],
+    "plan": {
+      "shard_count": 4,
+      "total_test_files": 38,
+      "estimated_durations_seconds": [
+        23.3356,
+        21.8551,
+        21.8237,
+        23.3454
+      ],
+      "estimated_max_duration_seconds": 23.3454,
+      "estimated_avg_duration_seconds": 22.5899,
+      "estimated_imbalance_ratio": 1.0334,
+      "shards": [
+        {
+          "shard_id": 1,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3356,
+          "tests": [
+            "tests/api/routes/test_items.py",
+            "tests/experimental/test_workload_03_extended.py",
+            "tests/experimental/test_users_password_extended.py",
+            "tests/experimental/test_items_listing_pagination_extended.py",
+            "tests/experimental/test_workload_01_extended.py",
+            "tests/experimental/test_password_recovery_html_extended.py",
+            "tests/experimental/test_users_admin_extended.py",
+            "tests/experimental/test_api_schema_extended.py",
+            "tests/experimental/test_email_templates_extended.py",
+            "tests/experimental/test_models_validation_extended.py"
+          ]
+        },
+        {
+          "shard_id": 2,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8551,
+          "tests": [
+            "tests/api/routes/test_users.py",
+            "tests/experimental/test_workload_08_extended.py",
+            "tests/experimental/test_security_passwords_extended.py",
+            "tests/experimental/test_workload_06_extended.py",
+            "tests/experimental/test_workload_05_extended.py",
+            "tests/experimental/test_crud_users_extended.py",
+            "tests/experimental/test_utils_routes_extended.py",
+            "tests/api/routes/test_private.py",
+            "tests/scripts/test_backend_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 3,
+          "test_count": 9,
+          "estimated_duration_seconds": 21.8237,
+          "tests": [
+            "tests/api/routes/test_login.py",
+            "tests/experimental/test_workload_04_extended.py",
+            "tests/experimental/test_users_me_extended.py",
+            "tests/experimental/test_workload_02_extended.py",
+            "tests/experimental/test_users_admin_update_extended.py",
+            "tests/experimental/test_items_create_read_extended.py",
+            "tests/experimental/test_password_recovery_extended.py",
+            "tests/experimental/test_crud_items_extended.py",
+            "tests/scripts/test_test_pre_start.py"
+          ]
+        },
+        {
+          "shard_id": 4,
+          "test_count": 10,
+          "estimated_duration_seconds": 23.3454,
+          "tests": [
+            "tests/crud/test_user.py",
+            "tests/experimental/test_items_update_extended.py",
+            "tests/experimental/test_workload_07_extended.py",
+            "tests/experimental/test_items_delete_permissions_extended.py",
+            "tests/experimental/test_users_delete_extended.py",
+            "tests/experimental/test_login_access_extended.py",
+            "tests/experimental/test_users_registration_extended.py",
+            "tests/experimental/test_login_token_identity_extended.py",
+            "tests/experimental/test_private_route_extended.py",
+            "tests/experimental/test_security_tokens_extended.py"
+          ]
+        }
+      ]
+    },
+    "generated_shard_tests": true,
+    "generated_shard_plan": true,
+    "run_id": "run_10",
+    "scenario": "sharding_extended_timing_based",
+    "shard_index": 4,
+    "shard_total": 4,
+    "source_note": "run_id and shard_index were inferred from the raw artifact filename."
+  }
+]

@@ -1,0 +1,272 @@
+[
+  {
+    "run_id": "run_01",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6276,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_01",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7462,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_02",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6242,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_02",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7500,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_03",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6231,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_03",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 8097,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_04",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6669,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_04",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7452,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_05",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 5383,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_05",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7731,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_06",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6183,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_06",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 8166,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_07",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6466,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_07",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 8246,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_08",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6021,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_08",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 9019,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_09",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6467,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_09",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7757,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_10",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 1,
+    "shard_total": 2,
+    "shard_duration_ms": 6271,
+    "tests": [
+      "tests/api/routes/test_items.py",
+      "tests/api/routes/test_private.py",
+      "tests/crud/test_user.py",
+      "tests/scripts/test_test_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  },
+  {
+    "run_id": "run_10",
+    "scenario": "sharding_original_baseline",
+    "shard_index": 2,
+    "shard_total": 2,
+    "shard_duration_ms": 7322,
+    "tests": [
+      "tests/api/routes/test_login.py",
+      "tests/api/routes/test_users.py",
+      "tests/scripts/test_backend_pre_start.py"
+    ],
+    "source_note": "Derived from legacy original-suite sharding metrics. Each consecutive pair of shard records is interpreted as one run."
+  }
+]
