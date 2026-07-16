@@ -1,0 +1,7 @@
+{
+  "docker_build_duration_seconds": 203,
+  "services_start_duration_seconds": 59,
+  "backend_healthcheck_duration_seconds": 0,
+  "frontend_healthcheck_duration_seconds": 0,
+  "measured_total_duration_seconds": 262
+}

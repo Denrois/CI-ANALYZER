@@ -1,0 +1,72 @@
+[
+  {
+    "docker_build_duration_seconds": 45,
+    "services_start_duration_seconds": 29,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 74
+  },
+  {
+    "docker_build_duration_seconds": 48,
+    "services_start_duration_seconds": 30,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 78
+  },
+  {
+    "docker_build_duration_seconds": 47,
+    "services_start_duration_seconds": 28,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 75
+  },
+  {
+    "docker_build_duration_seconds": 58,
+    "services_start_duration_seconds": 32,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 90
+  },
+  {
+    "docker_build_duration_seconds": 50,
+    "services_start_duration_seconds": 30,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 80
+  },
+  {
+    "docker_build_duration_seconds": 58,
+    "services_start_duration_seconds": 31,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 89
+  },
+  {
+    "docker_build_duration_seconds": 45,
+    "services_start_duration_seconds": 32,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 77
+  },
+  {
+    "docker_build_duration_seconds": 42,
+    "services_start_duration_seconds": 29,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 71
+  },
+  {
+    "docker_build_duration_seconds": 63,
+    "services_start_duration_seconds": 30,
+    "backend_healthcheck_duration_seconds": 0,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 93
+  },
+  {
+    "docker_build_duration_seconds": 44,
+    "services_start_duration_seconds": 29,
+    "backend_healthcheck_duration_seconds": 1,
+    "frontend_healthcheck_duration_seconds": 0,
+    "measured_total_duration_seconds": 74
+  }
+]

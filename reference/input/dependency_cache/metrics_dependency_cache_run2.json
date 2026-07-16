@@ -1,0 +1,8 @@
+{
+  "dependency_prepare_duration_ms": 1945,
+  "services_start_duration_ms": 11197,
+  "migration_duration_ms": 4349,
+  "test_duration_ms": 36201,
+  "measured_total_duration_ms": 53692,
+  "uv_cache_hit": "true"
+}
