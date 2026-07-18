@@ -8,10 +8,24 @@ from typing import cast
 from ci_experiment_analyzer import __version__
 from ci_experiment_analyzer.comparisons import compare_scenarios
 from ci_experiment_analyzer.config import load_config
+from ci_experiment_analyzer.errors import ConfigValidationError
 from ci_experiment_analyzer.readers import read_experiment_datasets
 from ci_experiment_analyzer.reports import write_analysis_json
+from ci_experiment_analyzer.validation import validate_config
 
 CommandHandler = Callable[[argparse.Namespace], int]
+
+
+def _run_validate(args: argparse.Namespace) -> int:
+    """Execute the validate command."""
+    config_path = cast(Path, args.config)
+
+    config = load_config(config_path)
+    validate_config(config)
+
+    print(f"Configuration is valid: {config_path}")
+
+    return 0
 
 
 def _run_analyze(args: argparse.Namespace) -> int:
@@ -20,6 +34,8 @@ def _run_analyze(args: argparse.Namespace) -> int:
     output_directory = cast(Path, args.output)
 
     config = load_config(config_path)
+    validate_config(config)
+
     datasets = read_experiment_datasets(config)
 
     comparison_results = tuple(
@@ -62,6 +78,18 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
     )
 
+    validate_parser = subparsers.add_parser(
+        "validate",
+        help="Validate an experiment configuration.",
+    )
+    validate_parser.add_argument(
+        "--config",
+        type=Path,
+        required=True,
+        help="Path to the experiment YAML configuration.",
+    )
+    validate_parser.set_defaults(handler=_run_validate)
+
     analyze_parser = subparsers.add_parser(
         "analyze",
         help="Analyze configured experiment scenarios.",
@@ -90,4 +118,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     handler = cast(CommandHandler, args.handler)
 
-    return handler(args)
+    try:
+        return handler(args)
+    except ConfigValidationError as error:
+        parser.error(str(error))
