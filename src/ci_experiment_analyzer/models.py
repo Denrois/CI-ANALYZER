@@ -60,3 +60,19 @@ class ExperimentConfig:
     record_mapping: Mapping[str, str]
     metrics: tuple[MetricConfig, ...]
     comparisons: tuple[ComparisonConfig, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RunRecord:
+    """One measured CI experiment run."""
+
+    run_id: str
+    metric_values: Mapping[str, float]
+
+
+@dataclass(frozen=True, slots=True)
+class ScenarioDataset:
+    """All measured runs belonging to one scenario."""
+
+    scenario_id: str
+    records: tuple[RunRecord, ...]
