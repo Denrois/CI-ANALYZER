@@ -20,7 +20,8 @@ dependencies = [
 dev = [
     "mypy",
     "pytest",
-    "ruff"
+    "ruff",
+    "types-PyYAML",
 ]
 
 [project.scripts]
