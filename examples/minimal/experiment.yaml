@@ -1,0 +1,40 @@
+version: 1
+
+experiment:
+  id: minimal-cache-example
+  title: Minimal cache experiment
+
+scenarios:
+  - id: baseline
+    source:
+      format: csv
+      path: data/baseline.csv
+
+  - id: optimized
+    source:
+      format: csv
+      path: data/optimized.csv
+
+record_mapping:
+  run_id: run_id
+
+metrics:
+  - id: install_duration
+    field: install_seconds
+    type: duration
+    unit: seconds
+    role: phase
+
+  - id: total_duration
+    field: total_seconds
+    type: duration
+    unit: seconds
+    role: total
+
+comparisons:
+  - id: cache-impact
+    baseline: baseline
+    candidate: optimized
+    metrics:
+      - install_duration
+      - total_duration
