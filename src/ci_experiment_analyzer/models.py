@@ -76,3 +76,24 @@ class ScenarioDataset:
 
     scenario_id: str
     records: tuple[RunRecord, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class MetricComparisonResult:
+    """Comparison result for one metric."""
+
+    metric_id: str
+    baseline_median: float
+    candidate_median: float
+    absolute_difference: float
+    relative_difference_percent: float | None
+
+
+@dataclass(frozen=True, slots=True)
+class ComparisonResult:
+    """Result of comparing two experiment scenarios."""
+
+    comparison_id: str
+    baseline_scenario_id: str
+    candidate_scenario_id: str
+    metrics: tuple[MetricComparisonResult, ...]
