@@ -1,0 +1,62 @@
+"""Domain models for CI experiment configuration."""
+
+from collections.abc import Mapping
+from dataclasses import dataclass
+from pathlib import Path
+
+
+@dataclass(frozen=True, slots=True)
+class ExperimentMetadata:
+    """Basic experiment information."""
+
+    id: str
+    title: str
+
+
+@dataclass(frozen=True, slots=True)
+class SourceConfig:
+    """Input source associated with a scenario."""
+
+    format: str
+    path: Path
+
+
+@dataclass(frozen=True, slots=True)
+class ScenarioConfig:
+    """A measured experiment scenario."""
+
+    id: str
+    source: SourceConfig
+
+
+@dataclass(frozen=True, slots=True)
+class MetricConfig:
+    """A numeric metric loaded from scenario records."""
+
+    id: str
+    field: str
+    metric_type: str
+    unit: str
+    role: str
+
+
+@dataclass(frozen=True, slots=True)
+class ComparisonConfig:
+    """A comparison between baseline and candidate scenarios."""
+
+    id: str
+    baseline: str
+    candidate: str
+    metrics: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ExperimentConfig:
+    """Complete experiment configuration."""
+
+    version: int
+    experiment: ExperimentMetadata
+    scenarios: tuple[ScenarioConfig, ...]
+    record_mapping: Mapping[str, str]
+    metrics: tuple[MetricConfig, ...]
+    comparisons: tuple[ComparisonConfig, ...]
