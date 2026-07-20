@@ -61,12 +61,12 @@ def test_read_csv_scenario_uses_configured_field_names(
 
     assert dataset.records[0].run_id == "run-1"
     assert dataset.records[0].metric_values == {
-        "install_duration": 10.5,
-        "total_duration": 50.0,
+        "install_duration": 10_500.0,
+        "total_duration": 50_000.0,
     }
 
     assert dataset.records[1].run_id == "run-2"
     assert dataset.records[1].metric_values == {
-        "install_duration": 12.5,
-        "total_duration": 54.0,
+        "install_duration": 12_500.0,
+        "total_duration": 54_000.0,
     }

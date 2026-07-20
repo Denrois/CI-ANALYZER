@@ -17,6 +17,7 @@ def _serialize_metric_result(
     """Convert one metric comparison result to JSON-compatible data."""
     return {
         "id": result.metric_id,
+        "unit": result.unit,
         "baseline_median": result.baseline_median,
         "candidate_median": result.candidate_median,
         "absolute_difference": result.absolute_difference,
