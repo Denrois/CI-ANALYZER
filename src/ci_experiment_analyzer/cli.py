@@ -8,7 +8,10 @@ from typing import cast
 from ci_experiment_analyzer import __version__
 from ci_experiment_analyzer.comparisons import compare_scenarios
 from ci_experiment_analyzer.config import load_config
-from ci_experiment_analyzer.errors import ConfigValidationError
+from ci_experiment_analyzer.errors import (
+    ConfigValidationError,
+    DataValidationError,
+)
 from ci_experiment_analyzer.readers import read_experiment_datasets
 from ci_experiment_analyzer.reports import write_analysis_json
 from ci_experiment_analyzer.validation import validate_config
@@ -22,8 +25,9 @@ def _run_validate(args: argparse.Namespace) -> int:
 
     config = load_config(config_path)
     validate_config(config)
+    read_experiment_datasets(config)
 
-    print(f"Configuration is valid: {config_path}")
+    print(f"Configuration and data are valid: {config_path}")
 
     return 0
 
@@ -38,10 +42,16 @@ def _run_analyze(args: argparse.Namespace) -> int:
 
     datasets = read_experiment_datasets(config)
 
+    metrics_by_id = {
+        metric.id: metric
+        for metric in config.metrics
+    }
+
     comparison_results = tuple(
         compare_scenarios(
             comparison=comparison,
             datasets=datasets,
+            metrics=metrics_by_id,
         )
         for comparison in config.comparisons
     )
@@ -120,5 +130,5 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         return handler(args)
-    except ConfigValidationError as error:
+    except (ConfigValidationError, DataValidationError) as error:
         parser.error(str(error))

@@ -98,9 +98,12 @@ comparisons:
     assert exit_code == 0
 
     report_path = output_directory / "analysis.json"
+
     assert report_path.is_file()
 
-    report = json.loads(report_path.read_text(encoding="utf-8"))
+    report = json.loads(
+        report_path.read_text(encoding="utf-8")
+    )
 
     assert report["version"] == 1
     assert report["experiment"] == {
@@ -108,32 +111,51 @@ comparisons:
         "title": "Minimal cache experiment",
     }
 
+    assert len(report["comparisons"]) == 1
+
     comparison = report["comparisons"][0]
 
     assert comparison["id"] == "cache-impact"
     assert comparison["baseline"] == "baseline"
     assert comparison["candidate"] == "optimized"
 
+    assert len(comparison["metrics"]) == 2
+
     install_result = comparison["metrics"][0]
 
     assert install_result["id"] == "install_duration"
-    assert install_result["baseline_median"] == pytest.approx(12.0)
-    assert install_result["candidate_median"] == pytest.approx(9.0)
-    assert install_result["absolute_difference"] == pytest.approx(-3.0)
-    assert install_result["relative_difference_percent"] == pytest.approx(
-        -25.0
+    assert install_result["unit"] == "milliseconds"
+    assert install_result["baseline_median"] == pytest.approx(
+        12_000.0
     )
+    assert install_result["candidate_median"] == pytest.approx(
+        9_000.0
+    )
+    assert install_result["absolute_difference"] == pytest.approx(
+        -3_000.0
+    )
+    assert install_result[
+        "relative_difference_percent"
+    ] == pytest.approx(-25.0)
 
     total_result = comparison["metrics"][1]
 
     assert total_result["id"] == "total_duration"
-    assert total_result["baseline_median"] == pytest.approx(55.0)
-    assert total_result["candidate_median"] == pytest.approx(48.0)
-    assert total_result["absolute_difference"] == pytest.approx(-7.0)
-    assert total_result["relative_difference_percent"] == pytest.approx(
-        -12.7272727273
+    assert total_result["unit"] == "milliseconds"
+    assert total_result["baseline_median"] == pytest.approx(
+        55_000.0
     )
+    assert total_result["candidate_median"] == pytest.approx(
+        48_000.0
+    )
+    assert total_result["absolute_difference"] == pytest.approx(
+        -7_000.0
+    )
+    assert total_result[
+        "relative_difference_percent"
+    ] == pytest.approx(-12.7272727273)
 
     output = capsys.readouterr().out
+
     assert "Analysis written to" in output
     assert "analysis.json" in output

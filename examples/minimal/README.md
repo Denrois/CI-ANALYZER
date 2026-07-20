@@ -9,7 +9,28 @@ It compares two scenarios:
 
 The input data is stored in CSV files. Column names are mapped to analyzer metrics through `experiment.yaml`.
 
-## Run
+## Validate
+
+Validate both the experiment configuration and the referenced CSV data:
+
+```powershell
+ci-analyzer validate `
+  --config examples/minimal/experiment.yaml
+```
+
+The same command on one line:
+
+```powershell
+ci-analyzer validate --config examples/minimal/experiment.yaml
+```
+
+Expected output:
+
+```text
+Configuration and data are valid: examples\minimal\experiment.yaml
+```
+
+## Analyze
 
 Execute from the repository root:
 
@@ -32,12 +53,31 @@ The analyzer creates:
 └── analysis.json
 ```
 
+## Duration normalization
+
+Duration metrics are normalized to milliseconds in `analysis.json`, regardless of the source unit configured in YAML.
+
+The supported duration units are:
+
+- `milliseconds`
+- `seconds`
+- `minutes`
+
+The CSV files in this example contain values in seconds, while the resulting JSON report contains the corresponding values in milliseconds.
+
 ## Expected medians
 
 | Metric | Baseline | Optimized | Absolute difference | Relative difference |
 |---|---:|---:|---:|---:|
-| `install_duration` | 12.0 | 9.0 | -3.0 | -25.0% |
-| `total_duration` | 54.0 | 48.0 | -6.0 | -11.11% |
+| `install_duration` | 12000 ms | 9000 ms | -3000 ms | -25.0% |
+| `total_duration` | 54000 ms | 48000 ms | -6000 ms | -11.11% |
+
+The difference is calculated as:
+
+```text
+candidate - baseline
+```
 
 A negative difference means that the candidate value is lower than the baseline value.
-For duration metrics, this normally represents an improvement.
+
+For duration metrics, a negative difference normally represents an improvement.

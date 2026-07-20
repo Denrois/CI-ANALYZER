@@ -73,4 +73,7 @@ comparisons:
     )
 
     assert exit_code == 0
-    assert "Configuration is valid:" in capsys.readouterr().out
+    assert (
+            "Configuration and data are valid:"
+            in capsys.readouterr().out
+    )

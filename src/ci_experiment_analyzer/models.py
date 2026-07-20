@@ -83,6 +83,7 @@ class MetricComparisonResult:
     """Comparison result for one metric."""
 
     metric_id: str
+    unit: str
     baseline_median: float
     candidate_median: float
     absolute_difference: float

@@ -15,3 +15,7 @@ class ConfigValidationError(ValueError):
         )
 
         super().__init__(message)
+
+
+class DataValidationError(ValueError):
+    """Raised when scenario input data is invalid."""
