@@ -9,6 +9,7 @@ from ci_experiment_analyzer import __version__
 from ci_experiment_analyzer.comparisons import compare_scenarios
 from ci_experiment_analyzer.config import load_config
 from ci_experiment_analyzer.errors import (
+    ConfigLoadError,
     ConfigValidationError,
     DataValidationError,
 )
@@ -130,5 +131,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         return handler(args)
-    except (ConfigValidationError, DataValidationError) as error:
+    except (
+            ConfigLoadError,
+            ConfigValidationError,
+            DataValidationError,
+    ) as error:
         parser.error(str(error))
