@@ -77,3 +77,32 @@ comparisons:
             "Configuration and data are valid:"
             in capsys.readouterr().out
     )
+
+def test_validate_command_reports_config_load_error(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Malformed configuration should not produce a traceback."""
+    config_path = tmp_path / "invalid.yaml"
+
+    config_path.write_text(
+        "version: 1\n"
+        "scenarios: [\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        main(
+            [
+                "validate",
+                "--config",
+                str(config_path),
+            ]
+        )
+
+    assert exc_info.value.code == 2
+
+    captured = capsys.readouterr()
+
+    assert "Cannot parse YAML configuration" in captured.err
+    assert "Traceback" not in captured.err

@@ -3,6 +3,10 @@
 from collections.abc import Sequence
 
 
+class ConfigLoadError(ValueError):
+    """Raised when a configuration file cannot be loaded or parsed."""
+
+
 class ConfigValidationError(ValueError):
     """Raised when an experiment configuration is invalid."""
 
