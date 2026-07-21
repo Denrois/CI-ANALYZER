@@ -26,9 +26,46 @@ The goal of this repository is to redesign that prototype into a configurable an
 
 ## Project status
 
-The project is currently in the initial development stage.
+**Early functional prototype**
 
-The repository structure and development baseline are being prepared before the first functional version of the analyzer is implemented.
+The project already provides an installable Python package and a working
+`ci-analyzer` command-line interface.
+
+### Implemented
+
+- installable Python package using a `src` layout;
+- YAML-based experiment configuration;
+- CSV scenario input;
+- configurable mapping of CSV columns to analyzer metrics;
+- separate `validate` and `analyze` commands;
+- configuration structure and semantic validation;
+- CSV header and value validation;
+- baseline-versus-candidate median comparison;
+- absolute and relative difference calculation;
+- duration normalization to milliseconds;
+- JSON analysis report;
+- minimal end-to-end example;
+- frozen thesis baseline reference;
+- unit and integration tests.
+
+### Current limitations
+
+- only CSV input is supported;
+- comparisons currently use medians;
+- output is currently limited to `analysis.json`;
+- the analyzer does not yet calculate full descriptive statistics;
+- parallel-stage and shard-planning analysis are not yet implemented.
+
+### Planned
+
+- JSON and JSONL input readers;
+- full descriptive statistics;
+- local-phase versus total-impact analysis;
+- longest measured phase detection;
+- parallel critical-path and imbalance analysis;
+- Markdown and CSV reports;
+- generic timing-based shard planner;
+- extended thesis compatibility tests.
 
 ## Planned features
 
@@ -43,6 +80,53 @@ The repository structure and development baseline are being prepared before the 
 * JSON, CSV, and Markdown reports;
 * generic work-item shard planner;
 * automated tests and GitHub Actions.
+
+
+## Quick start
+
+The project requires Python 3.13.
+
+Install the package and development dependencies:
+
+```powershell
+python -m pip install -e ".[dev]"
+```
+
+Verify the installed CLI:
+
+```powershell
+ci-analyzer --version
+```
+
+Validate the included minimal experiment:
+
+```powershell
+ci-analyzer validate --config examples/minimal/experiment.yaml
+```
+
+Run the analysis:
+
+```powershell
+ci-analyzer analyze `
+  --config examples/minimal/experiment.yaml `
+  --output .tmp/minimal-report
+```
+
+The same command on one line:
+
+```powershell
+ci-analyzer analyze --config examples/minimal/experiment.yaml --output .tmp/minimal-report
+```
+
+The generated report is written to:
+
+```text
+.tmp/minimal-report/analysis.json
+```
+
+Duration metrics are normalized to milliseconds in the generated report,
+regardless of whether their source unit is configured as milliseconds,
+seconds, or minutes.
 
 ## Repository structure
 
