@@ -230,16 +230,14 @@ def _load_json_document(source_path: Path) -> object:
     return raw_data
 
 
-def _require_json_record(
+def _require_record(
     value: object,
-    source_path: Path,
-    record_number: int,
+    location: str,
 ) -> dict[str, object]:
-    """Require one JSON array item to be an object."""
+    """Require one input record to be an object."""
     if not isinstance(value, dict):
         raise DataValidationError(
-            f"JSON file {source_path}, record {record_number}, "
-            "must be an object."
+            f"{location} must be an object."
         )
 
     record: dict[str, object] = {}
@@ -247,8 +245,7 @@ def _require_json_record(
     for key, item in value.items():
         if not isinstance(key, str):
             raise DataValidationError(
-                f"JSON file {source_path}, record {record_number}, "
-                "must contain only string field names."
+                f"{location} must contain only string field names."
             )
 
         record[key] = item
@@ -256,52 +253,46 @@ def _require_json_record(
     return record
 
 
-def _require_json_field(
+def _require_record_field(
     record: Mapping[str, object],
     field: str,
-    source_path: Path,
-    record_number: int,
+    location: str,
 ) -> object:
-    """Return a required field from one JSON record."""
+    """Return a required field from one structured record."""
     if field not in record:
         raise DataValidationError(
-            f"JSON file {source_path}, record {record_number}, "
-            f"does not contain field {field!r}."
+            f"{location} does not contain field {field!r}."
         )
 
     value = record[field]
 
     if value is None:
         raise DataValidationError(
-            f"JSON file {source_path}, record {record_number}, "
-            f"contains an empty value for field {field!r}."
+            f"{location} contains an empty value for field {field!r}."
         )
 
     return value
 
 
-def _parse_json_run_id(
+def _parse_run_id(
     raw_value: object,
     field: str,
-    source_path: Path,
-    record_number: int,
+    location: str,
 ) -> str:
-    """Validate and normalize one JSON run identifier."""
-    location = f"JSON file {source_path}, record {record_number}"
-
+    """Validate and normalize one structured run identifier."""
     if isinstance(raw_value, str):
         run_id = raw_value.strip()
 
         if not run_id:
             raise DataValidationError(
-                f"{location}, contains an empty value for field {field!r}."
+                f"{location} contains an empty value for field {field!r}."
             )
 
         return run_id
 
     if isinstance(raw_value, bool):
         raise DataValidationError(
-            f"{location}, field {field!r} must contain a string or "
+            f"{location} field {field!r} must contain a string or "
             "numeric identifier."
         )
 
@@ -311,14 +302,14 @@ def _parse_json_run_id(
     if isinstance(raw_value, float):
         if not math.isfinite(raw_value):
             raise DataValidationError(
-                f"{location}, field {field!r} must contain a finite "
+                f"{location} field {field!r} must contain a finite "
                 "identifier."
             )
 
         return str(raw_value)
 
     raise DataValidationError(
-        f"{location}, field {field!r} must contain a string or "
+        f"{location} field {field!r} must contain a string or "
         "numeric identifier."
     )
 
@@ -345,35 +336,31 @@ def read_json_scenario(
         raw_data,
         start=1,
     ):
-        record = _require_json_record(
-            value=raw_record,
-            source_path=source_path,
-            record_number=record_number,
-        )
-
-        run_id = _parse_json_run_id(
-            raw_value=_require_json_field(
-                record=record,
-                field=run_id_field,
-                source_path=source_path,
-                record_number=record_number,
-            ),
-            field=run_id_field,
-            source_path=source_path,
-            record_number=record_number,
-        )
-
         location = (
             f"JSON file {source_path}, record {record_number}"
         )
 
+        record = _require_record(
+            value=raw_record,
+            location=location,
+        )
+
+        run_id = _parse_run_id(
+            raw_value=_require_record_field(
+                record=record,
+                field=run_id_field,
+                location=location,
+            ),
+            field=run_id_field,
+            location=location,
+        )
+
         metric_values = {
             metric.id: _parse_numeric_value(
-                raw_value=_require_json_field(
+                raw_value=_require_record_field(
                     record=record,
                     field=metric.field,
-                    source_path=source_path,
-                    record_number=record_number,
+                    location=location,
                 ),
                 metric=metric,
                 source_path=source_path,
@@ -400,6 +387,99 @@ def read_json_scenario(
     )
 
 
+def read_jsonl_scenario(
+    scenario: ScenarioConfig,
+    metrics: Sequence[MetricConfig],
+    record_mapping: Mapping[str, str],
+) -> ScenarioDataset:
+    """Read one scenario dataset from a JSONL file."""
+    source_path = scenario.source.path
+    run_id_field = record_mapping["run_id"]
+    records: list[RunRecord] = []
+
+    try:
+        with source_path.open(
+            mode="r",
+            encoding="utf-8-sig",
+        ) as stream:
+            for line_number, raw_line in enumerate(
+                stream,
+                start=1,
+            ):
+                line = raw_line.strip()
+
+                if not line:
+                    continue
+
+                location = (
+                    f"JSONL file {source_path}, line {line_number}"
+                )
+
+                try:
+                    raw_record: object = json.loads(line)
+                except json.JSONDecodeError as error:
+                    raise DataValidationError(
+                        f"Cannot parse JSONL file {source_path}, "
+                        f"line {line_number}, column {error.colno}: "
+                        f"{error.msg}."
+                    ) from error
+
+                record = _require_record(
+                    value=raw_record,
+                    location=location,
+                )
+
+                run_id = _parse_run_id(
+                    raw_value=_require_record_field(
+                        record=record,
+                        field=run_id_field,
+                        location=location,
+                    ),
+                    field=run_id_field,
+                    location=location,
+                )
+
+                metric_values = {
+                    metric.id: _parse_numeric_value(
+                        raw_value=_require_record_field(
+                            record=record,
+                            field=metric.field,
+                            location=location,
+                        ),
+                        metric=metric,
+                        source_path=source_path,
+                        location=location,
+                    )
+                    for metric in metrics
+                }
+
+                records.append(
+                    RunRecord(
+                        run_id=run_id,
+                        metric_values=metric_values,
+                    )
+                )
+
+    except UnicodeError as error:
+        raise DataValidationError(
+            f"Cannot decode JSONL file {source_path} as UTF-8."
+        ) from error
+    except OSError as error:
+        raise DataValidationError(
+            f"Cannot read JSONL file {source_path}: {error}"
+        ) from error
+
+    if not records:
+        raise DataValidationError(
+            f"JSONL file {source_path} does not contain any data records."
+        )
+
+    return ScenarioDataset(
+        scenario_id=scenario.id,
+        records=tuple(records),
+    )
+
+
 def read_scenario(
     scenario: ScenarioConfig,
     metrics: Sequence[MetricConfig],
@@ -415,6 +495,13 @@ def read_scenario(
 
     if scenario.source.format == "json":
         return read_json_scenario(
+            scenario=scenario,
+            metrics=metrics,
+            record_mapping=record_mapping,
+        )
+
+    if scenario.source.format == "jsonl":
+        return read_jsonl_scenario(
             scenario=scenario,
             metrics=metrics,
             record_mapping=record_mapping,

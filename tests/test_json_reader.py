@@ -169,7 +169,7 @@ def test_json_reader_rejects_non_object_record(
 
     with pytest.raises(
         DataValidationError,
-        match="record 2, must be an object",
+        match="record 2 must be an object",
     ):
         read_scenario(
             scenario=_scenario(json_path),

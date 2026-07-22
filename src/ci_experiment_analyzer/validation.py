@@ -11,6 +11,7 @@ SUPPORTED_SOURCE_FORMATS = frozenset(
     {
         "csv",
         "json",
+        "jsonl",
     }
 )
 SUPPORTED_METRIC_TYPES = frozenset({"duration", "number"})

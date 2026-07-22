@@ -208,3 +208,38 @@ def test_validate_config_accepts_json_source_format(
     )
 
     validate_config(json_config)
+
+
+def test_validate_config_accepts_jsonl_source_format(
+    tmp_path: Path,
+) -> None:
+    """JSONL should be accepted as a scenario source format."""
+    config = _valid_config(tmp_path)
+
+    jsonl_path = tmp_path / "baseline.jsonl"
+    jsonl_path.write_text(
+        (
+            '{"run_id":"baseline-1",'
+            '"duration":10.0}\n'
+        ),
+        encoding="utf-8",
+    )
+
+    jsonl_source = replace(
+        config.scenarios[0].source,
+        format="jsonl",
+        path=jsonl_path,
+    )
+    jsonl_scenario = replace(
+        config.scenarios[0],
+        source=jsonl_source,
+    )
+    jsonl_config = replace(
+        config,
+        scenarios=(
+            jsonl_scenario,
+            config.scenarios[1],
+        ),
+    )
+
+    validate_config(jsonl_config)
