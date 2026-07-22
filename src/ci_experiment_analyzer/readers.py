@@ -1,6 +1,7 @@
 """Read CI experiment records from input files."""
 
 import csv
+import json
 import math
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -16,7 +17,57 @@ from ci_experiment_analyzer.models import (
 from ci_experiment_analyzer.normalization import normalize_metric_value
 
 
-def _require_value(
+def _parse_numeric_value(
+    raw_value: object,
+    metric: MetricConfig,
+    source_path: Path,
+    location: str,
+) -> float:
+    """Validate and normalize one numeric metric value."""
+    if isinstance(raw_value, bool):
+        raise DataValidationError(
+            f"{location}, field {metric.field!r} contains non-numeric "
+            f"value {raw_value!r}."
+        )
+
+    if isinstance(raw_value, str):
+        value_text = raw_value.strip()
+
+        if not value_text:
+            raise DataValidationError(
+                f"{location}, field {metric.field!r} contains an empty value."
+            )
+
+        try:
+            numeric_value = float(value_text)
+        except ValueError as error:
+            raise DataValidationError(
+                f"{location}, field {metric.field!r} contains non-numeric "
+                f"value {raw_value!r}."
+            ) from error
+
+    elif isinstance(raw_value, (int, float)):
+        numeric_value = float(raw_value)
+
+    else:
+        raise DataValidationError(
+            f"{location}, field {metric.field!r} contains non-numeric "
+            f"value {raw_value!r}."
+        )
+
+    if not math.isfinite(numeric_value):
+        raise DataValidationError(
+            f"{location}, field {metric.field!r} must contain a finite "
+            "numeric value."
+        )
+
+    return normalize_metric_value(
+        metric=metric,
+        value=numeric_value,
+    )
+
+
+def _require_csv_value(
     row: Mapping[str, str | None],
     field: str,
     source_path: Path,
@@ -39,7 +90,7 @@ def _require_value(
     return value.strip()
 
 
-def _validate_columns(
+def _validate_csv_columns(
     fieldnames: Sequence[str] | None,
     run_id_field: str,
     metrics: Sequence[MetricConfig],
@@ -57,47 +108,15 @@ def _validate_columns(
     missing_fields = sorted(required_fields.difference(fieldnames))
 
     if missing_fields:
-        formatted_fields = ", ".join(repr(field) for field in missing_fields)
+        formatted_fields = ", ".join(
+            repr(field)
+            for field in missing_fields
+        )
 
         raise DataValidationError(
             f"CSV file {source_path} is missing required field(s): "
             f"{formatted_fields}."
         )
-
-
-def _parse_metric_value(
-    row: Mapping[str, str | None],
-    metric: MetricConfig,
-    source_path: Path,
-    line_number: int,
-) -> float:
-    """Read, validate, and normalize one metric value."""
-    raw_value = _require_value(
-        row=row,
-        field=metric.field,
-        source_path=source_path,
-        line_number=line_number,
-    )
-
-    try:
-        numeric_value = float(raw_value)
-    except ValueError as error:
-        raise DataValidationError(
-            f"CSV file {source_path}, line {line_number}, field "
-            f"{metric.field!r} contains non-numeric value "
-            f"{raw_value!r}."
-        ) from error
-
-    if not math.isfinite(numeric_value):
-        raise DataValidationError(
-            f"CSV file {source_path}, line {line_number}, field "
-            f"{metric.field!r} must contain a finite numeric value."
-        )
-
-    return normalize_metric_value(
-        metric=metric,
-        value=numeric_value,
-    )
 
 
 def read_csv_scenario(
@@ -110,50 +129,269 @@ def read_csv_scenario(
     run_id_field = record_mapping["run_id"]
     records: list[RunRecord] = []
 
-    with source_path.open(
-        mode="r",
-        encoding="utf-8-sig",
-        newline="",
-    ) as stream:
-        reader = csv.DictReader(stream)
-
-        _validate_columns(
-            fieldnames=reader.fieldnames,
-            run_id_field=run_id_field,
-            metrics=metrics,
-            source_path=source_path,
+    try:
+        stream = source_path.open(
+            mode="r",
+            encoding="utf-8-sig",
+            newline="",
         )
+    except OSError as error:
+        raise DataValidationError(
+            f"Cannot read CSV file {source_path}: {error}"
+        ) from error
 
-        for row in reader:
-            line_number = reader.line_num
+    try:
+        with stream:
+            reader = csv.DictReader(stream)
 
-            run_id = _require_value(
-                row=row,
-                field=run_id_field,
+            _validate_csv_columns(
+                fieldnames=reader.fieldnames,
+                run_id_field=run_id_field,
+                metrics=metrics,
                 source_path=source_path,
-                line_number=line_number,
             )
 
-            metric_values = {
-                metric.id: _parse_metric_value(
+            for row in reader:
+                line_number = reader.line_num
+                location = (
+                    f"CSV file {source_path}, line {line_number}"
+                )
+
+                run_id = _require_csv_value(
                     row=row,
-                    metric=metric,
+                    field=run_id_field,
                     source_path=source_path,
                     line_number=line_number,
                 )
-                for metric in metrics
-            }
 
-            records.append(
-                RunRecord(
-                    run_id=run_id,
-                    metric_values=metric_values,
+                metric_values = {
+                    metric.id: _parse_numeric_value(
+                        raw_value=_require_csv_value(
+                            row=row,
+                            field=metric.field,
+                            source_path=source_path,
+                            line_number=line_number,
+                        ),
+                        metric=metric,
+                        source_path=source_path,
+                        location=location,
+                    )
+                    for metric in metrics
+                }
+
+                records.append(
+                    RunRecord(
+                        run_id=run_id,
+                        metric_values=metric_values,
+                    )
                 )
-            )
+    except UnicodeError as error:
+        raise DataValidationError(
+            f"Cannot decode CSV file {source_path} as UTF-8."
+        ) from error
+    except csv.Error as error:
+        raise DataValidationError(
+            f"Cannot parse CSV file {source_path}: {error}"
+        ) from error
 
     if not records:
         raise DataValidationError(
             f"CSV file {source_path} does not contain any data records."
+        )
+
+    return ScenarioDataset(
+        scenario_id=scenario.id,
+        records=tuple(records),
+    )
+
+
+def _load_json_document(source_path: Path) -> object:
+    """Load one JSON document."""
+    try:
+        with source_path.open(
+            mode="r",
+            encoding="utf-8-sig",
+        ) as stream:
+            raw_data: object = json.load(stream)
+    except json.JSONDecodeError as error:
+        raise DataValidationError(
+            f"Cannot parse JSON file {source_path}: "
+            f"line {error.lineno}, column {error.colno}: {error.msg}."
+        ) from error
+    except UnicodeError as error:
+        raise DataValidationError(
+            f"Cannot decode JSON file {source_path} as UTF-8."
+        ) from error
+    except OSError as error:
+        raise DataValidationError(
+            f"Cannot read JSON file {source_path}: {error}"
+        ) from error
+
+    return raw_data
+
+
+def _require_json_record(
+    value: object,
+    source_path: Path,
+    record_number: int,
+) -> dict[str, object]:
+    """Require one JSON array item to be an object."""
+    if not isinstance(value, dict):
+        raise DataValidationError(
+            f"JSON file {source_path}, record {record_number}, "
+            "must be an object."
+        )
+
+    record: dict[str, object] = {}
+
+    for key, item in value.items():
+        if not isinstance(key, str):
+            raise DataValidationError(
+                f"JSON file {source_path}, record {record_number}, "
+                "must contain only string field names."
+            )
+
+        record[key] = item
+
+    return record
+
+
+def _require_json_field(
+    record: Mapping[str, object],
+    field: str,
+    source_path: Path,
+    record_number: int,
+) -> object:
+    """Return a required field from one JSON record."""
+    if field not in record:
+        raise DataValidationError(
+            f"JSON file {source_path}, record {record_number}, "
+            f"does not contain field {field!r}."
+        )
+
+    value = record[field]
+
+    if value is None:
+        raise DataValidationError(
+            f"JSON file {source_path}, record {record_number}, "
+            f"contains an empty value for field {field!r}."
+        )
+
+    return value
+
+
+def _parse_json_run_id(
+    raw_value: object,
+    field: str,
+    source_path: Path,
+    record_number: int,
+) -> str:
+    """Validate and normalize one JSON run identifier."""
+    location = f"JSON file {source_path}, record {record_number}"
+
+    if isinstance(raw_value, str):
+        run_id = raw_value.strip()
+
+        if not run_id:
+            raise DataValidationError(
+                f"{location}, contains an empty value for field {field!r}."
+            )
+
+        return run_id
+
+    if isinstance(raw_value, bool):
+        raise DataValidationError(
+            f"{location}, field {field!r} must contain a string or "
+            "numeric identifier."
+        )
+
+    if isinstance(raw_value, int):
+        return str(raw_value)
+
+    if isinstance(raw_value, float):
+        if not math.isfinite(raw_value):
+            raise DataValidationError(
+                f"{location}, field {field!r} must contain a finite "
+                "identifier."
+            )
+
+        return str(raw_value)
+
+    raise DataValidationError(
+        f"{location}, field {field!r} must contain a string or "
+        "numeric identifier."
+    )
+
+
+def read_json_scenario(
+    scenario: ScenarioConfig,
+    metrics: Sequence[MetricConfig],
+    record_mapping: Mapping[str, str],
+) -> ScenarioDataset:
+    """Read one scenario dataset from a JSON array."""
+    source_path = scenario.source.path
+    run_id_field = record_mapping["run_id"]
+    raw_data = _load_json_document(source_path)
+
+    if not isinstance(raw_data, list):
+        raise DataValidationError(
+            f"JSON file {source_path} must contain a top-level list "
+            "of records."
+        )
+
+    records: list[RunRecord] = []
+
+    for record_number, raw_record in enumerate(
+        raw_data,
+        start=1,
+    ):
+        record = _require_json_record(
+            value=raw_record,
+            source_path=source_path,
+            record_number=record_number,
+        )
+
+        run_id = _parse_json_run_id(
+            raw_value=_require_json_field(
+                record=record,
+                field=run_id_field,
+                source_path=source_path,
+                record_number=record_number,
+            ),
+            field=run_id_field,
+            source_path=source_path,
+            record_number=record_number,
+        )
+
+        location = (
+            f"JSON file {source_path}, record {record_number}"
+        )
+
+        metric_values = {
+            metric.id: _parse_numeric_value(
+                raw_value=_require_json_field(
+                    record=record,
+                    field=metric.field,
+                    source_path=source_path,
+                    record_number=record_number,
+                ),
+                metric=metric,
+                source_path=source_path,
+                location=location,
+            )
+            for metric in metrics
+        }
+
+        records.append(
+            RunRecord(
+                run_id=run_id,
+                metric_values=metric_values,
+            )
+        )
+
+    if not records:
+        raise DataValidationError(
+            f"JSON file {source_path} does not contain any data records."
         )
 
     return ScenarioDataset(
@@ -168,15 +406,22 @@ def read_scenario(
     record_mapping: Mapping[str, str],
 ) -> ScenarioDataset:
     """Read one scenario using its configured source format."""
-    if scenario.source.format != "csv":
-        raise DataValidationError(
-            f"Unsupported source format: {scenario.source.format!r}."
+    if scenario.source.format == "csv":
+        return read_csv_scenario(
+            scenario=scenario,
+            metrics=metrics,
+            record_mapping=record_mapping,
         )
 
-    return read_csv_scenario(
-        scenario=scenario,
-        metrics=metrics,
-        record_mapping=record_mapping,
+    if scenario.source.format == "json":
+        return read_json_scenario(
+            scenario=scenario,
+            metrics=metrics,
+            record_mapping=record_mapping,
+        )
+
+    raise DataValidationError(
+        f"Unsupported source format: {scenario.source.format!r}."
     )
 
 
