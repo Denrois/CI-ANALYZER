@@ -1,7 +1,7 @@
 """Domain models for CI experiment configuration."""
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -51,6 +51,14 @@ class ComparisonConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class AnalysisConfig:
+    """Configurable thresholds for higher-level analysis."""
+
+    local_improvement_threshold_pct: float = 10.0
+    total_impact_threshold_pct: float = 5.0
+
+
+@dataclass(frozen=True, slots=True)
 class ExperimentConfig:
     """Complete experiment configuration."""
 
@@ -60,6 +68,9 @@ class ExperimentConfig:
     record_mapping: Mapping[str, str]
     metrics: tuple[MetricConfig, ...]
     comparisons: tuple[ComparisonConfig, ...]
+    analysis: AnalysisConfig = field(
+        default_factory=AnalysisConfig
+    )
 
 
 @dataclass(frozen=True, slots=True)

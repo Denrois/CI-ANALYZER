@@ -7,6 +7,7 @@ import yaml
 
 from ci_experiment_analyzer.errors import ConfigLoadError
 from ci_experiment_analyzer.models import (
+    AnalysisConfig,
     ComparisonConfig,
     ExperimentConfig,
     ExperimentMetadata,
@@ -102,6 +103,29 @@ def _require_integer(
         )
 
     return value
+
+
+def _optional_number(
+    data: RawMapping,
+    field: str,
+    context: str,
+    default: float,
+) -> float:
+    """Return an optional integer or floating-point field."""
+    if field not in data:
+        return default
+
+    value = data[field]
+
+    if isinstance(value, bool) or not isinstance(
+        value,
+        (int, float),
+    ):
+        raise ConfigLoadError(
+            f"{context} field {field!r} must be a number."
+        )
+
+    return float(value)
 
 
 def _require_string_list(
@@ -275,6 +299,34 @@ def _load_record_mapping(
     return result
 
 
+def _load_analysis_config(
+    value: Any,
+) -> AnalysisConfig:
+    """Load configurable higher-level analysis thresholds."""
+    data = _require_mapping(
+        value,
+        "analysis",
+    )
+
+    defaults = AnalysisConfig()
+
+    return AnalysisConfig(
+        local_improvement_threshold_pct=_optional_number(
+            data=data,
+            field="local_improvement_threshold_pct",
+            context="analysis",
+            default=defaults.local_improvement_threshold_pct,
+        ),
+        total_impact_threshold_pct=_optional_number(
+            data=data,
+            field="total_impact_threshold_pct",
+            context="analysis",
+            default=defaults.total_impact_threshold_pct,
+        ),
+    )
+
+
+
 def load_config(path: str | Path) -> ExperimentConfig:
     """Load an experiment configuration from a YAML file."""
     config_path = Path(path).resolve()
@@ -377,6 +429,13 @@ def load_config(path: str | Path) -> ExperimentConfig:
         for index, item in enumerate(comparison_items)
     )
 
+    if "analysis" in data:
+        analysis = _load_analysis_config(
+            data["analysis"]
+        )
+    else:
+        analysis = AnalysisConfig()
+
     return ExperimentConfig(
         version=version,
         experiment=ExperimentMetadata(
@@ -395,4 +454,5 @@ def load_config(path: str | Path) -> ExperimentConfig:
         record_mapping=record_mapping,
         metrics=metrics,
         comparisons=comparisons,
+        analysis=analysis,
     )
