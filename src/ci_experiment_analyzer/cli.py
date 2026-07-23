@@ -13,8 +13,10 @@ from ci_experiment_analyzer.errors import (
     ConfigValidationError,
     DataValidationError,
 )
+from ci_experiment_analyzer.models import AnalysisResult
 from ci_experiment_analyzer.readers import read_experiment_datasets
-from ci_experiment_analyzer.reports import write_analysis_json
+from ci_experiment_analyzer.reports import write_analysis_report
+from ci_experiment_analyzer.statistics import calculate_scenario_result
 from ci_experiment_analyzer.validation import validate_config
 
 CommandHandler = Callable[[argparse.Namespace], int]
@@ -33,12 +35,12 @@ def _run_validate(args: argparse.Namespace) -> int:
     return 0
 
 
-def _run_analyze(args: argparse.Namespace) -> int:
-    """Execute the analyze command."""
-    config_path = cast(Path, args.config)
-    output_directory = cast(Path, args.output)
+def _run_analyze(
+    args: argparse.Namespace,
+) -> int:
+    """Validate, analyze, and report one experiment."""
+    config = load_config(args.config)
 
-    config = load_config(config_path)
     validate_config(config)
 
     datasets = read_experiment_datasets(config)
@@ -47,6 +49,14 @@ def _run_analyze(args: argparse.Namespace) -> int:
         metric.id: metric
         for metric in config.metrics
     }
+
+    scenario_results = tuple(
+        calculate_scenario_result(
+            dataset=datasets[scenario.id],
+            metrics=config.metrics,
+        )
+        for scenario in config.scenarios
+    )
 
     comparison_results = tuple(
         compare_scenarios(
@@ -57,13 +67,19 @@ def _run_analyze(args: argparse.Namespace) -> int:
         for comparison in config.comparisons
     )
 
-    report_path = write_analysis_json(
-        config=config,
-        comparison_results=comparison_results,
-        output_directory=output_directory,
+    analysis_result = AnalysisResult(
+        version=config.version,
+        experiment=config.experiment,
+        scenarios=scenario_results,
+        comparisons=comparison_results,
     )
 
-    print(f"Analysis written to {report_path}")
+    report_path = write_analysis_report(
+        result=analysis_result,
+        output_directory=args.output,
+    )
+
+    print(f"Analysis written to: {report_path}")
 
     return 0
 

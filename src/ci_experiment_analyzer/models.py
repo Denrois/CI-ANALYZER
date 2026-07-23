@@ -121,3 +121,13 @@ class ComparisonResult:
     baseline_scenario_id: str
     candidate_scenario_id: str
     metrics: tuple[MetricComparisonResult, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisResult:
+    """Complete result of one configured experiment analysis."""
+
+    version: int
+    experiment: ExperimentMetadata
+    scenarios: tuple[ScenarioResult, ...]
+    comparisons: tuple[ComparisonResult, ...]
