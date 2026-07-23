@@ -124,6 +124,17 @@ class ComparisonResult:
 
 
 @dataclass(frozen=True, slots=True)
+class LocalTotalImpactResult:
+    """Relationship between one local phase and total scenario impact."""
+
+    comparison_id: str
+    phase_metric_id: str
+    total_metric_id: str
+    phase_relative_difference_percent: float | None
+    total_relative_difference_percent: float | None
+
+
+@dataclass(frozen=True, slots=True)
 class AnalysisResult:
     """Complete result of one configured experiment analysis."""
 
@@ -131,3 +142,4 @@ class AnalysisResult:
     experiment: ExperimentMetadata
     scenarios: tuple[ScenarioResult, ...]
     comparisons: tuple[ComparisonResult, ...]
+    local_total_impacts: tuple[LocalTotalImpactResult, ...] = ()

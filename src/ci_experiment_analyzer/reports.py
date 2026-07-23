@@ -6,6 +6,7 @@ from pathlib import Path
 from ci_experiment_analyzer.models import (
     AnalysisResult,
     ComparisonResult,
+    LocalTotalImpactResult,
     MetricComparisonResult,
     MetricStats,
     ScenarioResult,
@@ -73,6 +74,23 @@ def _comparison_result_to_dict(
     }
 
 
+def _local_total_impact_to_dict(
+    impact: LocalTotalImpactResult,
+) -> dict[str, object]:
+    """Convert one local-versus-total result to a report mapping."""
+    return {
+        "comparison": impact.comparison_id,
+        "phase_metric": impact.phase_metric_id,
+        "total_metric": impact.total_metric_id,
+        "phase_relative_difference_percent": (
+            impact.phase_relative_difference_percent
+        ),
+        "total_relative_difference_percent": (
+            impact.total_relative_difference_percent
+        ),
+    }
+
+
 def analysis_result_to_dict(
     result: AnalysisResult,
 ) -> dict[str, object]:
@@ -90,6 +108,10 @@ def analysis_result_to_dict(
         "comparisons": [
             _comparison_result_to_dict(comparison)
             for comparison in result.comparisons
+        ],
+        "local_vs_total_impacts": [
+            _local_total_impact_to_dict(impact)
+            for impact in result.local_total_impacts
         ],
     }
 

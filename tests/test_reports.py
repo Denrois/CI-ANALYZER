@@ -4,6 +4,7 @@ from ci_experiment_analyzer.models import (
     AnalysisResult,
     ComparisonResult,
     ExperimentMetadata,
+    LocalTotalImpactResult,
     MetricComparisonResult,
     MetricStats,
     ScenarioResult,
@@ -72,6 +73,17 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 ),
             ),
         ),
+        local_total_impacts=(
+            LocalTotalImpactResult(
+                comparison_id="cache-impact",
+                phase_metric_id="install_duration",
+                total_metric_id="total_duration",
+                phase_relative_difference_percent=-25.0,
+                total_relative_difference_percent=(
+                    -12.727272727272727
+                ),
+            ),
+        ),
     )
 
     assert analysis_result_to_dict(result) == {
@@ -135,6 +147,17 @@ def test_analysis_result_has_stable_json_structure() -> None:
                         ),
                     }
                 ],
+            }
+        ],
+        "local_vs_total_impacts": [
+            {
+                "comparison": "cache-impact",
+                "phase_metric": "install_duration",
+                "total_metric": "total_duration",
+                "phase_relative_difference_percent": -25.0,
+                "total_relative_difference_percent": (
+                    -12.727272727272727
+                ),
             }
         ],
     }

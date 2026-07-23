@@ -155,6 +155,22 @@ comparisons:
         "relative_difference_percent"
     ] == pytest.approx(-12.7272727273)
 
+    assert len(report["local_vs_total_impacts"]) == 1
+
+    impact_result = report["local_vs_total_impacts"][0]
+
+    assert impact_result["comparison"] == "cache-impact"
+    assert impact_result["phase_metric"] == "install_duration"
+    assert impact_result["total_metric"] == "total_duration"
+
+    assert impact_result[
+               "phase_relative_difference_percent"
+           ] == pytest.approx(-25.0)
+
+    assert impact_result[
+               "total_relative_difference_percent"
+           ] == pytest.approx(-12.7272727273)
+
     output = capsys.readouterr().out
 
     assert "Analysis written to" in output
@@ -282,3 +298,5 @@ comparisons:
         "absolute_difference": 1_000.0,
         "relative_difference_percent": None,
     }
+
+    assert report["local_vs_total_impacts"] == []
