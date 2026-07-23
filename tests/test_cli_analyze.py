@@ -159,3 +159,126 @@ comparisons:
 
     assert "Analysis written to" in output
     assert "analysis.json" in output
+
+
+def test_analyze_handles_single_run_and_zero_baseline(
+    tmp_path: Path,
+) -> None:
+    """Single-run scenarios and zero baseline should be handled safely."""
+    data_directory = tmp_path / "data"
+    data_directory.mkdir()
+
+    baseline_path = data_directory / "baseline.csv"
+    baseline_path.write_text(
+        (
+            "run_id,total_seconds\n"
+            "baseline-1,0.0\n"
+        ),
+        encoding="utf-8",
+    )
+
+    optimized_path = data_directory / "optimized.csv"
+    optimized_path.write_text(
+        (
+            "run_id,total_seconds\n"
+            "optimized-1,1.0\n"
+        ),
+        encoding="utf-8",
+    )
+
+    config_path = tmp_path / "experiment.yaml"
+    config_path.write_text(
+        """
+version: 1
+
+experiment:
+  id: statistical-edge-cases
+  title: Statistical edge cases
+
+scenarios:
+  - id: baseline
+    source:
+      format: csv
+      path: data/baseline.csv
+
+  - id: optimized
+    source:
+      format: csv
+      path: data/optimized.csv
+
+record_mapping:
+  run_id: run_id
+
+metrics:
+  - id: total_duration
+    field: total_seconds
+    type: duration
+    unit: seconds
+    role: total
+
+comparisons:
+  - id: zero-baseline-impact
+    baseline: baseline
+    candidate: optimized
+    metrics:
+      - total_duration
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    output_directory = tmp_path / "report"
+
+    exit_code = main(
+        [
+            "analyze",
+            "--config",
+            str(config_path),
+            "--output",
+            str(output_directory),
+        ]
+    )
+
+    assert exit_code == 0
+
+    report_path = output_directory / "analysis.json"
+    report = json.loads(
+        report_path.read_text(encoding="utf-8")
+    )
+
+    baseline_metric = report["scenarios"][0]["metrics"][0]
+    optimized_metric = report["scenarios"][1]["metrics"][0]
+
+    assert baseline_metric == {
+        "id": "total_duration",
+        "unit": "milliseconds",
+        "role": "total",
+        "count": 1,
+        "median": 0.0,
+        "mean": 0.0,
+        "minimum": 0.0,
+        "maximum": 0.0,
+        "standard_deviation": 0.0,
+    }
+
+    assert optimized_metric == {
+        "id": "total_duration",
+        "unit": "milliseconds",
+        "role": "total",
+        "count": 1,
+        "median": 1_000.0,
+        "mean": 1_000.0,
+        "minimum": 1_000.0,
+        "maximum": 1_000.0,
+        "standard_deviation": 0.0,
+    }
+
+    comparison_metric = report["comparisons"][0]["metrics"][0]
+
+    assert comparison_metric == {
+        "id": "total_duration",
+        "unit": "milliseconds",
+        "baseline_median": 0.0,
+        "candidate_median": 1_000.0,
+        "absolute_difference": 1_000.0,
+        "relative_difference_percent": None,
+    }
