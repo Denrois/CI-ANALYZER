@@ -36,28 +36,30 @@ The project already provides an installable Python package and a working
 - installable Python package using a `src` layout;
 - YAML-based experiment configuration;
 - CSV, JSON, and JSONL scenario input;
-- configurable mapping of CSV columns to analyzer metrics;
+- configurable mapping of source fields to analyzer metrics;
 - separate `validate` and `analyze` commands;
 - configuration structure and semantic validation;
-- CSV header and value validation;
+- input structure and numeric value validation;
+- duration normalization to milliseconds;
+- descriptive statistics for every scenario metric:
+  count, median, mean, minimum, maximum, and sample standard deviation;
 - baseline-versus-candidate median comparison;
 - absolute and relative difference calculation;
-- duration normalization to milliseconds;
-- JSON analysis report;
+- scenario statistics included in the generated JSON analysis report;
 - minimal end-to-end example;
 - frozen thesis baseline reference;
-- unit and integration tests.
+- unit and integration tests;
+- GitHub Actions quality workflow.
 
 ### Current limitations
 
-- comparisons currently use medians;
+- comparisons currently use scenario medians;
 - output is currently limited to `analysis.json`;
-- the analyzer does not yet calculate full descriptive statistics;
+- local phase impact is not yet related automatically to total pipeline impact;
 - parallel-stage and shard-planning analysis are not yet implemented.
 
 ### Planned
 
-- full descriptive statistics;
 - local-phase versus total-impact analysis;
 - longest measured phase detection;
 - parallel critical-path and imbalance analysis;
@@ -182,6 +184,110 @@ JSONL input must contain one JSON object per non-empty line:
 
 All three formats use the same configurable field mapping, validation,
 normalization, statistical calculations, comparisons, and report generation.
+
+## Analysis report
+
+The `analyze` command writes a machine-readable report to:
+
+```text
+<output-directory>/analysis.json
+```
+
+The report contains three main analytical sections:
+
+- experiment metadata;
+- descriptive statistics for every scenario;
+- configured baseline-versus-candidate comparisons.
+
+Each scenario metric contains:
+
+- `count`;
+- `median`;
+- `mean`;
+- `minimum`;
+- `maximum`;
+- `standard_deviation`.
+
+Duration values are normalized to milliseconds before statistical
+calculations are performed.
+
+The analyzer uses sample standard deviation. A metric containing only one
+observation receives:
+
+```json
+{
+  "standard_deviation": 0.0
+}
+```
+
+Comparison differences are calculated as:
+
+```text
+candidate - baseline
+```
+
+For duration metrics:
+
+- a negative difference means that the candidate is faster;
+- a positive difference means that the candidate is slower;
+- zero means that the median did not change.
+
+When the baseline median is zero, relative change cannot be calculated.
+The JSON report therefore contains:
+
+```json
+{
+  "relative_difference_percent": null
+}
+```
+
+A shortened report example:
+
+```json
+{
+  "version": 1,
+  "experiment": {
+    "id": "minimal-cache-example",
+    "title": "Minimal cache experiment"
+  },
+  "scenarios": [
+    {
+      "id": "baseline",
+      "metrics": [
+        {
+          "id": "total_duration",
+          "unit": "milliseconds",
+          "role": "total",
+          "count": 5,
+          "median": 54000.0,
+          "mean": 54000.0,
+          "minimum": 50000.0,
+          "maximum": 58000.0,
+          "standard_deviation": 3162.2776601683795
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "cache-impact",
+      "baseline": "baseline",
+      "candidate": "optimized",
+      "metrics": [
+        {
+          "id": "total_duration",
+          "unit": "milliseconds",
+          "baseline_median": 54000.0,
+          "candidate_median": 48000.0,
+          "absolute_difference": -6000.0,
+          "relative_difference_percent": -11.11111111111111
+        }
+      ]
+    }
+  ]
+}
+```
+
 
 ## Repository structure
 

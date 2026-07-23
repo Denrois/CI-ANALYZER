@@ -81,3 +81,26 @@ candidate - baseline
 A negative difference means that the candidate value is lower than the baseline value.
 
 For duration metrics, a negative difference normally represents an improvement.
+
+## Generated analysis
+
+The example produces:
+
+```text
+<output-directory>/analysis.json
+```
+
+The report includes descriptive statistics for both `baseline` and
+`optimized` scenarios:
+
+- number of observations;
+- median;
+- arithmetic mean;
+- minimum and maximum;
+- sample standard deviation.
+
+It also compares the configured scenario medians and reports absolute and
+relative changes.
+
+All duration values are represented in milliseconds in the generated
+report, even though the source CSV values are expressed in seconds.
