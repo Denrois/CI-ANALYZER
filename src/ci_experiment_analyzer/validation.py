@@ -1,5 +1,5 @@
 """Validate experiment configuration."""
-
+import math
 from collections import Counter
 from collections.abc import Sequence
 
@@ -180,6 +180,31 @@ def validate_config(config: ExperimentConfig) -> None:
                     f"comparison {comparison.id!r} references unknown metric "
                     f"{metric_id!r}"
                 )
+
+    analysis_thresholds = {
+        "local_improvement_threshold_pct": (
+            config.analysis.local_improvement_threshold_pct
+        ),
+        "total_impact_threshold_pct": (
+            config.analysis.total_impact_threshold_pct
+        ),
+    }
+
+    for threshold_name, threshold_value in (
+        analysis_thresholds.items()
+    ):
+        if not math.isfinite(threshold_value):
+            errors.append(
+                f"analysis threshold {threshold_name!r} "
+                "must be finite"
+            )
+            continue
+
+        if not 0.0 <= threshold_value <= 100.0:
+            errors.append(
+                f"analysis threshold {threshold_name!r} "
+                "must be between 0 and 100"
+            )
 
     if errors:
         raise ConfigValidationError(errors)

@@ -18,6 +18,10 @@ scenarios:
 record_mapping:
   run_id: run_id
 
+analysis:
+  local_improvement_threshold_pct: 10.0
+  total_impact_threshold_pct: 5.0
+
 metrics:
   - id: install_duration
     field: install_seconds

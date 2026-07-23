@@ -7,6 +7,7 @@ import pytest
 
 from ci_experiment_analyzer.errors import ConfigValidationError
 from ci_experiment_analyzer.models import (
+    AnalysisConfig,
     ComparisonConfig,
     ExperimentConfig,
     ExperimentMetadata,
@@ -297,3 +298,71 @@ def test_validate_config_accepts_supported_metric_roles(
     )
 
     validate_config(valid_config)
+
+def test_validate_config_rejects_negative_analysis_threshold(
+    tmp_path: Path,
+) -> None:
+    """Analysis thresholds cannot be negative."""
+    config = _valid_config(tmp_path)
+
+    invalid_config = replace(
+        config,
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=-1.0,
+            total_impact_threshold_pct=5.0,
+        ),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match=(
+            "local_improvement_threshold_pct.*"
+            "must be between 0 and 100"
+        ),
+    ):
+        validate_config(invalid_config)
+
+def test_validate_config_rejects_analysis_threshold_above_100(
+    tmp_path: Path,
+) -> None:
+    """Analysis thresholds cannot exceed one hundred percent."""
+    config = _valid_config(tmp_path)
+
+    invalid_config = replace(
+        config,
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=10.0,
+            total_impact_threshold_pct=101.0,
+        ),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match=(
+            "total_impact_threshold_pct.*"
+            "must be between 0 and 100"
+        ),
+    ):
+        validate_config(invalid_config)
+
+def test_validate_config_rejects_non_finite_analysis_threshold(
+    tmp_path: Path,
+) -> None:
+    """Analysis thresholds must contain finite values."""
+    config = _valid_config(tmp_path)
+
+    invalid_config = replace(
+        config,
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=float("nan"),
+            total_impact_threshold_pct=5.0,
+        ),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match=(
+            "local_improvement_threshold_pct.*must be finite"
+        ),
+    ):
+        validate_config(invalid_config)

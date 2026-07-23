@@ -59,6 +59,10 @@ scenarios:
 record_mapping:
   run_id: run_id
 
+analysis:
+  local_improvement_threshold_pct: 10.0
+  total_impact_threshold_pct: 15.0
+
 metrics:
   - id: install_duration
     field: install_seconds
@@ -154,6 +158,47 @@ comparisons:
     assert total_result[
         "relative_difference_percent"
     ] == pytest.approx(-12.7272727273)
+
+    assert len(report["local_vs_total_impacts"]) == 1
+
+    impact_result = report["local_vs_total_impacts"][0]
+
+    assert impact_result["comparison"] == "cache-impact"
+    assert impact_result["phase_metric"] == "install_duration"
+    assert impact_result["total_metric"] == "total_duration"
+
+    assert impact_result[
+               "phase_relative_difference_percent"
+           ] == pytest.approx(-25.0)
+
+    assert impact_result[
+               "total_relative_difference_percent"
+           ] == pytest.approx(-12.7272727273)
+
+    assert impact_result[
+               "local_improvement_threshold_pct"
+           ] == pytest.approx(10.0)
+
+    assert impact_result[
+               "total_impact_threshold_pct"
+           ] == pytest.approx(15.0)
+
+    assert impact_result[
+               "substantial_local_improvement"
+           ] is True
+
+    assert impact_result[
+               "limited_total_improvement"
+           ] is True
+
+    assert impact_result[
+               "limited_end_to_end_impact"
+           ] is True
+
+    assert impact_result["warning"] == (
+        "The local phase improved substantially, but the total pipeline "
+        "improvement remained below the configured threshold."
+    )
 
     output = capsys.readouterr().out
 
@@ -282,3 +327,5 @@ comparisons:
         "absolute_difference": 1_000.0,
         "relative_difference_percent": None,
     }
+
+    assert report["local_vs_total_impacts"] == []

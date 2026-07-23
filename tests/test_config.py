@@ -81,3 +81,79 @@ comparisons:
         "install_duration",
         "total_duration",
     )
+
+def test_load_config_uses_default_analysis_thresholds(
+    tmp_path: Path,
+) -> None:
+    """Missing analysis section should use stable defaults."""
+    config_path = tmp_path / "experiment.yaml"
+
+    config_path.write_text(
+        """
+version: 1
+
+experiment:
+  id: default-thresholds
+  title: Default thresholds
+
+scenarios: []
+
+record_mapping:
+  run_id: run_id
+
+metrics: []
+comparisons: []
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert (
+        config.analysis.local_improvement_threshold_pct
+        == 10.0
+    )
+    assert (
+        config.analysis.total_impact_threshold_pct
+        == 5.0
+    )
+
+def test_load_config_reads_analysis_thresholds(
+    tmp_path: Path,
+) -> None:
+    """Configured analysis thresholds should override defaults."""
+    config_path = tmp_path / "experiment.yaml"
+
+    config_path.write_text(
+        """
+version: 1
+
+experiment:
+  id: configured-thresholds
+  title: Configured thresholds
+
+scenarios: []
+
+record_mapping:
+  run_id: run_id
+
+analysis:
+  local_improvement_threshold_pct: 15
+  total_impact_threshold_pct: 2.5
+
+metrics: []
+comparisons: []
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert (
+        config.analysis.local_improvement_threshold_pct
+        == 15.0
+    )
+    assert (
+        config.analysis.total_impact_threshold_pct
+        == 2.5
+    )

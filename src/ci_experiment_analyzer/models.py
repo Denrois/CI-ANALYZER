@@ -1,7 +1,7 @@
 """Domain models for CI experiment configuration."""
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -51,6 +51,14 @@ class ComparisonConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class AnalysisConfig:
+    """Configurable thresholds for higher-level analysis."""
+
+    local_improvement_threshold_pct: float = 10.0
+    total_impact_threshold_pct: float = 5.0
+
+
+@dataclass(frozen=True, slots=True)
 class ExperimentConfig:
     """Complete experiment configuration."""
 
@@ -60,6 +68,9 @@ class ExperimentConfig:
     record_mapping: Mapping[str, str]
     metrics: tuple[MetricConfig, ...]
     comparisons: tuple[ComparisonConfig, ...]
+    analysis: AnalysisConfig = field(
+        default_factory=AnalysisConfig
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -124,6 +135,23 @@ class ComparisonResult:
 
 
 @dataclass(frozen=True, slots=True)
+class LocalTotalImpactResult:
+    """Relationship between one local phase and total scenario impact."""
+
+    comparison_id: str
+    phase_metric_id: str
+    total_metric_id: str
+    phase_relative_difference_percent: float | None
+    total_relative_difference_percent: float | None
+    local_improvement_threshold_pct: float
+    total_impact_threshold_pct: float
+    substantial_local_improvement: bool | None
+    limited_total_improvement: bool | None
+    limited_end_to_end_impact: bool | None
+    warning: str | None
+
+
+@dataclass(frozen=True, slots=True)
 class AnalysisResult:
     """Complete result of one configured experiment analysis."""
 
@@ -131,3 +159,4 @@ class AnalysisResult:
     experiment: ExperimentMetadata
     scenarios: tuple[ScenarioResult, ...]
     comparisons: tuple[ComparisonResult, ...]
+    local_total_impacts: tuple[LocalTotalImpactResult, ...] = ()

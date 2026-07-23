@@ -159,3 +159,41 @@ comparisons: []
         match="field 'field' must be a string",
     ):
         load_config(config_path)
+
+def test_load_config_rejects_non_numeric_analysis_threshold(
+    tmp_path: Path,
+) -> None:
+    """Analysis thresholds must be YAML numbers."""
+    config_path = tmp_path / "invalid-threshold.yaml"
+
+    config_path.write_text(
+        """
+version: 1
+
+experiment:
+  id: invalid-threshold
+  title: Invalid threshold
+
+scenarios: []
+
+record_mapping:
+  run_id: run_id
+
+analysis:
+  local_improvement_threshold_pct: invalid
+
+metrics: []
+comparisons: []
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ConfigLoadError,
+        match=(
+            "analysis field "
+            "'local_improvement_threshold_pct' "
+            "must be a number"
+        ),
+    ):
+        load_config(config_path)
