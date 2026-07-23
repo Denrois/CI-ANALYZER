@@ -28,7 +28,7 @@ The goal of this repository is to redesign that prototype into a configurable an
 
 **Early functional prototype**
 
-The project already provides an installable Python package and a working
+The project provides an installable Python package and a working
 `ci-analyzer` command-line interface.
 
 ### Implemented
@@ -36,7 +36,7 @@ The project already provides an installable Python package and a working
 - installable Python package using a `src` layout;
 - YAML-based experiment configuration;
 - CSV, JSON, and JSONL scenario input;
-- configurable mapping of source fields to analyzer metrics;
+- configurable mapping of input fields to analyzer metrics;
 - separate `validate` and `analyze` commands;
 - configuration structure and semantic validation;
 - input structure and numeric value validation;
@@ -45,7 +45,10 @@ The project already provides an installable Python package and a working
   count, median, mean, minimum, maximum, and sample standard deviation;
 - baseline-versus-candidate median comparison;
 - absolute and relative difference calculation;
-- scenario statistics included in the generated JSON analysis report;
+- stable machine-readable `analysis.json` report;
+- scenario-level statistics in the generated report;
+- safe handling of single-observation scenarios;
+- safe handling of a zero baseline median;
 - minimal end-to-end example;
 - frozen thesis baseline reference;
 - unit and integration tests;
@@ -55,7 +58,9 @@ The project already provides an installable Python package and a working
 
 - comparisons currently use scenario medians;
 - output is currently limited to `analysis.json`;
-- local phase impact is not yet related automatically to total pipeline impact;
+- local phase improvement is not yet related automatically to total
+  pipeline impact;
+- longest measured phase detection is not yet implemented;
 - parallel-stage and shard-planning analysis are not yet implemented.
 
 ### Planned
@@ -66,20 +71,6 @@ The project already provides an installable Python package and a working
 - Markdown and CSV reports;
 - generic timing-based shard planner;
 - extended thesis compatibility tests.
-
-## Planned features
-
-* configuration-driven experiment analysis;
-* CSV, JSON, and JSONL input formats;
-* baseline versus candidate comparisons;
-* descriptive statistics;
-* local versus total impact analysis;
-* longest measured phase detection;
-* parallel stage critical-path analysis;
-* sharding balance analysis;
-* JSON, CSV, and Markdown reports;
-* generic work-item shard planner;
-* automated tests and GitHub Actions.
 
 
 ## Quick start
@@ -193,10 +184,10 @@ The `analyze` command writes a machine-readable report to:
 <output-directory>/analysis.json
 ```
 
-The report contains three main analytical sections:
+The report contains:
 
-- experiment metadata;
-- descriptive statistics for every scenario;
+- configuration version and experiment metadata;
+- descriptive statistics for every configured scenario metric;
 - configured baseline-versus-candidate comparisons.
 
 Each scenario metric contains:
@@ -208,11 +199,11 @@ Each scenario metric contains:
 - `maximum`;
 - `standard_deviation`.
 
-Duration values are normalized to milliseconds before statistical
-calculations are performed.
+Duration values are normalized to milliseconds before statistics and
+comparisons are calculated.
 
-The analyzer uses sample standard deviation. A metric containing only one
-observation receives:
+Sample standard deviation is used. A metric containing one observation
+has the following result:
 
 ```json
 {
@@ -228,63 +219,16 @@ candidate - baseline
 
 For duration metrics:
 
-- a negative difference means that the candidate is faster;
-- a positive difference means that the candidate is slower;
+- a negative value normally represents an improvement;
+- a positive value normally represents a regression;
 - zero means that the median did not change.
 
 When the baseline median is zero, relative change cannot be calculated.
-The JSON report therefore contains:
+The report represents this as:
 
 ```json
 {
   "relative_difference_percent": null
-}
-```
-
-A shortened report example:
-
-```json
-{
-  "version": 1,
-  "experiment": {
-    "id": "minimal-cache-example",
-    "title": "Minimal cache experiment"
-  },
-  "scenarios": [
-    {
-      "id": "baseline",
-      "metrics": [
-        {
-          "id": "total_duration",
-          "unit": "milliseconds",
-          "role": "total",
-          "count": 5,
-          "median": 54000.0,
-          "mean": 54000.0,
-          "minimum": 50000.0,
-          "maximum": 58000.0,
-          "standard_deviation": 3162.2776601683795
-        }
-      ]
-    }
-  ],
-  "comparisons": [
-    {
-      "id": "cache-impact",
-      "baseline": "baseline",
-      "candidate": "optimized",
-      "metrics": [
-        {
-          "id": "total_duration",
-          "unit": "milliseconds",
-          "baseline_median": 54000.0,
-          "candidate_median": 48000.0,
-          "absolute_difference": -6000.0,
-          "relative_difference_percent": -11.11111111111111
-        }
-      ]
-    }
-  ]
 }
 ```
 
