@@ -4,10 +4,16 @@ from ci_experiment_analyzer.impact import (
     calculate_local_total_impacts,
 )
 from ci_experiment_analyzer.models import (
+    AnalysisConfig,
     ComparisonResult,
     LocalTotalImpactResult,
     MetricComparisonResult,
     MetricConfig,
+)
+
+EXPECTED_WARNING = (
+    "The local phase improved substantially, but the total pipeline "
+    "improvement remained below the configured threshold."
 )
 
 
@@ -40,25 +46,31 @@ def _comparison_metric(
     )
 
 
-def test_calculate_local_total_impact() -> None:
-    """A phase duration should be paired with a total duration."""
-    comparison = ComparisonResult(
+def _comparison(
+    phase_difference: float | None,
+    total_difference: float | None,
+) -> ComparisonResult:
+    """Create a phase-and-total comparison."""
+    return ComparisonResult(
         comparison_id="optimization-impact",
         baseline_scenario_id="baseline",
         candidate_scenario_id="optimized",
         metrics=(
             _comparison_metric(
                 metric_id="phase_duration",
-                relative_difference_percent=-16.1,
+                relative_difference_percent=phase_difference,
             ),
             _comparison_metric(
                 metric_id="total_duration",
-                relative_difference_percent=-3.9,
+                relative_difference_percent=total_difference,
             ),
         ),
     )
 
-    metrics = {
+
+def _metrics() -> dict[str, MetricConfig]:
+    """Create phase and total duration metric definitions."""
+    return {
         "phase_duration": _duration_metric(
             metric_id="phase_duration",
             role="phase",
@@ -69,9 +81,19 @@ def test_calculate_local_total_impact() -> None:
         ),
     }
 
+
+def test_detects_limited_end_to_end_impact() -> None:
+    """Strong local improvement with weak total impact should warn."""
     result = calculate_local_total_impacts(
-        comparison=comparison,
-        metrics=metrics,
+        comparison=_comparison(
+            phase_difference=-16.1,
+            total_difference=-3.9,
+        ),
+        metrics=_metrics(),
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=10.0,
+            total_impact_threshold_pct=5.0,
+        ),
     )
 
     assert result == (
@@ -81,64 +103,77 @@ def test_calculate_local_total_impact() -> None:
             total_metric_id="total_duration",
             phase_relative_difference_percent=-16.1,
             total_relative_difference_percent=-3.9,
+            local_improvement_threshold_pct=10.0,
+            total_impact_threshold_pct=5.0,
+            substantial_local_improvement=True,
+            limited_total_improvement=True,
+            limited_end_to_end_impact=True,
+            warning=EXPECTED_WARNING,
         ),
     )
 
 
-def test_calculate_impact_for_multiple_phase_metrics() -> None:
-    """Every phase metric should be compared with the total metric."""
-    comparison = ComparisonResult(
-        comparison_id="multi-phase-impact",
-        baseline_scenario_id="baseline",
-        candidate_scenario_id="optimized",
-        metrics=(
-            _comparison_metric(
-                metric_id="install_duration",
-                relative_difference_percent=-20.0,
-            ),
-            _comparison_metric(
-                metric_id="build_duration",
-                relative_difference_percent=-10.0,
-            ),
-            _comparison_metric(
-                metric_id="total_duration",
-                relative_difference_percent=-4.0,
-            ),
-        ),
-    )
-
-    metrics = {
-        "install_duration": _duration_metric(
-            metric_id="install_duration",
-            role="phase",
-        ),
-        "build_duration": _duration_metric(
-            metric_id="build_duration",
-            role="phase",
-        ),
-        "total_duration": _duration_metric(
-            metric_id="total_duration",
-            role="total",
-        ),
-    }
-
+def test_does_not_warn_when_total_improvement_reaches_threshold() -> None:
+    """Meaningful total improvement should not produce a warning."""
     result = calculate_local_total_impacts(
-        comparison=comparison,
-        metrics=metrics,
+        comparison=_comparison(
+            phase_difference=-16.1,
+            total_difference=-5.0,
+        ),
+        metrics=_metrics(),
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=10.0,
+            total_impact_threshold_pct=5.0,
+        ),
     )
 
-    assert tuple(
-        impact.phase_metric_id
-        for impact in result
-    ) == (
-        "install_duration",
-        "build_duration",
+    impact = result[0]
+
+    assert impact.substantial_local_improvement is True
+    assert impact.limited_total_improvement is False
+    assert impact.limited_end_to_end_impact is False
+    assert impact.warning is None
+
+
+def test_does_not_warn_without_substantial_local_improvement() -> None:
+    """Weak local improvement should not trigger the warning."""
+    result = calculate_local_total_impacts(
+        comparison=_comparison(
+            phase_difference=-8.0,
+            total_difference=-3.0,
+        ),
+        metrics=_metrics(),
+        analysis=AnalysisConfig(
+            local_improvement_threshold_pct=10.0,
+            total_impact_threshold_pct=5.0,
+        ),
     )
 
-    assert all(
-        impact.total_metric_id == "total_duration"
-        for impact in result
+    impact = result[0]
+
+    assert impact.substantial_local_improvement is False
+    assert impact.limited_total_improvement is True
+    assert impact.limited_end_to_end_impact is False
+    assert impact.warning is None
+
+
+def test_unavailable_relative_change_is_not_classified() -> None:
+    """A zero baseline should produce an incomplete classification."""
+    result = calculate_local_total_impacts(
+        comparison=_comparison(
+            phase_difference=None,
+            total_difference=-3.0,
+        ),
+        metrics=_metrics(),
+        analysis=AnalysisConfig(),
     )
+
+    impact = result[0]
+
+    assert impact.substantial_local_improvement is None
+    assert impact.limited_total_improvement is True
+    assert impact.limited_end_to_end_impact is None
+    assert impact.warning is None
 
 
 def test_impact_requires_phase_and_total_duration_metrics() -> None:
@@ -168,6 +203,7 @@ def test_impact_requires_phase_and_total_duration_metrics() -> None:
     result = calculate_local_total_impacts(
         comparison=comparison,
         metrics=metrics,
+        analysis=AnalysisConfig(),
     )
 
     assert result == ()

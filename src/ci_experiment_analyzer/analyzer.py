@@ -44,6 +44,7 @@ def analyze_experiment(
         for impact in calculate_local_total_impacts(
             comparison=comparison_result,
             metrics=metrics_by_id,
+            analysis=config.analysis,
         )
     )
 

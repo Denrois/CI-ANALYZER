@@ -143,6 +143,12 @@ class LocalTotalImpactResult:
     total_metric_id: str
     phase_relative_difference_percent: float | None
     total_relative_difference_percent: float | None
+    local_improvement_threshold_pct: float
+    total_impact_threshold_pct: float
+    substantial_local_improvement: bool | None
+    limited_total_improvement: bool | None
+    limited_end_to_end_impact: bool | None
+    warning: str | None
 
 
 @dataclass(frozen=True, slots=True)

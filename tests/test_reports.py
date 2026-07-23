@@ -82,6 +82,12 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 total_relative_difference_percent=(
                     -12.727272727272727
                 ),
+                local_improvement_threshold_pct=10.0,
+                total_impact_threshold_pct=5.0,
+                substantial_local_improvement=True,
+                limited_total_improvement=False,
+                limited_end_to_end_impact=False,
+                warning=None,
             ),
         ),
     )
@@ -158,6 +164,12 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 "total_relative_difference_percent": (
                     -12.727272727272727
                 ),
+                "local_improvement_threshold_pct": 10.0,
+                "total_impact_threshold_pct": 5.0,
+                "substantial_local_improvement": True,
+                "limited_total_improvement": False,
+                "limited_end_to_end_impact": False,
+                "warning": None,
             }
         ],
     }

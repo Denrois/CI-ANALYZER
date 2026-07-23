@@ -88,6 +88,22 @@ def _local_total_impact_to_dict(
         "total_relative_difference_percent": (
             impact.total_relative_difference_percent
         ),
+        "local_improvement_threshold_pct": (
+            impact.local_improvement_threshold_pct
+        ),
+        "total_impact_threshold_pct": (
+            impact.total_impact_threshold_pct
+        ),
+        "substantial_local_improvement": (
+            impact.substantial_local_improvement
+        ),
+        "limited_total_improvement": (
+            impact.limited_total_improvement
+        ),
+        "limited_end_to_end_impact": (
+            impact.limited_end_to_end_impact
+        ),
+        "warning": impact.warning,
     }
 
 
