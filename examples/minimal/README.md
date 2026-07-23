@@ -104,3 +104,44 @@ relative changes.
 
 All duration values are represented in milliseconds in the generated
 report, even though the source CSV values are expressed in seconds.
+
+## Local-versus-total impact
+
+The example uses the following impact thresholds:
+
+```yaml
+analysis:
+  local_improvement_threshold_pct: 10.0
+  total_impact_threshold_pct: 5.0
+```
+
+The `install_duration` metric has the `phase` role and improves from a
+median of `12000.0` milliseconds to `9000.0` milliseconds:
+
+```text
+relative improvement: 25.0%
+```
+
+The `total_duration` metric has the `total` role and improves from a
+median of `54000.0` milliseconds to `48000.0` milliseconds:
+
+```text
+relative improvement: approximately 11.11%
+```
+
+The local improvement exceeds the configured `10.0%` threshold, while
+the total improvement also exceeds the configured `5.0%` threshold.
+
+The expected classification is therefore:
+
+```json
+{
+  "substantial_local_improvement": true,
+  "limited_total_improvement": false,
+  "limited_end_to_end_impact": false,
+  "warning": null
+}
+```
+
+This example demonstrates that the local optimization produces a
+meaningful end-to-end pipeline improvement.

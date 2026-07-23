@@ -52,20 +52,24 @@ The project provides an installable Python package and a working
 - minimal end-to-end example;
 - frozen thesis baseline reference;
 - unit and integration tests;
-- GitHub Actions quality workflow.
+- GitHub Actions quality workflow;
+- configurable local-versus-total impact thresholds;
+- automatic comparison of local phase improvement with total pipeline
+  improvement;
+- detection of substantial local improvements with limited end-to-end
+  impact;
+- machine-readable impact classification and warnings in `analysis.json`.
 
 ### Current limitations
 
 - comparisons currently use scenario medians;
 - output is currently limited to `analysis.json`;
-- local phase improvement is not yet related automatically to total
-  pipeline impact;
 - longest measured phase detection is not yet implemented;
 - parallel-stage and shard-planning analysis are not yet implemented.
+- impact thresholds currently apply to relative median changes.
 
 ### Planned
 
-- local-phase versus total-impact analysis;
 - longest measured phase detection;
 - parallel critical-path and imbalance analysis;
 - Markdown and CSV reports;
@@ -176,6 +180,48 @@ JSONL input must contain one JSON object per non-empty line:
 All three formats use the same configurable field mapping, validation,
 normalization, statistical calculations, comparisons, and report generation.
 
+## Impact analysis thresholds
+
+Local-versus-total impact classification is configured through the
+optional `analysis` section:
+
+```yaml
+analysis:
+  local_improvement_threshold_pct: 10.0
+  total_impact_threshold_pct: 5.0
+```
+
+The default values are:
+
+- `local_improvement_threshold_pct`: `10.0`;
+- `total_impact_threshold_pct`: `5.0`.
+
+Both values must be finite numbers between `0` and `100`.
+
+The local improvement threshold defines how much a duration metric with
+`role: phase` must improve before the local improvement is considered
+substantial.
+
+The total impact threshold defines how much a duration metric with
+`role: total` must improve before the end-to-end pipeline impact is
+considered meaningful.
+
+Impact analysis applies only to duration metrics that participate in the
+same configured comparison:
+
+- the local metric must have `role: phase`;
+- the total pipeline metric must have `role: total`.
+
+Comparison differences are calculated as:
+
+```text
+candidate - baseline
+```
+
+For duration metrics, negative relative differences represent
+improvements and positive relative differences represent regressions.
+
+
 ## Analysis report
 
 The `analyze` command writes a machine-readable report to:
@@ -188,7 +234,8 @@ The report contains:
 
 - configuration version and experiment metadata;
 - descriptive statistics for every configured scenario metric;
-- configured baseline-versus-candidate comparisons.
+- configured baseline-versus-candidate comparisons;
+- local-versus-total impact classifications and optional warnings.
 
 Each scenario metric contains:
 
@@ -231,6 +278,48 @@ The report represents this as:
   "relative_difference_percent": null
 }
 ```
+### Local-versus-total impact
+
+The report contains a `local_vs_total_impacts` section for duration
+metrics with `phase` and `total` roles that participate in the same
+comparison.
+
+Example:
+
+```json
+{
+  "local_vs_total_impacts": [
+    {
+      "comparison": "cache-impact",
+      "phase_metric": "install_duration",
+      "total_metric": "total_duration",
+      "phase_relative_difference_percent": -25.0,
+      "total_relative_difference_percent": -11.11111111111111,
+      "local_improvement_threshold_pct": 10.0,
+      "total_impact_threshold_pct": 5.0,
+      "substantial_local_improvement": true,
+      "limited_total_improvement": false,
+      "limited_end_to_end_impact": false,
+      "warning": null
+    }
+  ]
+}
+```
+
+The classification fields have the following meaning:
+
+- `substantial_local_improvement` indicates whether the local phase
+  improvement reached the configured local threshold;
+- `limited_total_improvement` indicates whether total pipeline
+  improvement remained below the configured total threshold;
+- `limited_end_to_end_impact` is `true` only when the local improvement
+  is substantial and the total improvement remains limited;
+- `warning` contains an interpretation message when limited end-to-end
+  impact is detected.
+
+When a relative change cannot be calculated because the corresponding
+baseline median is zero, the affected classification is represented as
+`null`.
 
 
 ## Repository structure
