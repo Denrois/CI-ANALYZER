@@ -35,7 +35,7 @@ The project already provides an installable Python package and a working
 
 - installable Python package using a `src` layout;
 - YAML-based experiment configuration;
-- CSV scenario input;
+- CSV, JSON, and JSONL scenario input;
 - configurable mapping of CSV columns to analyzer metrics;
 - separate `validate` and `analyze` commands;
 - configuration structure and semantic validation;
@@ -50,7 +50,6 @@ The project already provides an installable Python package and a working
 
 ### Current limitations
 
-- only CSV input is supported;
 - comparisons currently use medians;
 - output is currently limited to `analysis.json`;
 - the analyzer does not yet calculate full descriptive statistics;
@@ -58,7 +57,6 @@ The project already provides an installable Python package and a working
 
 ### Planned
 
-- JSON and JSONL input readers;
 - full descriptive statistics;
 - local-phase versus total-impact analysis;
 - longest measured phase detection;
@@ -127,6 +125,63 @@ The generated report is written to:
 Duration metrics are normalized to milliseconds in the generated report,
 regardless of whether their source unit is configured as milliseconds,
 seconds, or minutes.
+
+## Supported input formats
+
+The analyzer currently supports three scenario input formats:
+
+- CSV;
+- JSON;
+- JSONL.
+
+The source format is selected independently for each scenario in the YAML configuration:
+
+```yaml
+scenarios:
+  - id: baseline
+    source:
+      format: json
+      path: data/baseline.json
+```
+
+### CSV
+
+CSV input must contain a header row:
+
+```csv
+run_id,total_seconds
+run-1,50.0
+run-2,54.0
+```
+
+### JSON
+
+JSON input must contain a top-level array of objects:
+
+```json
+[
+  {
+    "run_id": "run-1",
+    "total_seconds": 50.0
+  },
+  {
+    "run_id": "run-2",
+    "total_seconds": 54.0
+  }
+]
+```
+
+### JSONL
+
+JSONL input must contain one JSON object per non-empty line:
+
+```jsonl
+{"run_id": "run-1", "total_seconds": 50.0}
+{"run_id": "run-2", "total_seconds": 54.0}
+```
+
+All three formats use the same configurable field mapping, validation,
+normalization, statistical calculations, comparisons, and report generation.
 
 ## Repository structure
 

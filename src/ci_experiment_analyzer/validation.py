@@ -7,7 +7,13 @@ from ci_experiment_analyzer.errors import ConfigValidationError
 from ci_experiment_analyzer.models import ExperimentConfig
 
 SUPPORTED_CONFIG_VERSIONS = frozenset({1})
-SUPPORTED_SOURCE_FORMATS = frozenset({"csv"})
+SUPPORTED_SOURCE_FORMATS = frozenset(
+    {
+        "csv",
+        "json",
+        "jsonl",
+    }
+)
 SUPPORTED_METRIC_TYPES = frozenset({"duration", "number"})
 SUPPORTED_DURATION_UNITS = frozenset(
     {
