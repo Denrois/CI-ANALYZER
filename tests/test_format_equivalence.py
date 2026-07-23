@@ -316,3 +316,23 @@ comparisons:
         "absolute_difference": -7_000.0,
         "relative_difference_percent": -12.727272727272727,
     }
+
+    scenarios = csv_report["scenarios"]
+
+    assert isinstance(scenarios, list)
+    assert len(scenarios) == 2
+
+    baseline_scenario = scenarios[0]
+
+    assert baseline_scenario["id"] == "baseline"
+    assert baseline_scenario["metrics"][0] == {
+        "id": "install_duration",
+        "unit": "milliseconds",
+        "role": "phase",
+        "count": 2,
+        "median": 12_000.0,
+        "mean": 12_000.0,
+        "minimum": 10_000.0,
+        "maximum": 14_000.0,
+        "standard_deviation": 2_828.42712474619,
+    }
