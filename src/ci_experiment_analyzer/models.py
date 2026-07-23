@@ -79,6 +79,29 @@ class ScenarioDataset:
 
 
 @dataclass(frozen=True, slots=True)
+class MetricStats:
+    """Descriptive statistics for one scenario metric."""
+
+    metric_id: str
+    unit: str
+    role: str
+    count: int
+    median: float
+    mean: float
+    minimum: float
+    maximum: float
+    standard_deviation: float
+
+
+@dataclass(frozen=True, slots=True)
+class ScenarioResult:
+    """Descriptive statistics calculated for one scenario."""
+
+    scenario_id: str
+    metrics: tuple[MetricStats, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class MetricComparisonResult:
     """Comparison result for one metric."""
 
