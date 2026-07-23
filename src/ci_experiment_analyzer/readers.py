@@ -61,6 +61,17 @@ def _parse_numeric_value(
             "numeric value."
         )
 
+    if metric.metric_type == "duration" and numeric_value < 0:
+        raise DataValidationError(
+            f"{location}, field {metric.field!r} contains negative "
+            f"duration value {numeric_value!r}."
+        )
+
+    return normalize_metric_value(
+        metric=metric,
+        value=numeric_value,
+    )
+
     return normalize_metric_value(
         metric=metric,
         value=numeric_value,
