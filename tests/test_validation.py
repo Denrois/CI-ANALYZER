@@ -243,3 +243,57 @@ def test_validate_config_accepts_jsonl_source_format(
     )
 
     validate_config(jsonl_config)
+
+def test_validate_config_rejects_unsupported_metric_role(
+    tmp_path: Path,
+) -> None:
+    """Metric roles outside the supported contract should be rejected."""
+    config = _valid_config(tmp_path)
+
+    invalid_metric = replace(
+        config.metrics[0],
+        role="pipeline",
+    )
+
+    invalid_config = replace(
+        config,
+        metrics=(
+            invalid_metric,
+            *config.metrics[1:],
+        ),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match="uses unsupported role 'pipeline'",
+    ):
+        validate_config(invalid_config)
+
+@pytest.mark.parametrize(
+    "role",
+    (
+        "phase",
+        "total",
+    ),
+)
+def test_validate_config_accepts_supported_metric_roles(
+    tmp_path: Path,
+    role: str,
+) -> None:
+    """Every currently supported metric role should be accepted."""
+    config = _valid_config(tmp_path)
+
+    metric = replace(
+        config.metrics[0],
+        role=role,
+    )
+
+    valid_config = replace(
+        config,
+        metrics=(
+            metric,
+            *config.metrics[1:],
+        ),
+    )
+
+    validate_config(valid_config)

@@ -15,6 +15,12 @@ SUPPORTED_SOURCE_FORMATS = frozenset(
     }
 )
 SUPPORTED_METRIC_TYPES = frozenset({"duration", "number"})
+SUPPORTED_METRIC_ROLES = frozenset(
+    {
+        "phase",
+        "total",
+    }
+)
 SUPPORTED_DURATION_UNITS = frozenset(
     {
         "milliseconds",
@@ -109,6 +115,13 @@ def validate_config(config: ExperimentConfig) -> None:
             errors.append(
                 f"metric {metric.id!r} uses unsupported type "
                 f"{metric.metric_type!r}"
+            )
+
+        if metric.role not in SUPPORTED_METRIC_ROLES:
+            errors.append(
+                f"metric {metric.id!r} uses unsupported role "
+                f"{metric.role!r}; supported roles: "
+                f"{sorted(SUPPORTED_METRIC_ROLES)}"
             )
 
         if (
