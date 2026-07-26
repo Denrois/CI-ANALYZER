@@ -149,3 +149,92 @@ def test_excludes_total_and_generic_number_metrics() -> None:
     )
 
     assert result is None
+
+def test_reports_all_tied_longest_phases_in_stable_order() -> None:
+    """All equally long phases should be returned in scenario order."""
+    scenario = ScenarioResult(
+        scenario_id="baseline",
+        metrics=(
+            _metric_stats(
+                metric_id="install_duration",
+                unit="milliseconds",
+                role="phase",
+                median=20_000.0,
+            ),
+            _metric_stats(
+                metric_id="build_duration",
+                unit="milliseconds",
+                role="phase",
+                median=20_000.0,
+            ),
+            _metric_stats(
+                metric_id="test_duration",
+                unit="milliseconds",
+                role="phase",
+                median=15_000.0,
+            ),
+            _metric_stats(
+                metric_id="total_duration",
+                unit="milliseconds",
+                role="total",
+                median=70_000.0,
+            ),
+        ),
+    )
+
+    metrics = {
+        "install_duration": _metric_config(
+            metric_id="install_duration",
+            metric_type="duration",
+            unit="seconds",
+            role="phase",
+        ),
+        "build_duration": _metric_config(
+            metric_id="build_duration",
+            metric_type="duration",
+            unit="seconds",
+            role="phase",
+        ),
+        "test_duration": _metric_config(
+            metric_id="test_duration",
+            metric_type="duration",
+            unit="seconds",
+            role="phase",
+        ),
+        "total_duration": _metric_config(
+            metric_id="total_duration",
+            metric_type="duration",
+            unit="seconds",
+            role="total",
+        ),
+    }
+
+    result = identify_bottleneck_candidate(
+        scenario=scenario,
+        metrics=metrics,
+    )
+
+    assert result == BottleneckCandidateResult(
+        scenario_id="baseline",
+        phase_metric_ids=(
+            "install_duration",
+            "build_duration",
+        ),
+        median=20_000.0,
+        unit="milliseconds",
+        is_tie=True,
+    )
+
+def test_returns_none_when_scenario_has_no_metrics() -> None:
+    """A scenario without measured metrics has no bottleneck candidate."""
+    scenario = ScenarioResult(
+        scenario_id="empty",
+        metrics=(),
+    )
+
+    result = identify_bottleneck_candidate(
+        scenario=scenario,
+        metrics={},
+    )
+
+    assert result is None
