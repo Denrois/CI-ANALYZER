@@ -89,10 +89,11 @@ class ExperimentConfig:
 
 @dataclass(frozen=True, slots=True)
 class RunRecord:
-    """One measured CI experiment run."""
+    """One measured CI experiment record."""
 
     run_id: str
     metric_values: Mapping[str, float]
+    branch_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
