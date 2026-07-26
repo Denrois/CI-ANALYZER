@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ci_experiment_analyzer.models import (
     AnalysisResult,
+    BottleneckCandidateResult,
     ComparisonResult,
     LocalTotalImpactResult,
     MetricComparisonResult,
@@ -107,6 +108,21 @@ def _local_total_impact_to_dict(
     }
 
 
+def _bottleneck_candidate_to_dict(
+    candidate: BottleneckCandidateResult,
+) -> dict[str, object]:
+    """Convert one bottleneck candidate to a report mapping."""
+    return {
+        "scenario": candidate.scenario_id,
+        "phase_metrics": list(
+            candidate.phase_metric_ids
+        ),
+        "median": candidate.median,
+        "unit": candidate.unit,
+        "is_tie": candidate.is_tie,
+    }
+
+
 def analysis_result_to_dict(
     result: AnalysisResult,
 ) -> dict[str, object]:
@@ -128,6 +144,10 @@ def analysis_result_to_dict(
         "local_vs_total_impacts": [
             _local_total_impact_to_dict(impact)
             for impact in result.local_total_impacts
+        ],
+        "bottleneck_candidates": [
+            _bottleneck_candidate_to_dict(candidate)
+            for candidate in result.bottleneck_candidates
         ],
     }
 

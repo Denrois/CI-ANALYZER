@@ -1,9 +1,13 @@
 """Coordinate configured CI experiment analysis."""
 
+from ci_experiment_analyzer.bottlenecks import (
+    identify_bottleneck_candidate,
+)
 from ci_experiment_analyzer.comparisons import compare_scenarios
 from ci_experiment_analyzer.impact import calculate_local_total_impacts
 from ci_experiment_analyzer.models import (
     AnalysisResult,
+    BottleneckCandidateResult,
     ExperimentConfig,
 )
 from ci_experiment_analyzer.readers import read_experiment_datasets
@@ -28,6 +32,19 @@ def analyze_experiment(
         )
         for scenario in config.scenarios
     )
+
+    bottleneck_candidates: list[
+        BottleneckCandidateResult
+    ] = []
+
+    for scenario_result in scenario_results:
+        candidate = identify_bottleneck_candidate(
+            scenario=scenario_result,
+            metrics=metrics_by_id,
+        )
+
+        if candidate is not None:
+            bottleneck_candidates.append(candidate)
 
     comparison_results = tuple(
         compare_scenarios(
@@ -54,4 +71,7 @@ def analyze_experiment(
         scenarios=scenario_results,
         comparisons=comparison_results,
         local_total_impacts=local_total_impacts,
+        bottleneck_candidates=tuple(
+            bottleneck_candidates
+        ),
     )

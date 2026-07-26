@@ -171,3 +171,7 @@ class AnalysisResult:
     scenarios: tuple[ScenarioResult, ...]
     comparisons: tuple[ComparisonResult, ...]
     local_total_impacts: tuple[LocalTotalImpactResult, ...] = ()
+    bottleneck_candidates: tuple[
+        BottleneckCandidateResult,
+        ...,
+    ] = ()

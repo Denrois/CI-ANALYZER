@@ -85,6 +85,8 @@ def test_analyze_experiment_builds_complete_result(
 
     result = analyze_experiment(config)
 
+    assert result.bottleneck_candidates == ()
+
     assert result.version == 1
     assert result.experiment.id == "analysis-example"
     assert len(result.scenarios) == 2
