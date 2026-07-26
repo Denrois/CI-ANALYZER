@@ -1,4 +1,5 @@
 """Validate experiment configuration."""
+
 import math
 from collections import Counter
 from collections.abc import Sequence
@@ -17,6 +18,7 @@ SUPPORTED_SOURCE_FORMATS = frozenset(
 SUPPORTED_METRIC_TYPES = frozenset({"duration", "number"})
 SUPPORTED_METRIC_ROLES = frozenset(
     {
+        "parallel_branch",
         "phase",
         "total",
     }
@@ -94,6 +96,30 @@ def validate_config(config: ExperimentConfig) -> None:
             "record_mapping must contain a non-empty 'run_id' field"
         )
 
+    branch_id_field = config.record_mapping.get(
+        "branch_id"
+    )
+
+    if config.parallel_analyses:
+        if (
+                branch_id_field is None
+                or not branch_id_field.strip()
+        ):
+            errors.append(
+                "record_mapping must contain a non-empty "
+                "'branch_id' field when parallel analyses "
+                "are configured"
+            )
+        elif (
+                run_id_field is not None
+                and branch_id_field == run_id_field
+        ):
+            errors.append(
+                "record_mapping fields 'run_id' and "
+                "'branch_id' must reference different "
+                "source fields"
+            )
+
     metric_ids = tuple(metric.id for metric in config.metrics)
 
     if not metric_ids:
@@ -137,14 +163,34 @@ def validate_config(config: ExperimentConfig) -> None:
         comparison.id for comparison in config.comparisons
     )
 
-    if not comparison_ids:
-        errors.append("at least one comparison must be configured")
+    parallel_analysis_ids = tuple(
+        parallel_analysis.id
+        for parallel_analysis in config.parallel_analyses
+    )
+
+    if not comparison_ids and not parallel_analysis_ids:
+        errors.append(
+            "at least one comparison or parallel analysis "
+            "must be configured"
+        )
 
     for duplicate_id in _find_duplicates(comparison_ids):
         errors.append(f"duplicate comparison id: {duplicate_id!r}")
 
+    for duplicate_id in _find_duplicates(
+            parallel_analysis_ids
+    ):
+        errors.append(
+            f"duplicate parallel analysis id: "
+            f"{duplicate_id!r}"
+        )
+
     scenario_id_set = set(scenario_ids)
     metric_id_set = set(metric_ids)
+    metrics_by_id = {
+        metric.id: metric
+        for metric in config.metrics
+    }
 
     for comparison in config.comparisons:
         if not comparison.id.strip():
@@ -180,6 +226,62 @@ def validate_config(config: ExperimentConfig) -> None:
                     f"comparison {comparison.id!r} references unknown metric "
                     f"{metric_id!r}"
                 )
+
+    for parallel_analysis in config.parallel_analyses:
+        if not parallel_analysis.id.strip():
+            errors.append(
+                "parallel analysis id must not be empty"
+            )
+
+        if parallel_analysis.baseline not in scenario_id_set:
+            errors.append(
+                f"parallel analysis "
+                f"{parallel_analysis.id!r} references "
+                f"unknown baseline scenario "
+                f"{parallel_analysis.baseline!r}"
+            )
+
+        if parallel_analysis.candidate not in scenario_id_set:
+            errors.append(
+                f"parallel analysis "
+                f"{parallel_analysis.id!r} references "
+                f"unknown candidate scenario "
+                f"{parallel_analysis.candidate!r}"
+            )
+
+        if (
+                parallel_analysis.baseline
+                == parallel_analysis.candidate
+        ):
+            errors.append(
+                f"parallel analysis "
+                f"{parallel_analysis.id!r} must use "
+                "different baseline and candidate scenarios"
+            )
+
+        duration_metric = metrics_by_id.get(
+            parallel_analysis.duration_metric
+        )
+
+        if duration_metric is None:
+            errors.append(
+                f"parallel analysis "
+                f"{parallel_analysis.id!r} references "
+                f"unknown duration metric "
+                f"{parallel_analysis.duration_metric!r}"
+            )
+            continue
+
+        if (
+                duration_metric.metric_type != "duration"
+                or duration_metric.role != "parallel_branch"
+        ):
+            errors.append(
+                f"parallel analysis "
+                f"{parallel_analysis.id!r} must reference "
+                "a duration metric with role "
+                "'parallel_branch'"
+            )
 
     analysis_thresholds = {
         "local_improvement_threshold_pct": (

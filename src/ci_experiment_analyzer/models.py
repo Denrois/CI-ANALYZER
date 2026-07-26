@@ -51,6 +51,16 @@ class ComparisonConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class ParallelAnalysisConfig:
+    """Parallel branch analysis between two scenarios."""
+
+    id: str
+    baseline: str
+    candidate: str
+    duration_metric: str
+
+
+@dataclass(frozen=True, slots=True)
 class AnalysisConfig:
     """Configurable thresholds for higher-level analysis."""
 
@@ -68,6 +78,10 @@ class ExperimentConfig:
     record_mapping: Mapping[str, str]
     metrics: tuple[MetricConfig, ...]
     comparisons: tuple[ComparisonConfig, ...]
+    parallel_analyses: tuple[
+        ParallelAnalysisConfig,
+        ...,
+    ] = ()
     analysis: AnalysisConfig = field(
         default_factory=AnalysisConfig
     )
