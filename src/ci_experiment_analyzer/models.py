@@ -152,6 +152,17 @@ class LocalTotalImpactResult:
 
 
 @dataclass(frozen=True, slots=True)
+class BottleneckCandidateResult:
+    """Longest measured duration phase for one scenario."""
+
+    scenario_id: str
+    phase_metric_ids: tuple[str, ...]
+    median: float
+    unit: str
+    is_tie: bool
+
+
+@dataclass(frozen=True, slots=True)
 class AnalysisResult:
     """Complete result of one configured experiment analysis."""
 
