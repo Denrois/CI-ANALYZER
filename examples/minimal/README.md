@@ -145,3 +145,45 @@ The expected classification is therefore:
 
 This example demonstrates that the local optimization produces a
 meaningful end-to-end pipeline improvement.
+
+## Bottleneck candidate
+
+The minimal experiment contains one measured phase metric:
+
+```text
+install_duration
+```
+
+The `total_duration` metric is not considered because it has `role: total`
+and represents the complete pipeline duration rather than an individual
+phase.
+
+The expected bottleneck candidates are:
+
+```json
+{
+  "bottleneck_candidates": [
+    {
+      "scenario": "baseline",
+      "phase_metrics": [
+        "install_duration"
+      ],
+      "median": 12000.0,
+      "unit": "milliseconds",
+      "is_tie": false
+    },
+    {
+      "scenario": "optimized",
+      "phase_metrics": [
+        "install_duration"
+      ],
+      "median": 9000.0,
+      "unit": "milliseconds",
+      "is_tie": false
+    }
+  ]
+}
+```
+
+Because each scenario contains only one measured duration phase, that phase
+is selected as the candidate in both scenarios.

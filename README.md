@@ -54,6 +54,10 @@ The project provides an installable Python package and a working
 - unit and integration tests;
 - GitHub Actions quality workflow;
 - configurable local-versus-total impact thresholds;
+- automatic identification of the longest measured duration phase in each
+  scenario;
+- deterministic handling of tied bottleneck candidates;
+- machine-readable bottleneck candidates in `analysis.json`;
 - automatic comparison of local phase improvement with total pipeline
   improvement;
 - detection of substantial local improvements with limited end-to-end
@@ -62,15 +66,17 @@ The project provides an installable Python package and a working
 
 ### Current limitations
 
+### Current limitations
+
 - comparisons currently use scenario medians;
 - output is currently limited to `analysis.json`;
-- longest measured phase detection is not yet implemented;
-- parallel-stage and shard-planning analysis are not yet implemented.
+- bottleneck detection currently considers measured duration metrics with
+  `role: phase` independently for each scenario;
+- parallel-stage and shard-planning analysis are not yet implemented;
 - impact thresholds currently apply to relative median changes.
 
 ### Planned
 
-- longest measured phase detection;
 - parallel critical-path and imbalance analysis;
 - Markdown and CSV reports;
 - generic timing-based shard planner;
@@ -235,7 +241,8 @@ The report contains:
 - configuration version and experiment metadata;
 - descriptive statistics for every configured scenario metric;
 - configured baseline-versus-candidate comparisons;
-- local-versus-total impact classifications and optional warnings.
+- local-versus-total impact classifications and optional warnings;
+- bottleneck candidates for scenarios containing measured duration phases.
 
 Each scenario metric contains:
 
@@ -321,6 +328,71 @@ When a relative change cannot be calculated because the corresponding
 baseline median is zero, the affected classification is represented as
 `null`.
 
+
+### Bottleneck candidates
+
+The report contains a `bottleneck_candidates` section that identifies the
+longest measured duration phase in each scenario.
+
+Only metrics satisfying both conditions participate:
+
+- the metric type is `duration`;
+- the metric role is `phase`.
+
+Metrics with `role: total` are excluded because total pipeline duration is
+not an individual phase. Generic `number` metrics are also excluded.
+
+Example:
+
+```json
+{
+  "bottleneck_candidates": [
+    {
+      "scenario": "baseline",
+      "phase_metrics": [
+        "install_duration"
+      ],
+      "median": 12000.0,
+      "unit": "milliseconds",
+      "is_tie": false
+    },
+    {
+      "scenario": "optimized",
+      "phase_metrics": [
+        "install_duration"
+      ],
+      "median": 9000.0,
+      "unit": "milliseconds",
+      "is_tie": false
+    }
+  ]
+}
+```
+
+The candidate is selected using the largest phase median in the scenario.
+
+The result is described as a candidate rather than a confirmed bottleneck
+because the analyzer currently compares measured phase durations without
+reconstructing pipeline dependencies or a parallel critical path.
+
+When several phase metrics have equal maximum medians, all of them are
+reported in their configured order:
+
+```json
+{
+  "scenario": "baseline",
+  "phase_metrics": [
+    "build_duration",
+    "test_duration"
+  ],
+  "median": 20000.0,
+  "unit": "milliseconds",
+  "is_tie": true
+}
+```
+
+A scenario without duration metrics using `role: phase` does not produce a
+bottleneck candidate.
 
 ## Repository structure
 
