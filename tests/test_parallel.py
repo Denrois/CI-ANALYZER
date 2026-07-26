@@ -6,11 +6,13 @@ from ci_experiment_analyzer.errors import DataValidationError
 from ci_experiment_analyzer.models import (
     ParallelBranchMeasurement,
     ParallelRunGroup,
+    ParallelRunMetrics,
     RunRecord,
     ScenarioDataset,
 )
 from ci_experiment_analyzer.parallel import (
     calculate_parallel_run_metrics,
+    calculate_parallel_scenario_result,
     group_parallel_runs,
 )
 
@@ -44,6 +46,19 @@ def _parallel_run_group(
             )
             for branch_id, duration in branches
         ),
+    )
+
+
+def _calculated_run(
+    run_id: str,
+    branches: tuple[tuple[str, float], ...],
+) -> ParallelRunMetrics:
+    """Create calculated metrics for one parallel run."""
+    return calculate_parallel_run_metrics(
+        _parallel_run_group(
+            run_id=run_id,
+            branches=branches,
+        )
     )
 
 
@@ -379,4 +394,206 @@ def test_rejects_invalid_parallel_branch_duration() -> None:
     ):
         calculate_parallel_run_metrics(
             run_group
+        )
+
+
+def test_aggregates_parallel_scenario_statistics() -> None:
+    """Run-level parallel metrics should be aggregated by scenario."""
+    first_run = _calculated_run(
+        run_id="run-1",
+        branches=(
+            ("shard-1", 40_000.0),
+            ("shard-2", 35_000.0),
+            ("shard-3", 42_000.0),
+            ("shard-4", 38_000.0),
+        ),
+    )
+
+    second_run = _calculated_run(
+        run_id="run-2",
+        branches=(
+            ("shard-1", 39_000.0),
+            ("shard-2", 37_000.0),
+            ("shard-3", 41_000.0),
+            ("shard-4", 36_000.0),
+        ),
+    )
+
+    result = calculate_parallel_scenario_result(
+        scenario_id="baseline",
+        run_metrics=(
+            first_run,
+            second_run,
+        ),
+        duration_unit="milliseconds",
+    )
+
+    assert result.scenario_id == "baseline"
+    assert result.duration_unit == "milliseconds"
+    assert result.runs == (
+        first_run,
+        second_run,
+    )
+
+    assert result.branch_count_minimum == 4
+    assert result.branch_count_maximum == 4
+    assert result.branch_count_consistent is True
+
+    critical_path = result.critical_path_duration
+
+    assert critical_path.count == 2
+    assert critical_path.median == 41_500.0
+    assert critical_path.mean == 41_500.0
+    assert critical_path.minimum == 41_000.0
+    assert critical_path.maximum == 42_000.0
+    assert critical_path.standard_deviation == pytest.approx(
+        707.1067811865476
+    )
+
+    spread = result.spread
+
+    assert spread.count == 2
+    assert spread.median == 6_000.0
+    assert spread.mean == 6_000.0
+    assert spread.minimum == 5_000.0
+    assert spread.maximum == 7_000.0
+    assert spread.standard_deviation == pytest.approx(
+        1_414.213562373095
+    )
+
+    first_ratio = 42_000.0 / 38_750.0
+    second_ratio = 41_000.0 / 38_250.0
+    expected_ratio_mean = (
+        first_ratio + second_ratio
+    ) / 2
+
+    imbalance = result.imbalance_ratio
+
+    assert imbalance.count == 2
+    assert imbalance.median == pytest.approx(
+        expected_ratio_mean
+    )
+    assert imbalance.mean == pytest.approx(
+        expected_ratio_mean
+    )
+    assert imbalance.minimum == pytest.approx(
+        min(first_ratio, second_ratio)
+    )
+    assert imbalance.maximum == pytest.approx(
+        max(first_ratio, second_ratio)
+    )
+
+    expected_ratio_standard_deviation = (
+        abs(first_ratio - second_ratio)
+        / (2 ** 0.5)
+    )
+
+    assert (
+        imbalance.standard_deviation
+        == pytest.approx(
+            expected_ratio_standard_deviation
+        )
+    )
+
+
+def test_detects_inconsistent_parallel_branch_counts() -> None:
+    """Different branch counts across runs should be reported."""
+    result = calculate_parallel_scenario_result(
+        scenario_id="variable-shards",
+        run_metrics=(
+            _calculated_run(
+                run_id="run-1",
+                branches=(
+                    ("shard-1", 20_000.0),
+                    ("shard-2", 18_000.0),
+                ),
+            ),
+            _calculated_run(
+                run_id="run-2",
+                branches=(
+                    ("shard-1", 20_000.0),
+                    ("shard-2", 18_000.0),
+                    ("shard-3", 17_000.0),
+                ),
+            ),
+        ),
+        duration_unit="milliseconds",
+    )
+
+    assert result.branch_count_minimum == 2
+    assert result.branch_count_maximum == 3
+    assert result.branch_count_consistent is False
+
+
+def test_single_parallel_run_uses_zero_standard_deviation() -> None:
+    """One analyzed run should have zero sample deviation."""
+    result = calculate_parallel_scenario_result(
+        scenario_id="single-run",
+        run_metrics=(
+            _calculated_run(
+                run_id="run-1",
+                branches=(
+                    ("shard-1", 25_000.0),
+                    ("shard-2", 20_000.0),
+                ),
+            ),
+        ),
+        duration_unit="milliseconds",
+    )
+
+    assert (
+        result.critical_path_duration
+        .standard_deviation
+        == 0.0
+    )
+    assert result.spread.standard_deviation == 0.0
+    assert (
+        result.imbalance_ratio.standard_deviation
+        == 0.0
+    )
+
+    assert result.branch_count_minimum == 2
+    assert result.branch_count_maximum == 2
+    assert result.branch_count_consistent is True
+
+
+def test_rejects_parallel_scenario_without_runs() -> None:
+    """A scenario result requires at least one analyzed run."""
+    with pytest.raises(
+        DataValidationError,
+        match=(
+            "Parallel scenario 'empty' does not contain "
+            "any analyzed runs"
+        ),
+    ):
+        calculate_parallel_scenario_result(
+            scenario_id="empty",
+            run_metrics=(),
+            duration_unit="milliseconds",
+        )
+
+
+def test_rejects_duplicate_parallel_run_results() -> None:
+    """Each CI run may appear only once in scenario statistics."""
+    run = _calculated_run(
+        run_id="run-1",
+        branches=(
+            ("shard-1", 25_000.0),
+            ("shard-2", 20_000.0),
+        ),
+    )
+
+    with pytest.raises(
+        DataValidationError,
+        match=(
+            "contains duplicate analyzed run 'run-1'"
+        ),
+    ):
+        calculate_parallel_scenario_result(
+            scenario_id="baseline",
+            run_metrics=(
+                run,
+                run,
+            ),
+            duration_unit="milliseconds",
         )

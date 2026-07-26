@@ -1,13 +1,16 @@
 """Analyze measurements from parallel CI branches."""
 
 import math
-from statistics import fmean
+from collections.abc import Sequence
+from statistics import fmean, median, stdev
 
 from ci_experiment_analyzer.errors import DataValidationError
 from ci_experiment_analyzer.models import (
     ParallelBranchMeasurement,
+    ParallelMetricStats,
     ParallelRunGroup,
     ParallelRunMetrics,
+    ParallelScenarioResult,
     ScenarioDataset,
 )
 
@@ -142,4 +145,135 @@ def calculate_parallel_run_metrics(
         imbalance_ratio=imbalance_ratio,
         slowest_branch_ids=slowest_branch_ids,
         is_slowest_tie=len(slowest_branch_ids) > 1,
+    )
+
+
+def _calculate_parallel_metric_stats(
+    values: Sequence[float],
+    context: str,
+) -> ParallelMetricStats:
+    """Calculate descriptive statistics for parallel run values."""
+    if not values:
+        raise DataValidationError(
+            f"{context} does not contain any values."
+        )
+
+    normalized_values = tuple(
+        float(value)
+        for value in values
+    )
+
+    for value in normalized_values:
+        if not math.isfinite(value):
+            raise DataValidationError(
+                f"{context} contains non-finite value "
+                f"{value!r}."
+            )
+
+    standard_deviation = (
+        stdev(normalized_values)
+        if len(normalized_values) > 1
+        else 0.0
+    )
+
+    return ParallelMetricStats(
+        count=len(normalized_values),
+        median=float(
+            median(normalized_values)
+        ),
+        mean=fmean(normalized_values),
+        minimum=min(normalized_values),
+        maximum=max(normalized_values),
+        standard_deviation=standard_deviation,
+    )
+
+
+def calculate_parallel_scenario_result(
+    scenario_id: str,
+    run_metrics: Sequence[ParallelRunMetrics],
+    duration_unit: str,
+) -> ParallelScenarioResult:
+    """Aggregate parallel run metrics for one scenario."""
+    runs = tuple(run_metrics)
+
+    if not runs:
+        raise DataValidationError(
+            f"Parallel scenario {scenario_id!r} "
+            "does not contain any analyzed runs."
+        )
+
+    if not duration_unit.strip():
+        raise DataValidationError(
+            f"Parallel scenario {scenario_id!r} "
+            "must define a non-empty duration unit."
+        )
+
+    seen_run_ids: set[str] = set()
+
+    for run in runs:
+        if run.run_id in seen_run_ids:
+            raise DataValidationError(
+                f"Parallel scenario {scenario_id!r} "
+                f"contains duplicate analyzed run "
+                f"{run.run_id!r}."
+            )
+
+        seen_run_ids.add(run.run_id)
+
+    branch_counts = tuple(
+        run.branch_count
+        for run in runs
+    )
+
+    critical_path_values = tuple(
+        run.critical_path_duration
+        for run in runs
+    )
+
+    spread_values = tuple(
+        run.spread
+        for run in runs
+    )
+
+    imbalance_ratio_values = tuple(
+        run.imbalance_ratio
+        for run in runs
+    )
+
+    branch_count_minimum = min(branch_counts)
+    branch_count_maximum = max(branch_counts)
+
+    return ParallelScenarioResult(
+        scenario_id=scenario_id,
+        duration_unit=duration_unit,
+        runs=runs,
+        branch_count_minimum=branch_count_minimum,
+        branch_count_maximum=branch_count_maximum,
+        branch_count_consistent=(
+            branch_count_minimum
+            == branch_count_maximum
+        ),
+        critical_path_duration=(
+            _calculate_parallel_metric_stats(
+                values=critical_path_values,
+                context=(
+                    f"Parallel scenario {scenario_id!r} "
+                    "critical path duration"
+                ),
+            )
+        ),
+        spread=_calculate_parallel_metric_stats(
+            values=spread_values,
+            context=(
+                f"Parallel scenario {scenario_id!r} "
+                "spread"
+            ),
+        ),
+        imbalance_ratio=_calculate_parallel_metric_stats(
+            values=imbalance_ratio_values,
+            context=(
+                f"Parallel scenario {scenario_id!r} "
+                "imbalance ratio"
+            ),
+        ),
     )

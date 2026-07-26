@@ -136,6 +136,33 @@ class ParallelRunMetrics:
 
 
 @dataclass(frozen=True, slots=True)
+class ParallelMetricStats:
+    """Descriptive statistics for one parallel analysis metric."""
+
+    count: int
+    median: float
+    mean: float
+    minimum: float
+    maximum: float
+    standard_deviation: float
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelScenarioResult:
+    """Aggregated parallel analysis result for one scenario."""
+
+    scenario_id: str
+    duration_unit: str
+    runs: tuple[ParallelRunMetrics, ...]
+    branch_count_minimum: int
+    branch_count_maximum: int
+    branch_count_consistent: bool
+    critical_path_duration: ParallelMetricStats
+    spread: ParallelMetricStats
+    imbalance_ratio: ParallelMetricStats
+
+
+@dataclass(frozen=True, slots=True)
 class MetricStats:
     """Descriptive statistics for one scenario metric."""
 
