@@ -1,9 +1,13 @@
 """Analyze measurements from parallel CI branches."""
 
+import math
+from statistics import fmean
+
 from ci_experiment_analyzer.errors import DataValidationError
 from ci_experiment_analyzer.models import (
     ParallelBranchMeasurement,
     ParallelRunGroup,
+    ParallelRunMetrics,
     ScenarioDataset,
 )
 
@@ -73,4 +77,69 @@ def group_parallel_runs(
             branches=tuple(branches),
         )
         for run_id, branches in grouped_branches.items()
+    )
+
+
+def calculate_parallel_run_metrics(
+    run_group: ParallelRunGroup,
+) -> ParallelRunMetrics:
+    """Calculate duration and imbalance metrics for one parallel run."""
+    if not run_group.branches:
+        raise DataValidationError(
+            f"Parallel run {run_group.run_id!r} "
+            "does not contain any branches."
+        )
+
+    for branch in run_group.branches:
+        if (
+            not math.isfinite(branch.duration)
+            or branch.duration < 0.0
+        ):
+            raise DataValidationError(
+                f"Parallel run {run_group.run_id!r}, "
+                f"branch {branch.branch_id!r} contains "
+                f"invalid duration {branch.duration!r}."
+            )
+
+    durations = tuple(
+        branch.duration
+        for branch in run_group.branches
+    )
+
+    critical_path_duration = max(durations)
+    minimum_branch_duration = min(durations)
+    mean_branch_duration = fmean(durations)
+
+    slowest_branch_ids = tuple(
+        branch.branch_id
+        for branch in run_group.branches
+        if math.isclose(
+            branch.duration,
+            critical_path_duration,
+            rel_tol=1e-9,
+            abs_tol=1e-9,
+        )
+    )
+
+    if mean_branch_duration == 0.0:
+        imbalance_ratio = 1.0
+    else:
+        imbalance_ratio = (
+            critical_path_duration
+            / mean_branch_duration
+        )
+
+    return ParallelRunMetrics(
+        run_id=run_group.run_id,
+        branch_count=len(run_group.branches),
+        critical_path_duration=critical_path_duration,
+        minimum_branch_duration=minimum_branch_duration,
+        mean_branch_duration=mean_branch_duration,
+        spread=(
+            critical_path_duration
+            - minimum_branch_duration
+        ),
+        imbalance_ratio=imbalance_ratio,
+        slowest_branch_ids=slowest_branch_ids,
+        is_slowest_tie=len(slowest_branch_ids) > 1,
     )

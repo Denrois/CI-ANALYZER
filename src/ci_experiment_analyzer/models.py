@@ -121,6 +121,21 @@ class ParallelRunGroup:
 
 
 @dataclass(frozen=True, slots=True)
+class ParallelRunMetrics:
+    """Calculated metrics for one parallel CI run."""
+
+    run_id: str
+    branch_count: int
+    critical_path_duration: float
+    minimum_branch_duration: float
+    mean_branch_duration: float
+    spread: float
+    imbalance_ratio: float
+    slowest_branch_ids: tuple[str, ...]
+    is_slowest_tie: bool
+
+
+@dataclass(frozen=True, slots=True)
 class MetricStats:
     """Descriptive statistics for one scenario metric."""
 

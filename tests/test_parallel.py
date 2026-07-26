@@ -10,6 +10,7 @@ from ci_experiment_analyzer.models import (
     ScenarioDataset,
 )
 from ci_experiment_analyzer.parallel import (
+    calculate_parallel_run_metrics,
     group_parallel_runs,
 )
 
@@ -26,6 +27,23 @@ def _parallel_record(
         metric_values={
             "branch_duration": duration,
         },
+    )
+
+
+def _parallel_run_group(
+    run_id: str,
+    branches: tuple[tuple[str, float], ...],
+) -> ParallelRunGroup:
+    """Create one parallel run group from branch-duration pairs."""
+    return ParallelRunGroup(
+        run_id=run_id,
+        branches=tuple(
+            ParallelBranchMeasurement(
+                branch_id=branch_id,
+                duration=duration,
+            )
+            for branch_id, duration in branches
+        ),
     )
 
 
@@ -207,3 +225,158 @@ def test_allows_same_branch_id_in_different_runs() -> None:
         "run-1",
         "run-2",
     )
+
+
+def test_calculates_parallel_run_metrics() -> None:
+    """Parallel run metrics should describe duration imbalance."""
+    run_group = _parallel_run_group(
+        run_id="run-1",
+        branches=(
+            ("shard-1", 40_000.0),
+            ("shard-2", 35_000.0),
+            ("shard-3", 42_000.0),
+            ("shard-4", 38_000.0),
+        ),
+    )
+
+    result = calculate_parallel_run_metrics(
+        run_group
+    )
+
+    assert result.run_id == "run-1"
+    assert result.branch_count == 4
+    assert result.critical_path_duration == 42_000.0
+    assert result.minimum_branch_duration == 35_000.0
+    assert result.mean_branch_duration == pytest.approx(
+        38_750.0
+    )
+    assert result.spread == 7_000.0
+    assert result.imbalance_ratio == pytest.approx(
+        42_000.0 / 38_750.0
+    )
+    assert result.slowest_branch_ids == (
+        "shard-3",
+    )
+    assert result.is_slowest_tie is False
+
+
+def test_reports_tied_slowest_branches_in_stable_order() -> None:
+    """Equal maximum durations should produce tied slowest branches."""
+    run_group = _parallel_run_group(
+        run_id="run-1",
+        branches=(
+            ("shard-1", 40_000.0),
+            ("shard-2", 30_000.0),
+            ("shard-3", 40_000.0),
+        ),
+    )
+
+    result = calculate_parallel_run_metrics(
+        run_group
+    )
+
+    assert result.run_id == "run-1"
+    assert result.branch_count == 3
+    assert result.critical_path_duration == 40_000.0
+    assert result.minimum_branch_duration == 30_000.0
+    assert result.mean_branch_duration == pytest.approx(
+        110_000.0 / 3
+    )
+    assert result.spread == 10_000.0
+    assert result.imbalance_ratio == pytest.approx(
+        40_000.0 / (110_000.0 / 3)
+    )
+    assert result.slowest_branch_ids == (
+        "shard-1",
+        "shard-3",
+    )
+    assert result.is_slowest_tie is True
+
+
+def test_calculates_balanced_parallel_run() -> None:
+    """Equal branch durations should have no spread or imbalance."""
+    run_group = _parallel_run_group(
+        run_id="balanced-run",
+        branches=(
+            ("shard-1", 25_000.0),
+            ("shard-2", 25_000.0),
+            ("shard-3", 25_000.0),
+        ),
+    )
+
+    result = calculate_parallel_run_metrics(
+        run_group
+    )
+
+    assert result.critical_path_duration == 25_000.0
+    assert result.minimum_branch_duration == 25_000.0
+    assert result.mean_branch_duration == 25_000.0
+    assert result.spread == 0.0
+    assert result.imbalance_ratio == 1.0
+    assert result.slowest_branch_ids == (
+        "shard-1",
+        "shard-2",
+        "shard-3",
+    )
+    assert result.is_slowest_tie is True
+
+
+def test_zero_duration_branches_are_treated_as_balanced() -> None:
+    """All-zero branches should use a neutral imbalance ratio."""
+    run_group = _parallel_run_group(
+        run_id="zero-run",
+        branches=(
+            ("shard-1", 0.0),
+            ("shard-2", 0.0),
+        ),
+    )
+
+    result = calculate_parallel_run_metrics(
+        run_group
+    )
+
+    assert result.critical_path_duration == 0.0
+    assert result.minimum_branch_duration == 0.0
+    assert result.mean_branch_duration == 0.0
+    assert result.spread == 0.0
+    assert result.imbalance_ratio == 1.0
+    assert result.is_slowest_tie is True
+
+
+def test_rejects_parallel_run_without_branches() -> None:
+    """A parallel run must contain at least one branch."""
+    run_group = ParallelRunGroup(
+        run_id="empty-run",
+        branches=(),
+    )
+
+    with pytest.raises(
+        DataValidationError,
+        match=(
+            "Parallel run 'empty-run' does not contain "
+            "any branches"
+        ),
+    ):
+        calculate_parallel_run_metrics(
+            run_group
+        )
+
+
+def test_rejects_invalid_parallel_branch_duration() -> None:
+    """Parallel run calculation requires valid durations."""
+    run_group = _parallel_run_group(
+        run_id="invalid-run",
+        branches=(
+            ("shard-1", -1.0),
+        ),
+    )
+
+    with pytest.raises(
+        DataValidationError,
+        match=(
+            "branch 'shard-1' contains invalid duration"
+        ),
+    ):
+        calculate_parallel_run_metrics(
+            run_group
+        )
