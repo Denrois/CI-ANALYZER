@@ -105,6 +105,22 @@ class ScenarioDataset:
 
 
 @dataclass(frozen=True, slots=True)
+class ParallelBranchMeasurement:
+    """Duration measured for one parallel branch."""
+
+    branch_id: str
+    duration: float
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelRunGroup:
+    """Parallel branch measurements belonging to one CI run."""
+
+    run_id: str
+    branches: tuple[ParallelBranchMeasurement, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class MetricStats:
     """Descriptive statistics for one scenario metric."""
 
