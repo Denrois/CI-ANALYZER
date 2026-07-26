@@ -2,6 +2,7 @@
 
 from ci_experiment_analyzer.models import (
     AnalysisResult,
+    BottleneckCandidateResult,
     ComparisonResult,
     ExperimentMetadata,
     LocalTotalImpactResult,
@@ -90,6 +91,17 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 warning=None,
             ),
         ),
+        bottleneck_candidates=(
+            BottleneckCandidateResult(
+                scenario_id="baseline",
+                phase_metric_ids=(
+                    "install_duration",
+                ),
+                median=12_000.0,
+                unit="milliseconds",
+                is_tie=False,
+            ),
+        ),
     )
 
     assert analysis_result_to_dict(result) == {
@@ -170,6 +182,17 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 "limited_total_improvement": False,
                 "limited_end_to_end_impact": False,
                 "warning": None,
+            }
+        ],
+        "bottleneck_candidates": [
+            {
+                "scenario": "baseline",
+                "phase_metrics": [
+                    "install_duration",
+                ],
+                "median": 12_000.0,
+                "unit": "milliseconds",
+                "is_tie": False,
             }
         ],
     }

@@ -200,6 +200,36 @@ comparisons:
         "improvement remained below the configured threshold."
     )
 
+    assert len(report["bottleneck_candidates"]) == 2
+
+    baseline_candidate = report[
+        "bottleneck_candidates"
+    ][0]
+
+    assert baseline_candidate["scenario"] == "baseline"
+    assert baseline_candidate["phase_metrics"] == [
+        "install_duration",
+    ]
+    assert baseline_candidate["median"] == pytest.approx(
+        12_000.0
+    )
+    assert baseline_candidate["unit"] == "milliseconds"
+    assert baseline_candidate["is_tie"] is False
+
+    optimized_candidate = report[
+        "bottleneck_candidates"
+    ][1]
+
+    assert optimized_candidate["scenario"] == "optimized"
+    assert optimized_candidate["phase_metrics"] == [
+        "install_duration",
+    ]
+    assert optimized_candidate["median"] == pytest.approx(
+        9_000.0
+    )
+    assert optimized_candidate["unit"] == "milliseconds"
+    assert optimized_candidate["is_tie"] is False
+
     output = capsys.readouterr().out
 
     assert "Analysis written to" in output
@@ -329,3 +359,5 @@ comparisons:
     }
 
     assert report["local_vs_total_impacts"] == []
+
+    assert report["bottleneck_candidates"] == []
