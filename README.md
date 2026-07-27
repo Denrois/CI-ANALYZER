@@ -62,22 +62,39 @@ The project provides an installable Python package and a working
   improvement;
 - detection of substantial local improvements with limited end-to-end
   impact;
-- machine-readable impact classification and warnings in `analysis.json`.
-
-### Current limitations
+- machine-readable impact classification and warnings in `analysis.json`;
+- configurable parallel branch identification through `run_id` and
+  `branch_id` field mappings;
+- grouping of parallel branch records by CI run;
+- validation of duplicate branch identifiers within the same run;
+- per-run parallel-stage metrics:
+  critical-path duration, minimum and mean branch duration, spread, and
+  imbalance ratio;
+- deterministic reporting of slowest branches and tied slowest branches;
+- aggregated parallel-stage statistics across multiple CI runs;
+- detection of inconsistent branch counts between runs;
+- baseline-versus-candidate comparison of critical-path duration, spread,
+  and imbalance ratio;
+- machine-readable parallel-stage analysis in `analysis.json`;
+- end-to-end parallel-stage example and CLI integration tests.
 
 ### Current limitations
 
 - comparisons currently use scenario medians;
 - output is currently limited to `analysis.json`;
-- bottleneck detection currently considers measured duration metrics with
+- bottleneck detection considers measured duration metrics with
   `role: phase` independently for each scenario;
-- parallel-stage and shard-planning analysis are not yet implemented;
+- parallel-stage analysis expects one input record per measured branch;
+- every parallel branch must have a unique `(run_id, branch_id)` pair
+  within its scenario;
+- parallel critical-path duration represents the longest measured branch
+  inside one parallel stage and does not reconstruct the dependency graph
+  or critical path of the complete CI pipeline;
+- automatic shard planning is not yet implemented;
 - impact thresholds currently apply to relative median changes.
 
 ### Planned
 
-- parallel critical-path and imbalance analysis;
 - Markdown and CSV reports;
 - generic timing-based shard planner;
 - extended thesis compatibility tests.
@@ -85,45 +102,42 @@ The project provides an installable Python package and a working
 
 ## Quick start
 
-The project requires Python 3.13.
+The generated report is written to:
 
-Install the package and development dependencies:
-
-```powershell
-python -m pip install -e ".[dev]"
+```text
+.tmp/minimal-report/analysis.json
 ```
 
-Verify the installed CLI:
+Run the included parallel-stage example:
 
 ```powershell
-ci-analyzer --version
-```
-
-Validate the included minimal experiment:
-
-```powershell
-ci-analyzer validate --config examples/minimal/experiment.yaml
+ci-analyzer validate `
+  --config examples/parallel-stage/experiment.yaml
 ```
 
 Run the analysis:
 
 ```powershell
 ci-analyzer analyze `
-  --config examples/minimal/experiment.yaml `
-  --output .tmp/minimal-report
+  --config examples/parallel-stage/experiment.yaml `
+  --output .tmp/parallel-stage-report
 ```
 
-The same command on one line:
+The same analysis command on one line:
 
 ```powershell
-ci-analyzer analyze --config examples/minimal/experiment.yaml --output .tmp/minimal-report
+ci-analyzer analyze --config examples/parallel-stage/experiment.yaml --output .tmp/parallel-stage-report
 ```
 
-The generated report is written to:
+The generated parallel-stage report is written to:
 
 ```text
-.tmp/minimal-report/analysis.json
+.tmp/parallel-stage-report/analysis.json
 ```
+
+See
+[`examples/parallel-stage/README.md`](examples/parallel-stage/README.md)
+for the input structure, expected calculations, and report semantics.
 
 Duration metrics are normalized to milliseconds in the generated report,
 regardless of whether their source unit is configured as milliseconds,
@@ -242,7 +256,9 @@ The report contains:
 - descriptive statistics for every configured scenario metric;
 - configured baseline-versus-candidate comparisons;
 - local-versus-total impact classifications and optional warnings;
-- bottleneck candidates for scenarios containing measured duration phases.
+- bottleneck candidates for scenarios containing measured duration phases;
+- parallel-stage run metrics, aggregated scenario statistics, and
+  baseline-versus-candidate comparisons.
 
 Each scenario metric contains:
 
@@ -394,14 +410,197 @@ reported in their configured order:
 A scenario without duration metrics using `role: phase` does not produce a
 bottleneck candidate.
 
+### Parallel-stage analysis
+
+The report contains a `parallel_analyses` section for configured
+parallel-stage comparisons.
+
+Parallel input uses two record identifiers:
+
+```yaml
+record_mapping:
+  run_id: workflow_run_id
+  branch_id: shard_id
+```
+
+Each input record represents one measured parallel branch. Records sharing
+the same `run_id` belong to the same CI run.
+
+The combination of `run_id` and `branch_id` must be unique within a
+scenario. The same branch identifier may be reused in different runs.
+
+A parallel branch duration metric must use:
+
+```yaml
+metrics:
+  - id: shard_duration
+    field: shard_duration_seconds
+    type: duration
+    unit: seconds
+    role: parallel_branch
+```
+
+Parallel comparison is configured separately from ordinary metric
+comparisons:
+
+```yaml
+comparisons: []
+
+parallel_analyses:
+  - id: test-sharding-balance
+    baseline: baseline
+    candidate: timing-based
+    duration_metric: shard_duration
+```
+
+For every grouped CI run, the analyzer calculates:
+
+```text
+critical_path_duration = maximum branch duration
+minimum_branch_duration = minimum branch duration
+mean_branch_duration = arithmetic mean of branch durations
+spread = maximum branch duration - minimum branch duration
+imbalance_ratio = maximum branch duration / mean branch duration
+```
+
+The run result also contains:
+
+- the number of measured branches;
+- the slowest branch identifiers;
+- whether several branches are tied for the maximum duration.
+
+An imbalance ratio of `1.0` represents equal branch durations. Increasing
+values indicate greater imbalance.
+
+When every branch duration is zero, the imbalance ratio is reported as
+`1.0`, representing a neutral and fully balanced result.
+
+The term `critical_path_duration` refers only to the longest measured
+branch inside the configured parallel stage. It does not represent a
+reconstructed critical path of the complete pipeline.
+
+Run-level values are aggregated separately for the baseline and candidate
+scenarios. The following descriptive statistics are calculated:
+
+- `count`;
+- `median`;
+- `mean`;
+- `minimum`;
+- `maximum`;
+- `standard_deviation`.
+
+The report also records whether every analyzed run used the same number of
+branches:
+
+```json
+{
+  "branch_count": {
+    "minimum": 2,
+    "maximum": 2,
+    "consistent": true
+  }
+}
+```
+
+The scenario comparison uses median values for:
+
+- `critical_path_duration`;
+- `spread`;
+- `imbalance_ratio`.
+
+Differences use the same convention as ordinary comparisons:
+
+```text
+candidate - baseline
+```
+
+Negative changes normally represent an improvement:
+
+- a shorter critical branch reduces parallel-stage completion time;
+- a smaller spread represents more even branch durations;
+- a lower imbalance ratio represents better balance when it moves closer
+  to `1.0`.
+
+A simplified report structure looks like this:
+
+```json
+{
+  "parallel_analyses": [
+    {
+      "id": "test-sharding-balance",
+      "duration_metric": "shard_duration",
+      "baseline": {
+        "scenario": "baseline",
+        "duration_unit": "milliseconds",
+        "branch_count": {
+          "minimum": 2,
+          "maximum": 2,
+          "consistent": true
+        },
+        "runs": [
+          {
+            "run_id": "baseline-1",
+            "branch_count": 2,
+            "critical_path_duration": 40000.0,
+            "minimum_branch_duration": 20000.0,
+            "mean_branch_duration": 30000.0,
+            "spread": 20000.0,
+            "imbalance_ratio": 1.3333333333333333,
+            "slowest_branches": [
+              "shard-1"
+            ],
+            "is_slowest_tie": false
+          }
+        ]
+      },
+      "candidate": {
+        "scenario": "timing-based",
+        "duration_unit": "milliseconds"
+      },
+      "metrics": [
+        {
+          "id": "critical_path_duration",
+          "unit": "milliseconds",
+          "baseline_median": 35000.0,
+          "candidate_median": 25000.0,
+          "absolute_difference": -10000.0,
+          "relative_difference_percent": -28.57142857142857
+        },
+        {
+          "id": "spread",
+          "unit": "milliseconds",
+          "baseline_median": 20000.0,
+          "candidate_median": 0.0,
+          "absolute_difference": -20000.0,
+          "relative_difference_percent": -100.0
+        },
+        {
+          "id": "imbalance_ratio",
+          "unit": "ratio",
+          "baseline_median": 1.4166666666666665,
+          "candidate_median": 1.0,
+          "absolute_difference": -0.4166666666666665,
+          "relative_difference_percent": -29.411764705882344
+        }
+      ]
+    }
+  ]
+}
+```
+
+All configured duration values are normalized to milliseconds before
+parallel-run calculations are performed.
+
 ## Repository structure
 
 ```text
 ci-experiment-analyzer/
-├── docs/        # Project documentation
-├── examples/    # Example experiments and input data
-├── reference/   # Original thesis snapshot and expected results
-└── tests/       # Automated tests
+|-- docs/                   # Project documentation
+|-- examples/               # Example experiments and input data
+|   |-- minimal/
+|   `-- parallel-stage/
+|-- reference/              # Original thesis snapshot and expected results
+`-- tests/                  # Automated tests
 ```
 
 ## Development approach
@@ -410,10 +609,10 @@ Each milestone should leave the project in a working and testable state:
 
 ```text
 small working increment
-→ tests
-→ commit
-→ push
-→ next increment
+-> tests
+-> commit
+-> push
+-> next increment
 ```
 
 ## License
