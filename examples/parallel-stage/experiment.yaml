@@ -1,0 +1,35 @@
+version: 1
+
+experiment:
+  id: parallel-stage-example
+  title: Parallel stage balance experiment
+
+scenarios:
+  - id: baseline
+    source:
+      format: csv
+      path: data/baseline.csv
+
+  - id: timing-based
+    source:
+      format: csv
+      path: data/timing-based.csv
+
+record_mapping:
+  run_id: workflow_run_id
+  branch_id: shard_id
+
+metrics:
+  - id: shard_duration
+    field: shard_duration_seconds
+    type: duration
+    unit: seconds
+    role: parallel_branch
+
+comparisons: []
+
+parallel_analyses:
+  - id: test-sharding-balance
+    baseline: baseline
+    candidate: timing-based
+    duration_metric: shard_duration
