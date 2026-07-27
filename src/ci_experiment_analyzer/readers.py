@@ -72,11 +72,6 @@ def _parse_numeric_value(
         value=numeric_value,
     )
 
-    return normalize_metric_value(
-        metric=metric,
-        value=numeric_value,
-    )
-
 
 def _require_csv_value(
     row: Mapping[str, str | None],
@@ -104,6 +99,7 @@ def _require_csv_value(
 def _validate_csv_columns(
     fieldnames: Sequence[str] | None,
     run_id_field: str,
+    branch_id_field: str | None,
     metrics: Sequence[MetricConfig],
     source_path: Path,
 ) -> None:
@@ -114,6 +110,10 @@ def _validate_csv_columns(
         )
 
     required_fields = {run_id_field}
+
+    if branch_id_field is not None:
+        required_fields.add(branch_id_field)
+
     required_fields.update(metric.field for metric in metrics)
 
     missing_fields = sorted(required_fields.difference(fieldnames))
@@ -138,6 +138,7 @@ def read_csv_scenario(
     """Read one scenario dataset from a CSV file."""
     source_path = scenario.source.path
     run_id_field = record_mapping["run_id"]
+    branch_id_field = record_mapping.get("branch_id")
     records: list[RunRecord] = []
 
     try:
@@ -158,6 +159,7 @@ def read_csv_scenario(
             _validate_csv_columns(
                 fieldnames=reader.fieldnames,
                 run_id_field=run_id_field,
+                branch_id_field=branch_id_field,
                 metrics=metrics,
                 source_path=source_path,
             )
@@ -173,6 +175,17 @@ def read_csv_scenario(
                     field=run_id_field,
                     source_path=source_path,
                     line_number=line_number,
+                )
+
+                branch_id = (
+                    _require_csv_value(
+                        row=row,
+                        field=branch_id_field,
+                        source_path=source_path,
+                        line_number=line_number,
+                    )
+                    if branch_id_field is not None
+                    else None
                 )
 
                 metric_values = {
@@ -194,6 +207,7 @@ def read_csv_scenario(
                     RunRecord(
                         run_id=run_id,
                         metric_values=metric_values,
+                        branch_id=branch_id,
                     )
                 )
     except UnicodeError as error:
@@ -285,21 +299,21 @@ def _require_record_field(
     return value
 
 
-def _parse_run_id(
+def _parse_identifier(
     raw_value: object,
     field: str,
     location: str,
 ) -> str:
-    """Validate and normalize one structured run identifier."""
+    """Validate and normalize one structured identifier."""
     if isinstance(raw_value, str):
-        run_id = raw_value.strip()
+        identifier = raw_value.strip()
 
-        if not run_id:
+        if not identifier:
             raise DataValidationError(
                 f"{location} contains an empty value for field {field!r}."
             )
 
-        return run_id
+        return identifier
 
     if isinstance(raw_value, bool):
         raise DataValidationError(
@@ -333,6 +347,7 @@ def read_json_scenario(
     """Read one scenario dataset from a JSON array."""
     source_path = scenario.source.path
     run_id_field = record_mapping["run_id"]
+    branch_id_field = record_mapping.get("branch_id")
     raw_data = _load_json_document(source_path)
 
     if not isinstance(raw_data, list):
@@ -356,7 +371,7 @@ def read_json_scenario(
             location=location,
         )
 
-        run_id = _parse_run_id(
+        run_id = _parse_identifier(
             raw_value=_require_record_field(
                 record=record,
                 field=run_id_field,
@@ -364,6 +379,20 @@ def read_json_scenario(
             ),
             field=run_id_field,
             location=location,
+        )
+
+        branch_id = (
+            _parse_identifier(
+                raw_value=_require_record_field(
+                    record=record,
+                    field=branch_id_field,
+                    location=location,
+                ),
+                field=branch_id_field,
+                location=location,
+            )
+            if branch_id_field is not None
+            else None
         )
 
         metric_values = {
@@ -384,6 +413,7 @@ def read_json_scenario(
             RunRecord(
                 run_id=run_id,
                 metric_values=metric_values,
+                branch_id=branch_id,
             )
         )
 
@@ -406,6 +436,7 @@ def read_jsonl_scenario(
     """Read one scenario dataset from a JSONL file."""
     source_path = scenario.source.path
     run_id_field = record_mapping["run_id"]
+    branch_id_field = record_mapping.get("branch_id")
     records: list[RunRecord] = []
 
     try:
@@ -440,7 +471,7 @@ def read_jsonl_scenario(
                     location=location,
                 )
 
-                run_id = _parse_run_id(
+                run_id = _parse_identifier(
                     raw_value=_require_record_field(
                         record=record,
                         field=run_id_field,
@@ -448,6 +479,20 @@ def read_jsonl_scenario(
                     ),
                     field=run_id_field,
                     location=location,
+                )
+
+                branch_id = (
+                    _parse_identifier(
+                        raw_value=_require_record_field(
+                            record=record,
+                            field=branch_id_field,
+                            location=location,
+                        ),
+                        field=branch_id_field,
+                        location=location,
+                    )
+                    if branch_id_field is not None
+                    else None
                 )
 
                 metric_values = {
@@ -468,6 +513,7 @@ def read_jsonl_scenario(
                     RunRecord(
                         run_id=run_id,
                         metric_values=metric_values,
+                        branch_id=branch_id,
                     )
                 )
 

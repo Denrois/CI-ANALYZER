@@ -82,6 +82,8 @@ comparisons:
         "total_duration",
     )
 
+    assert config.parallel_analyses == ()
+
 def test_load_config_uses_default_analysis_thresholds(
     tmp_path: Path,
 ) -> None:
@@ -156,4 +158,71 @@ comparisons: []
     assert (
         config.analysis.total_impact_threshold_pct
         == 2.5
+    )
+
+
+def test_load_config_reads_parallel_analysis(
+    tmp_path: Path,
+) -> None:
+    """Parallel analysis configuration should be loaded."""
+    config_path = tmp_path / "experiment.yaml"
+
+    config_path.write_text(
+        """
+version: 1
+
+experiment:
+  id: parallel-test-example
+  title: Parallel test example
+
+scenarios:
+  - id: baseline
+    source:
+      format: csv
+      path: data/baseline.csv
+
+  - id: timing-based
+    source:
+      format: csv
+      path: data/timing-based.csv
+
+record_mapping:
+  run_id: workflow_run_id
+  branch_id: shard_id
+
+metrics:
+  - id: shard_duration
+    field: shard_duration_seconds
+    type: duration
+    unit: seconds
+    role: parallel_branch
+
+comparisons: []
+
+parallel_analyses:
+  - id: test-sharding
+    baseline: baseline
+    candidate: timing-based
+    duration_metric: shard_duration
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.record_mapping == {
+        "run_id": "workflow_run_id",
+        "branch_id": "shard_id",
+    }
+
+    assert len(config.parallel_analyses) == 1
+
+    parallel_analysis = config.parallel_analyses[0]
+
+    assert parallel_analysis.id == "test-sharding"
+    assert parallel_analysis.baseline == "baseline"
+    assert parallel_analysis.candidate == "timing-based"
+    assert (
+        parallel_analysis.duration_metric
+        == "shard_duration"
     )

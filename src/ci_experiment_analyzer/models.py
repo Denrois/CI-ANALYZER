@@ -1,5 +1,7 @@
 """Domain models for CI experiment configuration."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -51,6 +53,16 @@ class ComparisonConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class ParallelAnalysisConfig:
+    """Parallel branch analysis between two scenarios."""
+
+    id: str
+    baseline: str
+    candidate: str
+    duration_metric: str
+
+
+@dataclass(frozen=True, slots=True)
 class AnalysisConfig:
     """Configurable thresholds for higher-level analysis."""
 
@@ -68,6 +80,10 @@ class ExperimentConfig:
     record_mapping: Mapping[str, str]
     metrics: tuple[MetricConfig, ...]
     comparisons: tuple[ComparisonConfig, ...]
+    parallel_analyses: tuple[
+        ParallelAnalysisConfig,
+        ...,
+    ] = ()
     analysis: AnalysisConfig = field(
         default_factory=AnalysisConfig
     )
@@ -75,10 +91,11 @@ class ExperimentConfig:
 
 @dataclass(frozen=True, slots=True)
 class RunRecord:
-    """One measured CI experiment run."""
+    """One measured CI experiment record."""
 
     run_id: str
     metric_values: Mapping[str, float]
+    branch_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -87,6 +104,75 @@ class ScenarioDataset:
 
     scenario_id: str
     records: tuple[RunRecord, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelBranchMeasurement:
+    """Duration measured for one parallel branch."""
+
+    branch_id: str
+    duration: float
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelRunGroup:
+    """Parallel branch measurements belonging to one CI run."""
+
+    run_id: str
+    branches: tuple[ParallelBranchMeasurement, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelRunMetrics:
+    """Calculated metrics for one parallel CI run."""
+
+    run_id: str
+    branch_count: int
+    critical_path_duration: float
+    minimum_branch_duration: float
+    mean_branch_duration: float
+    spread: float
+    imbalance_ratio: float
+    slowest_branch_ids: tuple[str, ...]
+    is_slowest_tie: bool
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelMetricStats:
+    """Descriptive statistics for one parallel analysis metric."""
+
+    count: int
+    median: float
+    mean: float
+    minimum: float
+    maximum: float
+    standard_deviation: float
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelScenarioResult:
+    """Aggregated parallel analysis result for one scenario."""
+
+    scenario_id: str
+    duration_unit: str
+    runs: tuple[ParallelRunMetrics, ...]
+    branch_count_minimum: int
+    branch_count_maximum: int
+    branch_count_consistent: bool
+    critical_path_duration: ParallelMetricStats
+    spread: ParallelMetricStats
+    imbalance_ratio: ParallelMetricStats
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelAnalysisResult:
+    """Comparison result for one configured parallel analysis."""
+
+    analysis_id: str
+    duration_metric_id: str
+    baseline: ParallelScenarioResult
+    candidate: ParallelScenarioResult
+    metrics: tuple[MetricComparisonResult, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -173,5 +259,9 @@ class AnalysisResult:
     local_total_impacts: tuple[LocalTotalImpactResult, ...] = ()
     bottleneck_candidates: tuple[
         BottleneckCandidateResult,
+        ...,
+    ] = ()
+    parallel_analyses: tuple[
+        ParallelAnalysisResult,
         ...,
     ] = ()

@@ -84,7 +84,8 @@ def test_analyze_experiment_builds_complete_result(
     )
 
     result = analyze_experiment(config)
-
+    
+    assert result.parallel_analyses == ()
     assert result.bottleneck_candidates == ()
 
     assert result.version == 1

@@ -9,6 +9,11 @@ from ci_experiment_analyzer.models import (
     AnalysisResult,
     BottleneckCandidateResult,
     ExperimentConfig,
+    ParallelAnalysisResult,
+)
+from ci_experiment_analyzer.parallel import (
+    analyze_parallel_scenario,
+    compare_parallel_scenarios,
 )
 from ci_experiment_analyzer.readers import read_experiment_datasets
 from ci_experiment_analyzer.statistics import calculate_scenario_result
@@ -65,6 +70,39 @@ def analyze_experiment(
         )
     )
 
+    parallel_analysis_results: list[
+        ParallelAnalysisResult
+    ] = []
+
+    for parallel_analysis in config.parallel_analyses:
+        baseline_result = analyze_parallel_scenario(
+            dataset=datasets[
+                parallel_analysis.baseline
+            ],
+            duration_metric_id=(
+                parallel_analysis.duration_metric
+            ),
+            duration_unit="milliseconds",
+        )
+
+        candidate_result = analyze_parallel_scenario(
+            dataset=datasets[
+                parallel_analysis.candidate
+            ],
+            duration_metric_id=(
+                parallel_analysis.duration_metric
+            ),
+            duration_unit="milliseconds",
+        )
+
+        parallel_analysis_results.append(
+            compare_parallel_scenarios(
+                analysis=parallel_analysis,
+                baseline=baseline_result,
+                candidate=candidate_result,
+            )
+        )
+
     return AnalysisResult(
         version=config.version,
         experiment=config.experiment,
@@ -73,5 +111,8 @@ def analyze_experiment(
         local_total_impacts=local_total_impacts,
         bottleneck_candidates=tuple(
             bottleneck_candidates
+        ),
+        parallel_analyses=tuple(
+            parallel_analysis_results
         ),
     )

@@ -12,6 +12,7 @@ from ci_experiment_analyzer.models import (
     ExperimentConfig,
     ExperimentMetadata,
     MetricConfig,
+    ParallelAnalysisConfig,
     ScenarioConfig,
     SourceConfig,
 )
@@ -48,7 +49,7 @@ def _require_list(
             f"{context} must be a list."
         )
 
-    return  value
+    return value
 
 
 def _require_field(
@@ -277,6 +278,38 @@ def _load_comparison(
     )
 
 
+def _load_parallel_analysis(
+    value: Any,
+    index: int,
+) -> ParallelAnalysisConfig:
+    """Create a parallel branch analysis configuration."""
+    context = f"parallel_analyses[{index}]"
+    data = _require_mapping(value, context)
+
+    return ParallelAnalysisConfig(
+        id=_require_string(
+            data=data,
+            field="id",
+            context=context,
+        ),
+        baseline=_require_string(
+            data=data,
+            field="baseline",
+            context=context,
+        ),
+        candidate=_require_string(
+            data=data,
+            field="candidate",
+            context=context,
+        ),
+        duration_metric=_require_string(
+            data=data,
+            field="duration_metric",
+            context=context,
+        ),
+    )
+
+
 def _load_record_mapping(
     value: Any,
 ) -> dict[str, str]:
@@ -324,7 +357,6 @@ def _load_analysis_config(
             default=defaults.total_impact_threshold_pct,
         ),
     )
-
 
 
 def load_config(path: str | Path) -> ExperimentConfig:
@@ -396,6 +428,14 @@ def load_config(path: str | Path) -> ExperimentConfig:
         "comparisons",
     )
 
+    parallel_analysis_items = _require_list(
+        data.get(
+            "parallel_analyses",
+            [],
+        ),
+        "parallel_analyses",
+    )
+
     record_mapping = _load_record_mapping(
         _require_field(
             data=data,
@@ -429,6 +469,16 @@ def load_config(path: str | Path) -> ExperimentConfig:
         for index, item in enumerate(comparison_items)
     )
 
+    parallel_analyses = tuple(
+        _load_parallel_analysis(
+            value=item,
+            index=index,
+        )
+        for index, item in enumerate(
+            parallel_analysis_items
+        )
+    )
+
     if "analysis" in data:
         analysis = _load_analysis_config(
             data["analysis"]
@@ -454,5 +504,6 @@ def load_config(path: str | Path) -> ExperimentConfig:
         record_mapping=record_mapping,
         metrics=metrics,
         comparisons=comparisons,
+        parallel_analyses=parallel_analyses,
         analysis=analysis,
     )

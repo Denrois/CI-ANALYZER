@@ -12,6 +12,7 @@ from ci_experiment_analyzer.models import (
     ExperimentConfig,
     ExperimentMetadata,
     MetricConfig,
+    ParallelAnalysisConfig,
     ScenarioConfig,
     SourceConfig,
 )
@@ -273,6 +274,7 @@ def test_validate_config_rejects_unsupported_metric_role(
 @pytest.mark.parametrize(
     "role",
     (
+        "parallel_branch",
         "phase",
         "total",
     ),
@@ -363,6 +365,107 @@ def test_validate_config_rejects_non_finite_analysis_threshold(
         ConfigValidationError,
         match=(
             "local_improvement_threshold_pct.*must be finite"
+        ),
+    ):
+        validate_config(invalid_config)
+
+
+def test_validate_config_accepts_parallel_analysis(
+    tmp_path: Path,
+) -> None:
+    """A valid parallel analysis should be accepted."""
+    config = _valid_config(tmp_path)
+
+    branch_metric = replace(
+        config.metrics[0],
+        id="branch_duration",
+        role="parallel_branch",
+    )
+
+    parallel_analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="optimized",
+        duration_metric="branch_duration",
+    )
+
+    parallel_config = replace(
+        config,
+        record_mapping={
+            "run_id": "run_id",
+            "branch_id": "branch_id",
+        },
+        metrics=(branch_metric,),
+        comparisons=(),
+        parallel_analyses=(parallel_analysis,),
+    )
+
+    validate_config(parallel_config)
+
+
+def test_validate_config_requires_parallel_branch_mapping(
+    tmp_path: Path,
+) -> None:
+    """Parallel analysis requires a branch identifier mapping."""
+    config = _valid_config(tmp_path)
+
+    branch_metric = replace(
+        config.metrics[0],
+        id="branch_duration",
+        role="parallel_branch",
+    )
+
+    parallel_analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="optimized",
+        duration_metric="branch_duration",
+    )
+
+    invalid_config = replace(
+        config,
+        metrics=(branch_metric,),
+        comparisons=(),
+        parallel_analyses=(parallel_analysis,),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match=(
+            "record_mapping must contain a non-empty "
+            "'branch_id' field"
+        ),
+    ):
+        validate_config(invalid_config)
+
+
+def test_validate_config_rejects_non_branch_parallel_metric(
+    tmp_path: Path,
+) -> None:
+    """Parallel analysis must reference a branch duration metric."""
+    config = _valid_config(tmp_path)
+
+    parallel_analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="optimized",
+        duration_metric="duration",
+    )
+
+    invalid_config = replace(
+        config,
+        record_mapping={
+            "run_id": "run_id",
+            "branch_id": "branch_id",
+        },
+        parallel_analyses=(parallel_analysis,),
+    )
+
+    with pytest.raises(
+        ConfigValidationError,
+        match=(
+            "must reference a duration metric with role "
+            "'parallel_branch'"
         ),
     ):
         validate_config(invalid_config)
