@@ -14,6 +14,7 @@ from ci_experiment_analyzer.models import (
     ScenarioDataset,
 )
 from ci_experiment_analyzer.parallel import (
+    analyze_parallel_scenario,
     calculate_parallel_run_metrics,
     calculate_parallel_scenario_result,
     compare_parallel_scenarios,
@@ -845,3 +846,58 @@ def test_parallel_comparison_rejects_different_units() -> None:
             baseline=baseline,
             candidate=candidate,
         )
+
+
+def test_analyzes_parallel_scenario_from_dataset() -> None:
+    """A flat dataset should produce aggregated parallel results."""
+    dataset = ScenarioDataset(
+        scenario_id="baseline",
+        records=(
+            _parallel_record(
+                run_id="run-1",
+                branch_id="shard-1",
+                duration=40_000.0,
+            ),
+            _parallel_record(
+                run_id="run-1",
+                branch_id="shard-2",
+                duration=20_000.0,
+            ),
+            _parallel_record(
+                run_id="run-2",
+                branch_id="shard-1",
+                duration=30_000.0,
+            ),
+            _parallel_record(
+                run_id="run-2",
+                branch_id="shard-2",
+                duration=10_000.0,
+            ),
+        ),
+    )
+
+    result = analyze_parallel_scenario(
+        dataset=dataset,
+        duration_metric_id="branch_duration",
+        duration_unit="milliseconds",
+    )
+
+    assert result.scenario_id == "baseline"
+    assert result.duration_unit == "milliseconds"
+
+    assert tuple(
+        run.run_id
+        for run in result.runs
+    ) == (
+        "run-1",
+        "run-2",
+    )
+
+    assert (
+        result.critical_path_duration.median
+        == 35_000.0
+    )
+    assert result.spread.median == 20_000.0
+    assert result.branch_count_minimum == 2
+    assert result.branch_count_maximum == 2
+    assert result.branch_count_consistent is True

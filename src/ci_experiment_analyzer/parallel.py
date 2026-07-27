@@ -316,6 +316,29 @@ def _compare_parallel_metric(
     )
 
 
+def analyze_parallel_scenario(
+    dataset: ScenarioDataset,
+    duration_metric_id: str,
+    duration_unit: str,
+) -> ParallelScenarioResult:
+    """Analyze all parallel runs belonging to one scenario."""
+    run_groups = group_parallel_runs(
+        dataset=dataset,
+        duration_metric_id=duration_metric_id,
+    )
+
+    run_metrics = tuple(
+        calculate_parallel_run_metrics(run_group)
+        for run_group in run_groups
+    )
+
+    return calculate_parallel_scenario_result(
+        scenario_id=dataset.scenario_id,
+        run_metrics=run_metrics,
+        duration_unit=duration_unit,
+    )
+
+
 def compare_parallel_scenarios(
     analysis: ParallelAnalysisConfig,
     baseline: ParallelScenarioResult,

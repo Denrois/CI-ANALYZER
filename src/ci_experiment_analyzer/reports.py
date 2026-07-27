@@ -10,6 +10,10 @@ from ci_experiment_analyzer.models import (
     LocalTotalImpactResult,
     MetricComparisonResult,
     MetricStats,
+    ParallelAnalysisResult,
+    ParallelMetricStats,
+    ParallelRunMetrics,
+    ParallelScenarioResult,
     ScenarioResult,
 )
 
@@ -123,6 +127,99 @@ def _bottleneck_candidate_to_dict(
     }
 
 
+def _parallel_metric_stats_to_dict(
+    stats: ParallelMetricStats,
+) -> dict[str, object]:
+    """Convert parallel metric statistics to a report mapping."""
+    return {
+        "count": stats.count,
+        "median": stats.median,
+        "mean": stats.mean,
+        "minimum": stats.minimum,
+        "maximum": stats.maximum,
+        "standard_deviation": stats.standard_deviation,
+    }
+
+
+def _parallel_run_metrics_to_dict(
+    run: ParallelRunMetrics,
+) -> dict[str, object]:
+    """Convert one parallel run result to a report mapping."""
+    return {
+        "run_id": run.run_id,
+        "branch_count": run.branch_count,
+        "critical_path_duration": (
+            run.critical_path_duration
+        ),
+        "minimum_branch_duration": (
+            run.minimum_branch_duration
+        ),
+        "mean_branch_duration": (
+            run.mean_branch_duration
+        ),
+        "spread": run.spread,
+        "imbalance_ratio": run.imbalance_ratio,
+        "slowest_branches": list(
+            run.slowest_branch_ids
+        ),
+        "is_slowest_tie": run.is_slowest_tie,
+    }
+
+
+def _parallel_scenario_result_to_dict(
+    scenario: ParallelScenarioResult,
+) -> dict[str, object]:
+    """Convert one parallel scenario result to a report mapping."""
+    return {
+        "scenario": scenario.scenario_id,
+        "duration_unit": scenario.duration_unit,
+        "branch_count": {
+            "minimum": scenario.branch_count_minimum,
+            "maximum": scenario.branch_count_maximum,
+            "consistent": (
+                scenario.branch_count_consistent
+            ),
+        },
+        "runs": [
+            _parallel_run_metrics_to_dict(run)
+            for run in scenario.runs
+        ],
+        "critical_path_duration": (
+            _parallel_metric_stats_to_dict(
+                scenario.critical_path_duration
+            )
+        ),
+        "spread": _parallel_metric_stats_to_dict(
+            scenario.spread
+        ),
+        "imbalance_ratio": (
+            _parallel_metric_stats_to_dict(
+                scenario.imbalance_ratio
+            )
+        ),
+    }
+
+
+def _parallel_analysis_result_to_dict(
+    analysis: ParallelAnalysisResult,
+) -> dict[str, object]:
+    """Convert one parallel analysis result to a report mapping."""
+    return {
+        "id": analysis.analysis_id,
+        "duration_metric": analysis.duration_metric_id,
+        "baseline": _parallel_scenario_result_to_dict(
+            analysis.baseline
+        ),
+        "candidate": _parallel_scenario_result_to_dict(
+            analysis.candidate
+        ),
+        "metrics": [
+            _metric_comparison_to_dict(metric)
+            for metric in analysis.metrics
+        ],
+    }
+
+
 def analysis_result_to_dict(
     result: AnalysisResult,
 ) -> dict[str, object]:
@@ -148,6 +245,12 @@ def analysis_result_to_dict(
         "bottleneck_candidates": [
             _bottleneck_candidate_to_dict(candidate)
             for candidate in result.bottleneck_candidates
+        ],
+        "parallel_analyses": [
+            _parallel_analysis_result_to_dict(
+                analysis
+            )
+            for analysis in result.parallel_analyses
         ],
     }
 

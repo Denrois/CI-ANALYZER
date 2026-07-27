@@ -261,3 +261,7 @@ class AnalysisResult:
         BottleneckCandidateResult,
         ...,
     ] = ()
+    parallel_analyses: tuple[
+        ParallelAnalysisResult,
+        ...,
+    ] = ()
