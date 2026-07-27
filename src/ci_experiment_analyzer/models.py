@@ -1,5 +1,7 @@
 """Domain models for CI experiment configuration."""
 
+from __future__ import annotations
+
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -160,6 +162,17 @@ class ParallelScenarioResult:
     critical_path_duration: ParallelMetricStats
     spread: ParallelMetricStats
     imbalance_ratio: ParallelMetricStats
+
+
+@dataclass(frozen=True, slots=True)
+class ParallelAnalysisResult:
+    """Comparison result for one configured parallel analysis."""
+
+    analysis_id: str
+    duration_metric_id: str
+    baseline: ParallelScenarioResult
+    candidate: ParallelScenarioResult
+    metrics: tuple[MetricComparisonResult, ...]
 
 
 @dataclass(frozen=True, slots=True)

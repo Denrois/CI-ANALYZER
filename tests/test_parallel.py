@@ -4,15 +4,19 @@ import pytest
 
 from ci_experiment_analyzer.errors import DataValidationError
 from ci_experiment_analyzer.models import (
+    ParallelAnalysisConfig,
     ParallelBranchMeasurement,
+    ParallelMetricStats,
     ParallelRunGroup,
     ParallelRunMetrics,
+    ParallelScenarioResult,
     RunRecord,
     ScenarioDataset,
 )
 from ci_experiment_analyzer.parallel import (
     calculate_parallel_run_metrics,
     calculate_parallel_scenario_result,
+    compare_parallel_scenarios,
     group_parallel_runs,
 )
 
@@ -59,6 +63,45 @@ def _calculated_run(
             run_id=run_id,
             branches=branches,
         )
+    )
+
+
+def _parallel_stats(
+    value: float,
+) -> ParallelMetricStats:
+    """Create deterministic aggregated parallel statistics."""
+    return ParallelMetricStats(
+        count=1,
+        median=value,
+        mean=value,
+        minimum=value,
+        maximum=value,
+        standard_deviation=0.0,
+    )
+
+
+def _parallel_scenario_result(
+    scenario_id: str,
+    critical_path_duration: float,
+    spread: float,
+    imbalance_ratio: float,
+    duration_unit: str = "milliseconds",
+) -> ParallelScenarioResult:
+    """Create one deterministic parallel scenario result."""
+    return ParallelScenarioResult(
+        scenario_id=scenario_id,
+        duration_unit=duration_unit,
+        runs=(),
+        branch_count_minimum=4,
+        branch_count_maximum=4,
+        branch_count_consistent=True,
+        critical_path_duration=_parallel_stats(
+            critical_path_duration
+        ),
+        spread=_parallel_stats(spread),
+        imbalance_ratio=_parallel_stats(
+            imbalance_ratio
+        ),
     )
 
 
@@ -596,4 +639,209 @@ def test_rejects_duplicate_parallel_run_results() -> None:
                 run,
             ),
             duration_unit="milliseconds",
+        )
+
+
+def test_compares_parallel_scenario_medians() -> None:
+    """Parallel scenario medians should be compared consistently."""
+    analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="timing-based",
+        duration_metric="branch_duration",
+    )
+
+    baseline = _parallel_scenario_result(
+        scenario_id="baseline",
+        critical_path_duration=42_000.0,
+        spread=8_000.0,
+        imbalance_ratio=1.15,
+    )
+
+    candidate = _parallel_scenario_result(
+        scenario_id="timing-based",
+        critical_path_duration=36_000.0,
+        spread=3_000.0,
+        imbalance_ratio=1.035,
+    )
+
+    result = compare_parallel_scenarios(
+        analysis=analysis,
+        baseline=baseline,
+        candidate=candidate,
+    )
+
+    assert tuple(
+        metric.metric_id
+        for metric in result.metrics
+    ) == (
+               "critical_path_duration",
+               "spread",
+               "imbalance_ratio",
+           )
+
+    assert result.analysis_id == "test-sharding"
+    assert result.duration_metric_id == "branch_duration"
+    assert result.baseline is baseline
+    assert result.candidate is candidate
+
+    metrics_by_id = {
+        metric.metric_id: metric
+        for metric in result.metrics
+    }
+
+    critical_path = metrics_by_id[
+        "critical_path_duration"
+    ]
+
+    assert critical_path.unit == "milliseconds"
+    assert critical_path.baseline_median == 42_000.0
+    assert critical_path.candidate_median == 36_000.0
+    assert critical_path.absolute_difference == -6_000.0
+    assert (
+        critical_path.relative_difference_percent
+        == pytest.approx(-14.2857142857)
+    )
+
+    spread = metrics_by_id["spread"]
+
+    assert spread.unit == "milliseconds"
+    assert spread.baseline_median == 8_000.0
+    assert spread.candidate_median == 3_000.0
+    assert spread.absolute_difference == -5_000.0
+    assert (
+        spread.relative_difference_percent
+        == pytest.approx(-62.5)
+    )
+
+    imbalance = metrics_by_id["imbalance_ratio"]
+
+    assert imbalance.unit == "ratio"
+    assert imbalance.baseline_median == pytest.approx(
+        1.15
+    )
+    assert imbalance.candidate_median == pytest.approx(
+        1.035
+    )
+    assert imbalance.absolute_difference == pytest.approx(
+        -0.115
+    )
+    assert (
+        imbalance.relative_difference_percent
+        == pytest.approx(-10.0)
+    )
+
+
+def test_parallel_comparison_handles_zero_baseline_median() -> None:
+    """A zero baseline median should produce no relative change."""
+    analysis = ParallelAnalysisConfig(
+        id="balanced-to-unbalanced",
+        baseline="baseline",
+        candidate="candidate",
+        duration_metric="branch_duration",
+    )
+
+    baseline = _parallel_scenario_result(
+        scenario_id="baseline",
+        critical_path_duration=20_000.0,
+        spread=0.0,
+        imbalance_ratio=1.0,
+    )
+
+    candidate = _parallel_scenario_result(
+        scenario_id="candidate",
+        critical_path_duration=21_000.0,
+        spread=1_000.0,
+        imbalance_ratio=1.05,
+    )
+
+    result = compare_parallel_scenarios(
+        analysis=analysis,
+        baseline=baseline,
+        candidate=candidate,
+    )
+
+    metrics_by_id = {
+        metric.metric_id: metric
+        for metric in result.metrics
+    }
+
+    spread = metrics_by_id["spread"]
+
+    assert spread.baseline_median == 0.0
+    assert spread.candidate_median == 1_000.0
+    assert spread.absolute_difference == 1_000.0
+    assert spread.relative_difference_percent is None
+
+
+def test_parallel_comparison_rejects_wrong_baseline() -> None:
+    """Configured baseline must match the supplied result."""
+    analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="candidate",
+        duration_metric="branch_duration",
+    )
+
+    wrong_baseline = _parallel_scenario_result(
+        scenario_id="other",
+        critical_path_duration=20_000.0,
+        spread=2_000.0,
+        imbalance_ratio=1.1,
+    )
+
+    candidate = _parallel_scenario_result(
+        scenario_id="candidate",
+        critical_path_duration=18_000.0,
+        spread=1_000.0,
+        imbalance_ratio=1.05,
+    )
+
+    with pytest.raises(
+        DataValidationError,
+        match=(
+            "expected baseline scenario 'baseline', "
+            "but received 'other'"
+        ),
+    ):
+        compare_parallel_scenarios(
+            analysis=analysis,
+            baseline=wrong_baseline,
+            candidate=candidate,
+        )
+
+
+def test_parallel_comparison_rejects_different_units() -> None:
+    """Parallel duration results must use the same unit."""
+    analysis = ParallelAnalysisConfig(
+        id="test-sharding",
+        baseline="baseline",
+        candidate="candidate",
+        duration_metric="branch_duration",
+    )
+
+    baseline = _parallel_scenario_result(
+        scenario_id="baseline",
+        critical_path_duration=20_000.0,
+        spread=2_000.0,
+        imbalance_ratio=1.1,
+        duration_unit="milliseconds",
+    )
+
+    candidate = _parallel_scenario_result(
+        scenario_id="candidate",
+        critical_path_duration=18.0,
+        spread=1.0,
+        imbalance_ratio=1.05,
+        duration_unit="seconds",
+    )
+
+    with pytest.raises(
+        DataValidationError,
+        match="different duration units",
+    ):
+        compare_parallel_scenarios(
+            analysis=analysis,
+            baseline=baseline,
+            candidate=candidate,
         )

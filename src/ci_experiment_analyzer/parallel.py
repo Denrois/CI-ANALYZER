@@ -6,6 +6,9 @@ from statistics import fmean, median, stdev
 
 from ci_experiment_analyzer.errors import DataValidationError
 from ci_experiment_analyzer.models import (
+    MetricComparisonResult,
+    ParallelAnalysisConfig,
+    ParallelAnalysisResult,
     ParallelBranchMeasurement,
     ParallelMetricStats,
     ParallelRunGroup,
@@ -276,4 +279,98 @@ def calculate_parallel_scenario_result(
                 "imbalance ratio"
             ),
         ),
+    )
+
+
+def _compare_parallel_metric(
+    metric_id: str,
+    unit: str,
+    baseline: ParallelMetricStats,
+    candidate: ParallelMetricStats,
+) -> MetricComparisonResult:
+    """Compare one aggregated parallel metric using scenario medians."""
+    absolute_difference = (
+        candidate.median
+        - baseline.median
+    )
+
+    relative_difference_percent = (
+        None
+        if baseline.median == 0.0
+        else (
+            absolute_difference
+            / baseline.median
+            * 100.0
+        )
+    )
+
+    return MetricComparisonResult(
+        metric_id=metric_id,
+        unit=unit,
+        baseline_median=baseline.median,
+        candidate_median=candidate.median,
+        absolute_difference=absolute_difference,
+        relative_difference_percent=(
+            relative_difference_percent
+        ),
+    )
+
+
+def compare_parallel_scenarios(
+    analysis: ParallelAnalysisConfig,
+    baseline: ParallelScenarioResult,
+    candidate: ParallelScenarioResult,
+) -> ParallelAnalysisResult:
+    """Compare aggregated baseline and candidate parallel scenarios."""
+    if baseline.scenario_id != analysis.baseline:
+        raise DataValidationError(
+            f"Parallel analysis {analysis.id!r} expected "
+            f"baseline scenario {analysis.baseline!r}, "
+            f"but received {baseline.scenario_id!r}."
+        )
+
+    if candidate.scenario_id != analysis.candidate:
+        raise DataValidationError(
+            f"Parallel analysis {analysis.id!r} expected "
+            f"candidate scenario {analysis.candidate!r}, "
+            f"but received {candidate.scenario_id!r}."
+        )
+
+    if baseline.duration_unit != candidate.duration_unit:
+        raise DataValidationError(
+            f"Parallel analysis {analysis.id!r} cannot "
+            "compare scenarios with different duration units: "
+            f"{baseline.duration_unit!r} and "
+            f"{candidate.duration_unit!r}."
+        )
+
+    duration_unit = baseline.duration_unit
+
+    metric_comparisons = (
+        _compare_parallel_metric(
+            metric_id="critical_path_duration",
+            unit=duration_unit,
+            baseline=baseline.critical_path_duration,
+            candidate=candidate.critical_path_duration,
+        ),
+        _compare_parallel_metric(
+            metric_id="spread",
+            unit=duration_unit,
+            baseline=baseline.spread,
+            candidate=candidate.spread,
+        ),
+        _compare_parallel_metric(
+            metric_id="imbalance_ratio",
+            unit="ratio",
+            baseline=baseline.imbalance_ratio,
+            candidate=candidate.imbalance_ratio,
+        ),
+    )
+
+    return ParallelAnalysisResult(
+        analysis_id=analysis.id,
+        duration_metric_id=analysis.duration_metric,
+        baseline=baseline,
+        candidate=candidate,
+        metrics=metric_comparisons,
     )
