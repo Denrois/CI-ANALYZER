@@ -34,6 +34,106 @@ _COMPARISON_SUMMARY_COLUMNS = (
 )
 
 
+def _format_report_number(
+    value: float,
+) -> str:
+    """Format a report number without unstable trailing zeros."""
+    if value == 0.0:
+        return "0"
+
+    return f"{value:.6f}".rstrip("0").rstrip(".")
+
+
+def _format_report_percent(
+    value: float | None,
+) -> str:
+    """Format an optional percentage for a human-readable report."""
+    if value is None:
+        return "N/A"
+
+    return f"{_format_report_number(value)}%"
+
+
+def _format_report_boolean(
+    value: bool | None,
+) -> str:
+    """Format an optional boolean for a human-readable report."""
+    if value is None:
+        return "N/A"
+
+    return "yes" if value else "no"
+
+
+def _escape_markdown_cell(
+    value: str,
+) -> str:
+    """Escape text used inside a Markdown table cell."""
+    return (
+        value.replace("\n", " ")
+        .replace("|", r"\|")
+    )
+
+
+def _markdown_table(
+    headers: tuple[str, ...],
+    rows: tuple[tuple[str, ...], ...],
+) -> list[str]:
+    """Render a deterministic Markdown table."""
+    header_line = "| " + " | ".join(headers) + " |"
+    separator_line = (
+        "| "
+        + " | ".join("---" for _ in headers)
+        + " |"
+    )
+
+    lines = [
+        header_line,
+        separator_line,
+    ]
+
+    lines.extend(
+        "| " + " | ".join(row) + " |"
+        for row in rows
+    )
+
+    return lines
+
+
+def _analysis_warnings(
+    result: AnalysisResult,
+) -> tuple[str, ...]:
+    """Collect interpretation and data-consistency warnings."""
+    warnings: list[str] = []
+
+    for impact in result.local_total_impacts:
+        if impact.warning is not None:
+            warnings.append(
+                f"Comparison {impact.comparison_id!r}: "
+                f"{impact.warning}"
+            )
+
+    for analysis in result.parallel_analyses:
+        parallel_scenarios = (
+            ("baseline", analysis.baseline),
+            ("candidate", analysis.candidate),
+        )
+
+        for scenario_role, scenario in parallel_scenarios:
+            if scenario.branch_count_consistent:
+                continue
+
+            warnings.append(
+                f"Parallel analysis {analysis.analysis_id!r}, "
+                f"{scenario_role} scenario "
+                f"{scenario.scenario_id!r}: branch count "
+                f"varies from "
+                f"{scenario.branch_count_minimum} to "
+                f"{scenario.branch_count_maximum}."
+            )
+
+    return tuple(warnings)
+
+
 def _metric_stats_to_dict(
     metric: MetricStats,
 ) -> dict[str, object]:
@@ -360,6 +460,513 @@ def comparison_summary_to_csv(
     )
 
     return stream.getvalue()
+
+
+def analysis_result_to_markdown(
+    result: AnalysisResult,
+) -> str:
+    """Serialize a complete analysis as a Markdown report."""
+    lines: list[str] = [
+        f"# {_escape_markdown_cell(result.experiment.title)}",
+        "",
+        (
+            "Experiment ID: "
+            f"`{_escape_markdown_cell(result.experiment.id)}`"
+        ),
+        "",
+        "## Overview",
+        "",
+        f"- Configuration version: `{result.version}`",
+        f"- Scenario results: `{len(result.scenarios)}`",
+        f"- Ordinary comparisons: `{len(result.comparisons)}`",
+        f"- Parallel analyses: `{len(result.parallel_analyses)}`",
+        "",
+        "## Scenario statistics",
+        "",
+    ]
+
+    if not result.scenarios:
+        lines.extend(
+            [
+                "No scenario statistics were produced.",
+                "",
+            ]
+        )
+    else:
+        for scenario in result.scenarios:
+            lines.extend(
+                [
+                    (
+                        "### "
+                        f"`{_escape_markdown_cell(scenario.scenario_id)}`"
+                    ),
+                    "",
+                ]
+            )
+
+            metric_rows = tuple(
+                (
+                    _escape_markdown_cell(metric.metric_id),
+                    _escape_markdown_cell(metric.unit),
+                    _escape_markdown_cell(metric.role),
+                    str(metric.count),
+                    _format_report_number(metric.median),
+                    _format_report_number(metric.mean),
+                    _format_report_number(metric.minimum),
+                    _format_report_number(metric.maximum),
+                    _format_report_number(
+                        metric.standard_deviation
+                    ),
+                )
+                for metric in scenario.metrics
+            )
+
+            lines.extend(
+                _markdown_table(
+                    headers=(
+                        "Metric",
+                        "Unit",
+                        "Role",
+                        "Count",
+                        "Median",
+                        "Mean",
+                        "Minimum",
+                        "Maximum",
+                        "Standard deviation",
+                    ),
+                    rows=metric_rows,
+                )
+            )
+            lines.append("")
+
+    lines.extend(
+        [
+            "## Comparisons",
+            "",
+        ]
+    )
+
+    if not result.comparisons:
+        lines.extend(
+            [
+                "No ordinary comparisons were configured.",
+                "",
+            ]
+        )
+    else:
+        for comparison in result.comparisons:
+            lines.extend(
+                [
+                    (
+                        "### "
+                        f"`{_escape_markdown_cell(comparison.comparison_id)}`"
+                    ),
+                    "",
+                    (
+                        "Baseline: "
+                        f"`{_escape_markdown_cell(
+                            comparison.baseline_scenario_id
+                        )}`"
+                    ),
+                    "",
+                    (
+                        "Candidate: "
+                        f"`{_escape_markdown_cell(
+                            comparison.candidate_scenario_id
+                        )}`"
+                    ),
+                    "",
+                ]
+            )
+
+            comparison_rows = tuple(
+                (
+                    _escape_markdown_cell(metric.metric_id),
+                    _escape_markdown_cell(metric.unit),
+                    _format_report_number(
+                        metric.baseline_median
+                    ),
+                    _format_report_number(
+                        metric.candidate_median
+                    ),
+                    _format_report_number(
+                        metric.absolute_difference
+                    ),
+                    _format_report_percent(
+                        metric.relative_difference_percent
+                    ),
+                )
+                for metric in comparison.metrics
+            )
+
+            lines.extend(
+                _markdown_table(
+                    headers=(
+                        "Metric",
+                        "Unit",
+                        "Baseline median",
+                        "Candidate median",
+                        "Absolute difference",
+                        "Relative difference",
+                    ),
+                    rows=comparison_rows,
+                )
+            )
+            lines.append("")
+
+    lines.extend(
+        [
+            "## Local-versus-total impact",
+            "",
+        ]
+    )
+
+    if not result.local_total_impacts:
+        lines.extend(
+            [
+                (
+                    "No local-versus-total impact "
+                    "classifications were produced."
+                ),
+                "",
+            ]
+        )
+    else:
+        impact_rows = tuple(
+            (
+                _escape_markdown_cell(
+                    impact.comparison_id
+                ),
+                _escape_markdown_cell(
+                    impact.phase_metric_id
+                ),
+                _escape_markdown_cell(
+                    impact.total_metric_id
+                ),
+                _format_report_percent(
+                    impact.phase_relative_difference_percent
+                ),
+                _format_report_percent(
+                    impact.total_relative_difference_percent
+                ),
+                _format_report_boolean(
+                    impact.substantial_local_improvement
+                ),
+                _format_report_boolean(
+                    impact.limited_total_improvement
+                ),
+                _format_report_boolean(
+                    impact.limited_end_to_end_impact
+                ),
+            )
+            for impact in result.local_total_impacts
+        )
+
+        lines.extend(
+            _markdown_table(
+                headers=(
+                    "Comparison",
+                    "Phase metric",
+                    "Total metric",
+                    "Phase change",
+                    "Total change",
+                    "Substantial local improvement",
+                    "Limited total improvement",
+                    "Limited end-to-end impact",
+                ),
+                rows=impact_rows,
+            )
+        )
+        lines.append("")
+
+    lines.extend(
+        [
+            "## Bottleneck candidates",
+            "",
+        ]
+    )
+
+    if not result.bottleneck_candidates:
+        lines.extend(
+            [
+                "No bottleneck candidates were identified.",
+                "",
+            ]
+        )
+    else:
+        bottleneck_rows = tuple(
+            (
+                _escape_markdown_cell(
+                    candidate.scenario_id
+                ),
+                _escape_markdown_cell(
+                    ", ".join(
+                        candidate.phase_metric_ids
+                    )
+                ),
+                _format_report_number(candidate.median),
+                _escape_markdown_cell(candidate.unit),
+                _format_report_boolean(
+                    candidate.is_tie
+                ),
+            )
+            for candidate in result.bottleneck_candidates
+        )
+
+        lines.extend(
+            _markdown_table(
+                headers=(
+                    "Scenario",
+                    "Phase metrics",
+                    "Median",
+                    "Unit",
+                    "Tie",
+                ),
+                rows=bottleneck_rows,
+            )
+        )
+        lines.append("")
+
+    lines.extend(
+        [
+            "## Parallel-stage analysis",
+            "",
+        ]
+    )
+
+    if not result.parallel_analyses:
+        lines.extend(
+            [
+                "No parallel analyses were configured.",
+                "",
+            ]
+        )
+    else:
+        for analysis in result.parallel_analyses:
+            lines.extend(
+                [
+                    (
+                        "### "
+                        f"`{_escape_markdown_cell(analysis.analysis_id)}`"
+                    ),
+                    "",
+                    (
+                        "Source duration metric: "
+                        f"`{_escape_markdown_cell(
+                            analysis.duration_metric_id
+                        )}`"
+                    ),
+                    "",
+                ]
+            )
+
+            scenario_rows = tuple(
+                (
+                    scenario_role,
+                    _escape_markdown_cell(
+                        parallel_scenario.scenario_id
+                    ),
+                    str(
+                        parallel_scenario.branch_count_minimum
+                    ),
+                    str(
+                        parallel_scenario.branch_count_maximum
+                    ),
+                    _format_report_boolean(
+                        parallel_scenario.branch_count_consistent
+                    ),
+                    _format_report_number(
+                        parallel_scenario
+                        .critical_path_duration.median
+                    ),
+                    _format_report_number(
+                        parallel_scenario.spread.median
+                    ),
+                    _format_report_number(
+                        parallel_scenario.imbalance_ratio.median
+                    ),
+                )
+                for scenario_role, parallel_scenario in (
+                    ("Baseline", analysis.baseline),
+                    ("Candidate", analysis.candidate),
+                )
+            )
+
+            lines.extend(
+                _markdown_table(
+                    headers=(
+                        "Role",
+                        "Scenario",
+                        "Minimum branches",
+                        "Maximum branches",
+                        "Consistent",
+                        "Critical path median",
+                        "Spread median",
+                        "Imbalance ratio median",
+                    ),
+                    rows=scenario_rows,
+                )
+            )
+            lines.append("")
+
+            lines.extend(
+                [
+                    "#### Comparison metrics",
+                    "",
+                ]
+            )
+
+            parallel_comparison_rows = tuple(
+                (
+                    _escape_markdown_cell(metric.metric_id),
+                    _escape_markdown_cell(metric.unit),
+                    _format_report_number(
+                        metric.baseline_median
+                    ),
+                    _format_report_number(
+                        metric.candidate_median
+                    ),
+                    _format_report_number(
+                        metric.absolute_difference
+                    ),
+                    _format_report_percent(
+                        metric.relative_difference_percent
+                    ),
+                )
+                for metric in analysis.metrics
+            )
+
+            lines.extend(
+                _markdown_table(
+                    headers=(
+                        "Metric",
+                        "Unit",
+                        "Baseline median",
+                        "Candidate median",
+                        "Absolute difference",
+                        "Relative difference",
+                    ),
+                    rows=parallel_comparison_rows,
+                )
+            )
+            lines.append("")
+
+            for scenario_role, parallel_scenario in (
+                    ("Baseline", analysis.baseline),
+                    ("Candidate", analysis.candidate),
+            ):
+                lines.extend(
+                    [
+                        (
+                            f"#### {scenario_role} runs: "
+                            f"`{_escape_markdown_cell(
+                                parallel_scenario.scenario_id
+                            )}`"
+                        ),
+                        "",
+                    ]
+                )
+
+                if not parallel_scenario.runs:
+                    lines.extend(
+                        [
+                            "No run-level results were recorded.",
+                            "",
+                        ]
+                    )
+                    continue
+
+                run_rows = tuple(
+                    (
+                        _escape_markdown_cell(run.run_id),
+                        str(run.branch_count),
+                        _format_report_number(
+                            run.critical_path_duration
+                        ),
+                        _format_report_number(
+                            run.minimum_branch_duration
+                        ),
+                        _format_report_number(
+                            run.mean_branch_duration
+                        ),
+                        _format_report_number(run.spread),
+                        _format_report_number(
+                            run.imbalance_ratio
+                        ),
+                        _escape_markdown_cell(
+                            ", ".join(
+                                run.slowest_branch_ids
+                            )
+                        ),
+                        _format_report_boolean(
+                            run.is_slowest_tie
+                        ),
+                    )
+                    for run in parallel_scenario.runs
+                )
+
+                lines.extend(
+                    _markdown_table(
+                        headers=(
+                            "Run",
+                            "Branches",
+                            "Critical path",
+                            "Minimum branch",
+                            "Mean branch",
+                            "Spread",
+                            "Imbalance ratio",
+                            "Slowest branches",
+                            "Tie",
+                        ),
+                        rows=run_rows,
+                    )
+                )
+                lines.append("")
+
+    lines.extend(
+        [
+            "## Warnings",
+            "",
+        ]
+    )
+
+    warnings = _analysis_warnings(result)
+
+    if warnings:
+        lines.extend(
+            f"- {_escape_markdown_cell(warning)}"
+            for warning in warnings
+        )
+        lines.append("")
+    else:
+        lines.extend(
+            [
+                "No warnings.",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "## Limitations",
+            "",
+            "- Comparisons use scenario medians.",
+            (
+                "- Bottleneck candidates are based only on "
+                "configured measured phase durations."
+            ),
+            (
+                "- Parallel critical-path duration covers only "
+                "the configured parallel stage."
+            ),
+            (
+                "- The report does not reconstruct the dependency "
+                "graph of the complete CI pipeline."
+            ),
+        ]
+    )
+
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def write_analysis_report(
