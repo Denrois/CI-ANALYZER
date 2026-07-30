@@ -1,5 +1,8 @@
 """Tests for analysis report serialization."""
 
+import csv
+from io import StringIO
+
 from ci_experiment_analyzer.models import (
     AnalysisResult,
     BottleneckCandidateResult,
@@ -14,7 +17,30 @@ from ci_experiment_analyzer.models import (
     ParallelScenarioResult,
     ScenarioResult,
 )
-from ci_experiment_analyzer.reports import analysis_result_to_dict
+from ci_experiment_analyzer.reports import (
+    analysis_result_to_dict,
+    comparison_summary_to_csv,
+)
+
+
+def test_comparison_summary_csv_has_stable_empty_structure() -> None:
+    """A result without comparisons should still contain a header."""
+    result = AnalysisResult(
+        version=1,
+        experiment=ExperimentMetadata(
+            id="empty-example",
+            title="Empty example",
+        ),
+        scenarios=(),
+        comparisons=(),
+    )
+
+    assert comparison_summary_to_csv(result) == (
+        "analysis_type,analysis_id,baseline_scenario,"
+        "candidate_scenario,source_metric_id,metric_id,"
+        "unit,baseline_median,candidate_median,"
+        "absolute_difference,relative_difference_percent\n"
+    )
 
 
 def test_analysis_result_has_stable_json_structure() -> None:
@@ -215,6 +241,129 @@ def _parallel_stats(
         maximum=value,
         standard_deviation=0.0,
     )
+
+
+def test_comparison_summary_csv_flattens_all_comparisons() -> None:
+    """Ordinary and parallel comparisons should share one CSV schema."""
+    baseline = ParallelScenarioResult(
+        scenario_id="baseline",
+        duration_unit="milliseconds",
+        runs=(),
+        branch_count_minimum=2,
+        branch_count_maximum=2,
+        branch_count_consistent=True,
+        critical_path_duration=_parallel_stats(
+            40_000.0
+        ),
+        spread=_parallel_stats(20_000.0),
+        imbalance_ratio=_parallel_stats(
+            4.0 / 3.0
+        ),
+    )
+
+    candidate = ParallelScenarioResult(
+        scenario_id="timing-based",
+        duration_unit="milliseconds",
+        runs=(),
+        branch_count_minimum=2,
+        branch_count_maximum=2,
+        branch_count_consistent=True,
+        critical_path_duration=_parallel_stats(
+            30_000.0
+        ),
+        spread=_parallel_stats(0.0),
+        imbalance_ratio=_parallel_stats(1.0),
+    )
+
+    result = AnalysisResult(
+        version=1,
+        experiment=ExperimentMetadata(
+            id="summary-example",
+            title="Summary example",
+        ),
+        scenarios=(),
+        comparisons=(
+            ComparisonResult(
+                comparison_id="cache-impact",
+                baseline_scenario_id="baseline",
+                candidate_scenario_id="optimized",
+                metrics=(
+                    MetricComparisonResult(
+                        metric_id="total_duration",
+                        unit="milliseconds",
+                        baseline_median=0.0,
+                        candidate_median=1_000.0,
+                        absolute_difference=1_000.0,
+                        relative_difference_percent=None,
+                    ),
+                ),
+            ),
+        ),
+        parallel_analyses=(
+            ParallelAnalysisResult(
+                analysis_id="test-sharding",
+                duration_metric_id="shard_duration",
+                baseline=baseline,
+                candidate=candidate,
+                metrics=(
+                    MetricComparisonResult(
+                        metric_id=(
+                            "critical_path_duration"
+                        ),
+                        unit="milliseconds",
+                        baseline_median=40_000.0,
+                        candidate_median=30_000.0,
+                        absolute_difference=-10_000.0,
+                        relative_difference_percent=-25.0,
+                    ),
+                ),
+            ),
+        ),
+    )
+
+    content = comparison_summary_to_csv(result)
+
+    assert content.splitlines()[0] == (
+        "analysis_type,analysis_id,baseline_scenario,"
+        "candidate_scenario,source_metric_id,metric_id,"
+        "unit,baseline_median,candidate_median,"
+        "absolute_difference,relative_difference_percent"
+    )
+
+    rows = list(
+        csv.DictReader(
+            StringIO(content)
+        )
+    )
+
+    assert rows == [
+        {
+            "analysis_type": "comparison",
+            "analysis_id": "cache-impact",
+            "baseline_scenario": "baseline",
+            "candidate_scenario": "optimized",
+            "source_metric_id": "total_duration",
+            "metric_id": "total_duration",
+            "unit": "milliseconds",
+            "baseline_median": "0.0",
+            "candidate_median": "1000.0",
+            "absolute_difference": "1000.0",
+            "relative_difference_percent": "",
+        },
+        {
+            "analysis_type": "parallel_analysis",
+            "analysis_id": "test-sharding",
+            "baseline_scenario": "baseline",
+            "candidate_scenario": "timing-based",
+            "source_metric_id": "shard_duration",
+            "metric_id": "critical_path_duration",
+            "unit": "milliseconds",
+            "baseline_median": "40000.0",
+            "candidate_median": "30000.0",
+            "absolute_difference": "-10000.0",
+            "relative_difference_percent": "-25.0",
+        },
+    ]
 
 
 def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:

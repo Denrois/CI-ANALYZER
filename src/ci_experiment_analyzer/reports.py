@@ -1,6 +1,8 @@
-"""Generate machine-readable CI experiment reports."""
+"""Generate CI experiment reports."""
 
+import csv
 import json
+from io import StringIO
 from pathlib import Path
 
 from ci_experiment_analyzer.models import (
@@ -15,6 +17,20 @@ from ci_experiment_analyzer.models import (
     ParallelRunMetrics,
     ParallelScenarioResult,
     ScenarioResult,
+)
+
+_COMPARISON_SUMMARY_COLUMNS = (
+    "analysis_type",
+    "analysis_id",
+    "baseline_scenario",
+    "candidate_scenario",
+    "source_metric_id",
+    "metric_id",
+    "unit",
+    "baseline_median",
+    "candidate_median",
+    "absolute_difference",
+    "relative_difference_percent",
 )
 
 
@@ -220,6 +236,77 @@ def _parallel_analysis_result_to_dict(
     }
 
 
+def _comparison_summary_row(
+    analysis_type: str,
+    analysis_id: str,
+    baseline_scenario_id: str,
+    candidate_scenario_id: str,
+    source_metric_id: str,
+    metric: MetricComparisonResult,
+) -> dict[str, object]:
+    """Create one flat comparison summary row."""
+    return {
+        "analysis_type": analysis_type,
+        "analysis_id": analysis_id,
+        "baseline_scenario": baseline_scenario_id,
+        "candidate_scenario": candidate_scenario_id,
+        "source_metric_id": source_metric_id,
+        "metric_id": metric.metric_id,
+        "unit": metric.unit,
+        "baseline_median": metric.baseline_median,
+        "candidate_median": metric.candidate_median,
+        "absolute_difference": metric.absolute_difference,
+        "relative_difference_percent": (
+            metric.relative_difference_percent
+        ),
+    }
+
+
+def _comparison_summary_rows(
+    result: AnalysisResult,
+) -> tuple[dict[str, object], ...]:
+    """Flatten ordinary and parallel comparisons into CSV rows."""
+    rows: list[dict[str, object]] = []
+
+    for comparison in result.comparisons:
+        for metric in comparison.metrics:
+            rows.append(
+                _comparison_summary_row(
+                    analysis_type="comparison",
+                    analysis_id=comparison.comparison_id,
+                    baseline_scenario_id=(
+                        comparison.baseline_scenario_id
+                    ),
+                    candidate_scenario_id=(
+                        comparison.candidate_scenario_id
+                    ),
+                    source_metric_id=metric.metric_id,
+                    metric=metric,
+                )
+            )
+
+    for analysis in result.parallel_analyses:
+        for metric in analysis.metrics:
+            rows.append(
+                _comparison_summary_row(
+                    analysis_type="parallel_analysis",
+                    analysis_id=analysis.analysis_id,
+                    baseline_scenario_id=(
+                        analysis.baseline.scenario_id
+                    ),
+                    candidate_scenario_id=(
+                        analysis.candidate.scenario_id
+                    ),
+                    source_metric_id=(
+                        analysis.duration_metric_id
+                    ),
+                    metric=metric,
+                )
+            )
+
+    return tuple(rows)
+
+
 def analysis_result_to_dict(
     result: AnalysisResult,
 ) -> dict[str, object]:
@@ -253,6 +340,26 @@ def analysis_result_to_dict(
             for analysis in result.parallel_analyses
         ],
     }
+
+
+def comparison_summary_to_csv(
+    result: AnalysisResult,
+) -> str:
+    """Serialize comparison results as a flat CSV table."""
+    stream = StringIO(newline="")
+
+    writer = csv.DictWriter(
+        stream,
+        fieldnames=_COMPARISON_SUMMARY_COLUMNS,
+        lineterminator="\n",
+    )
+
+    writer.writeheader()
+    writer.writerows(
+        _comparison_summary_rows(result)
+    )
+
+    return stream.getvalue()
 
 
 def write_analysis_report(
