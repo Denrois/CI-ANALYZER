@@ -1,7 +1,9 @@
 """Tests for analysis report serialization."""
 
 import csv
+import json
 from io import StringIO
+from pathlib import Path
 
 from ci_experiment_analyzer.models import (
     AnalysisResult,
@@ -21,6 +23,7 @@ from ci_experiment_analyzer.reports import (
     analysis_result_to_dict,
     analysis_result_to_markdown,
     comparison_summary_to_csv,
+    write_analysis_reports,
 )
 
 
@@ -103,6 +106,60 @@ def test_comparison_summary_csv_has_stable_empty_structure() -> None:
         "unit,baseline_median,candidate_median,"
         "absolute_difference,relative_difference_percent\n"
     )
+
+
+def test_write_analysis_reports_writes_all_formats(
+    tmp_path: Path,
+) -> None:
+    """All supported report formats should be written together."""
+    result = AnalysisResult(
+        version=1,
+        experiment=ExperimentMetadata(
+            id="file-output-example",
+            title="File output example",
+        ),
+        scenarios=(),
+        comparisons=(),
+    )
+
+    output_directory = tmp_path / "nested" / "report"
+
+    report_paths = write_analysis_reports(
+        result,
+        output_directory,
+    )
+
+    assert report_paths.analysis_json == (
+        output_directory / "analysis.json"
+    )
+    assert report_paths.summary_csv == (
+        output_directory / "summary.csv"
+    )
+    assert report_paths.report_markdown == (
+        output_directory / "report.md"
+    )
+
+    assert report_paths.analysis_json.is_file()
+    assert report_paths.summary_csv.is_file()
+    assert report_paths.report_markdown.is_file()
+
+    json_content = json.loads(
+        report_paths.analysis_json.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert json_content == analysis_result_to_dict(
+        result
+    )
+
+    assert report_paths.summary_csv.read_text(
+        encoding="utf-8"
+    ) == comparison_summary_to_csv(result)
+
+    assert report_paths.report_markdown.read_text(
+        encoding="utf-8"
+    ) == analysis_result_to_markdown(result)
 
 
 def test_analysis_result_has_stable_json_structure() -> None:

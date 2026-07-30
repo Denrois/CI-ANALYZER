@@ -2,6 +2,7 @@
 
 import csv
 import json
+from dataclasses import dataclass
 from io import StringIO
 from pathlib import Path
 
@@ -18,6 +19,16 @@ from ci_experiment_analyzer.models import (
     ParallelScenarioResult,
     ScenarioResult,
 )
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisReportPaths:
+    """Paths of generated experiment report files."""
+
+    analysis_json: Path
+    summary_csv: Path
+    report_markdown: Path
+
 
 _COMPARISON_SUMMARY_COLUMNS = (
     "analysis_type",
@@ -991,6 +1002,44 @@ def write_analysis_report(
     report_path.write_text(
         report_content + "\n",
         encoding="utf-8",
+        newline="",
     )
 
     return report_path
+
+
+def write_analysis_reports(
+    result: AnalysisResult,
+    output_directory: str | Path,
+) -> AnalysisReportPaths:
+    """Write JSON, CSV, and Markdown experiment reports."""
+    destination = Path(output_directory)
+    destination.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    analysis_json_path = write_analysis_report(
+        result,
+        destination,
+    )
+    summary_csv_path = destination / "summary.csv"
+    report_markdown_path = destination / "report.md"
+
+    summary_csv_path.write_text(
+        comparison_summary_to_csv(result),
+        encoding="utf-8",
+        newline="",
+    )
+
+    report_markdown_path.write_text(
+        analysis_result_to_markdown(result),
+        encoding="utf-8",
+        newline="",
+    )
+
+    return AnalysisReportPaths(
+        analysis_json=analysis_json_path,
+        summary_csv=summary_csv_path,
+        report_markdown=report_markdown_path,
+    )
