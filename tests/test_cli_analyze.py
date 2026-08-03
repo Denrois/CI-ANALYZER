@@ -1,5 +1,6 @@
 """Integration tests for the analyze CLI command."""
 
+import csv
 import json
 from pathlib import Path
 
@@ -8,11 +9,11 @@ import pytest
 from ci_experiment_analyzer.cli import main
 
 
-def test_analyze_command_writes_json_report(
+def test_analyze_command_writes_all_report_formats(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """The CLI should analyze configured CSV scenarios end to end."""
+    """The CLI should write JSON, CSV, and Markdown reports."""
     data_directory = tmp_path / "data"
     data_directory.mkdir()
 
@@ -102,8 +103,12 @@ comparisons:
     assert exit_code == 0
 
     report_path = output_directory / "analysis.json"
+    summary_path = output_directory / "summary.csv"
+    markdown_path = output_directory / "report.md"
 
     assert report_path.is_file()
+    assert summary_path.is_file()
+    assert markdown_path.is_file()
 
     report = json.loads(
         report_path.read_text(encoding="utf-8")
@@ -232,10 +237,82 @@ comparisons:
 
     assert report["parallel_analyses"] == []
 
+    summary_rows = list(
+        csv.DictReader(
+            summary_path.read_text(
+                encoding="utf-8"
+            ).splitlines()
+        )
+    )
+
+    assert summary_rows == [
+        {
+            "analysis_type": "comparison",
+            "analysis_id": "cache-impact",
+            "baseline_scenario": "baseline",
+            "candidate_scenario": "optimized",
+            "source_metric_id": "install_duration",
+            "metric_id": "install_duration",
+            "unit": "milliseconds",
+            "baseline_median": "12000.0",
+            "candidate_median": "9000.0",
+            "absolute_difference": "-3000.0",
+            "relative_difference_percent": "-25.0",
+        },
+        {
+            "analysis_type": "comparison",
+            "analysis_id": "cache-impact",
+            "baseline_scenario": "baseline",
+            "candidate_scenario": "optimized",
+            "source_metric_id": "total_duration",
+            "metric_id": "total_duration",
+            "unit": "milliseconds",
+            "baseline_median": "55000.0",
+            "candidate_median": "48000.0",
+            "absolute_difference": "-7000.0",
+            "relative_difference_percent": (
+                "-12.727272727272727"
+            ),
+        },
+    ]
+
+    markdown = markdown_path.read_text(
+        encoding="utf-8"
+    )
+
+    assert markdown.startswith(
+        "# Minimal cache experiment\n"
+    )
+
+    assert "## Overview" in markdown
+    assert "## Scenario statistics" in markdown
+    assert "## Comparisons" in markdown
+    assert "## Local-versus-total impact" in markdown
+    assert "## Bottleneck candidates" in markdown
+    assert "## Parallel-stage analysis" in markdown
+    assert "## Warnings" in markdown
+    assert "## Limitations" in markdown
+
+    assert "`cache-impact`" in markdown
+
+    assert (
+               "| install_duration | milliseconds | "
+               "12000 | 9000 | -3000 | -25% |"
+           ) in markdown
+
+    assert (
+               "| total_duration | milliseconds | "
+               "55000 | 48000 | -7000 | -12.727273% |"
+           ) in markdown
+
+    assert "No parallel analyses were configured." in markdown
+
     output = capsys.readouterr().out
 
-    assert "Analysis written to" in output
-    assert "analysis.json" in output
+    assert "Analysis written to:" in output
+    assert str(report_path) in output
+    assert str(summary_path) in output
+    assert str(markdown_path) in output
 
 
 def test_analyze_handles_single_run_and_zero_baseline(
@@ -318,6 +395,13 @@ comparisons:
     assert exit_code == 0
 
     report_path = output_directory / "analysis.json"
+    summary_path = output_directory / "summary.csv"
+    markdown_path = output_directory / "report.md"
+
+    assert report_path.is_file()
+    assert summary_path.is_file()
+    assert markdown_path.is_file()
+
     report = json.loads(
         report_path.read_text(encoding="utf-8")
     )
@@ -366,12 +450,43 @@ comparisons:
 
     assert report["parallel_analyses"] == []
 
+    summary_rows = list(
+        csv.DictReader(
+            summary_path.read_text(
+                encoding="utf-8"
+            ).splitlines()
+        )
+    )
 
-def test_analyze_command_writes_parallel_analysis_report(
+    assert len(summary_rows) == 1
+
+    summary_row = summary_rows[0]
+
+    assert summary_row["analysis_type"] == "comparison"
+    assert summary_row["analysis_id"] == (
+        "zero-baseline-impact"
+    )
+    assert summary_row["metric_id"] == "total_duration"
+    assert summary_row["baseline_median"] == "0.0"
+    assert summary_row["candidate_median"] == "1000.0"
+    assert summary_row["absolute_difference"] == "1000.0"
+    assert summary_row["relative_difference_percent"] == ""
+
+    markdown = markdown_path.read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+               "| total_duration | milliseconds | "
+               "0 | 1000 | 1000 | N/A |"
+           ) in markdown
+
+
+def test_analyze_command_writes_parallel_report_formats(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """The CLI should analyze parallel branch data end to end."""
+    """The CLI should write all formats for parallel analysis."""
     data_directory = tmp_path / "data"
     data_directory.mkdir()
 
@@ -458,8 +573,12 @@ parallel_analyses:
     assert exit_code == 0
 
     report_path = output_directory / "analysis.json"
+    summary_path = output_directory / "summary.csv"
+    markdown_path = output_directory / "report.md"
 
     assert report_path.is_file()
+    assert summary_path.is_file()
+    assert markdown_path.is_file()
 
     report = json.loads(
         report_path.read_text(encoding="utf-8")
@@ -620,7 +739,130 @@ parallel_analyses:
         == pytest.approx(-500.0 / 17.0)
     )
 
+    summary_rows = list(
+        csv.DictReader(
+            summary_path.read_text(
+                encoding="utf-8"
+            ).splitlines()
+        )
+    )
+
+    assert len(summary_rows) == 3
+
+    assert [
+               row["metric_id"]
+               for row in summary_rows
+           ] == [
+               "critical_path_duration",
+               "spread",
+               "imbalance_ratio",
+           ]
+
+    for row in summary_rows:
+        assert row["analysis_type"] == (
+            "parallel_analysis"
+        )
+        assert row["analysis_id"] == "test-sharding"
+        assert row["baseline_scenario"] == "baseline"
+        assert row["candidate_scenario"] == (
+            "timing-based"
+        )
+        assert row["source_metric_id"] == (
+            "shard_duration"
+        )
+
+    summary_by_metric = {
+        row["metric_id"]: row
+        for row in summary_rows
+    }
+
+    critical_path_summary = summary_by_metric[
+        "critical_path_duration"
+    ]
+
+    assert critical_path_summary["unit"] == "milliseconds"
+    assert critical_path_summary["baseline_median"] == (
+        "35000.0"
+    )
+    assert critical_path_summary["candidate_median"] == (
+        "25000.0"
+    )
+    assert critical_path_summary["absolute_difference"] == (
+        "-10000.0"
+    )
+    assert float(
+        critical_path_summary[
+            "relative_difference_percent"
+        ]
+    ) == pytest.approx(-28.5714285714)
+
+    spread_summary = summary_by_metric["spread"]
+
+    assert spread_summary["unit"] == "milliseconds"
+    assert spread_summary["baseline_median"] == "20000.0"
+    assert spread_summary["candidate_median"] == "0.0"
+    assert spread_summary["absolute_difference"] == (
+        "-20000.0"
+    )
+    assert spread_summary[
+               "relative_difference_percent"
+           ] == "-100.0"
+
+    imbalance_summary = summary_by_metric[
+        "imbalance_ratio"
+    ]
+
+    assert imbalance_summary["unit"] == "ratio"
+    assert float(
+        imbalance_summary["baseline_median"]
+    ) == pytest.approx(17.0 / 12.0)
+    assert imbalance_summary["candidate_median"] == "1.0"
+    assert float(
+        imbalance_summary["absolute_difference"]
+    ) == pytest.approx(-5.0 / 12.0)
+    assert float(
+        imbalance_summary[
+            "relative_difference_percent"
+        ]
+    ) == pytest.approx(-500.0 / 17.0)
+
+    markdown = markdown_path.read_text(
+        encoding="utf-8"
+    )
+
+    assert markdown.startswith(
+        "# Parallel stage example\n"
+    )
+
+    assert "## Parallel-stage analysis" in markdown
+    assert "`test-sharding`" in markdown
+    assert "Source duration metric: `shard_duration`" in markdown
+
+    assert "baseline-1" in markdown
+    assert "baseline-2" in markdown
+    assert "candidate-1" in markdown
+    assert "candidate-2" in markdown
+
+    assert "shard-1, shard-2" in markdown
+
+    assert (
+               "| critical_path_duration | milliseconds | "
+               "35000 | 25000 | -10000 | -28.571429% |"
+           ) in markdown
+
+    assert (
+               "| spread | milliseconds | "
+               "20000 | 0 | -20000 | -100% |"
+           ) in markdown
+
+    assert (
+               "| imbalance_ratio | ratio | "
+               "1.416667 | 1 | -0.416667 | -29.411765% |"
+           ) in markdown
+
     output = capsys.readouterr().out
 
-    assert "Analysis written to" in output
+    assert "Analysis written to:" in output
     assert str(report_path) in output
+    assert str(summary_path) in output
+    assert str(markdown_path) in output
