@@ -1,28 +1,35 @@
 # CI Experiment Analyzer
 
-A Python CLI tool for reproducible analysis of CI pipeline optimization experiments.
+A Python CLI tool for reproducible analysis of CI pipeline optimization
+experiments.
 
 ## Overview
 
-CI Experiment Analyzer is intended to help engineers evaluate whether changes to a CI pipeline produce meaningful and repeatable improvements.
+CI Experiment Analyzer is intended to help engineers evaluate whether
+changes to a CI pipeline produce meaningful and repeatable improvements.
 
-The project will support:
+The project currently supports:
 
-* loading experimental CI metrics;
-* comparing baseline and candidate scenarios;
-* calculating descriptive statistics;
-* separating local phase improvements from total pipeline impact;
-* identifying the longest measured phase;
-* analyzing parallel jobs and sharding balance;
-* generating JSON, CSV, and Markdown reports.
+- loading experimental CI metrics;
+- comparing baseline and candidate scenarios;
+- calculating descriptive statistics;
+- separating local phase improvements from total pipeline impact;
+- identifying the longest measured phase;
+- analyzing parallel jobs and sharding balance;
+- generating JSON, CSV, and Markdown reports.
 
 ## Project origin
 
-This project originated from a diploma thesis on CI/CD pipeline optimization.
+This project originated from a diploma thesis on CI/CD pipeline
+optimization.
 
-The original implementation analyzed a fixed set of thesis experiments, including dependency caching, Docker build caching, and timing-based test sharding.
+The original implementation analyzed a fixed set of thesis experiments,
+including dependency caching, Docker build caching, and timing-based test
+sharding.
 
-The goal of this repository is to redesign that prototype into a configurable and reusable Python CLI tool that can evaluate CI optimization experiments across different projects.
+The goal of this repository is to redesign that prototype into a
+configurable and reusable Python CLI tool that can evaluate CI
+optimization experiments across different projects.
 
 ## Project status
 
@@ -45,8 +52,7 @@ The project provides an installable Python package and a working
   count, median, mean, minimum, maximum, and sample standard deviation;
 - baseline-versus-candidate median comparison;
 - absolute and relative difference calculation;
-- stable machine-readable `analysis.json` report;
-- scenario-level statistics in the generated report;
+- scenario-level statistics in generated reports;
 - safe handling of single-observation scenarios;
 - safe handling of a zero baseline median;
 - minimal end-to-end example;
@@ -63,6 +69,11 @@ The project provides an installable Python package and a working
 - detection of substantial local improvements with limited end-to-end
   impact;
 - machine-readable impact classification and warnings in `analysis.json`;
+- machine-readable JSON report in `analysis.json`;
+- flat comparison summary in `summary.csv`;
+- human-readable Markdown report in `report.md`;
+- deterministic report formatting across Windows and Linux;
+- combined report generation through one `analyze` command;
 - configurable parallel branch identification through `run_id` and
   `branch_id` field mappings;
 - grouping of parallel branch records by CI run;
@@ -81,7 +92,6 @@ The project provides an installable Python package and a working
 ### Current limitations
 
 - comparisons currently use scenario medians;
-- output is currently limited to `analysis.json`;
 - bottleneck detection considers measured duration metrics with
   `role: phase` independently for each scenario;
 - parallel-stage analysis expects one input record per measured branch;
@@ -95,18 +105,46 @@ The project provides an installable Python package and a working
 
 ### Planned
 
-- Markdown and CSV reports;
 - generic timing-based shard planner;
 - extended thesis compatibility tests.
 
-
 ## Quick start
 
-The generated report is written to:
+Validate the included minimal example:
+
+```powershell
+ci-analyzer validate `
+  --config examples/minimal/experiment.yaml
+```
+
+Run the analysis:
+
+```powershell
+ci-analyzer analyze `
+  --config examples/minimal/experiment.yaml `
+  --output .tmp/minimal-report
+```
+
+The same analysis command on one line:
+
+```powershell
+ci-analyzer analyze --config examples/minimal/experiment.yaml --output .tmp/minimal-report
+```
+
+The command creates three report files:
 
 ```text
-.tmp/minimal-report/analysis.json
+.tmp/minimal-report/
+|-- analysis.json
+|-- summary.csv
+`-- report.md
 ```
+
+- `analysis.json` contains the complete machine-readable analysis;
+- `summary.csv` contains a flat table of ordinary and parallel comparison
+  metrics;
+- `report.md` contains a human-readable overview, statistics, comparisons,
+  warnings, and limitations.
 
 Run the included parallel-stage example:
 
@@ -129,17 +167,29 @@ The same analysis command on one line:
 ci-analyzer analyze --config examples/parallel-stage/experiment.yaml --output .tmp/parallel-stage-report
 ```
 
-The generated parallel-stage report is written to:
+The command creates the same three report formats:
 
 ```text
-.tmp/parallel-stage-report/analysis.json
+.tmp/parallel-stage-report/
+|-- analysis.json
+|-- summary.csv
+`-- report.md
 ```
+
+For a parallel analysis, `summary.csv` contains rows for:
+
+- `critical_path_duration`;
+- `spread`;
+- `imbalance_ratio`.
+
+The Markdown report also includes per-run branch metrics and branch-count
+consistency information.
 
 See
 [`examples/parallel-stage/README.md`](examples/parallel-stage/README.md)
 for the input structure, expected calculations, and report semantics.
 
-Duration metrics are normalized to milliseconds in the generated report,
+Duration metrics are normalized to milliseconds in generated reports,
 regardless of whether their source unit is configured as milliseconds,
 seconds, or minutes.
 
@@ -151,7 +201,8 @@ The analyzer currently supports three scenario input formats:
 - JSON;
 - JSONL.
 
-The source format is selected independently for each scenario in the YAML configuration:
+The source format is selected independently for each scenario in the YAML
+configuration:
 
 ```yaml
 scenarios:
@@ -198,7 +249,8 @@ JSONL input must contain one JSON object per non-empty line:
 ```
 
 All three formats use the same configurable field mapping, validation,
-normalization, statistical calculations, comparisons, and report generation.
+normalization, statistical calculations, comparisons, and report
+generation.
 
 ## Impact analysis thresholds
 
@@ -241,16 +293,24 @@ candidate - baseline
 For duration metrics, negative relative differences represent
 improvements and positive relative differences represent regressions.
 
+## Analysis reports
 
-## Analysis report
-
-The `analyze` command writes a machine-readable report to:
+The `analyze` command writes three report formats to the configured output
+directory:
 
 ```text
-<output-directory>/analysis.json
+<output-directory>/
+|-- analysis.json
+|-- summary.csv
+`-- report.md
 ```
 
-The report contains:
+### JSON report
+
+`analysis.json` is the complete machine-readable representation of the
+analysis.
+
+It contains:
 
 - configuration version and experiment metadata;
 - descriptive statistics for every configured scenario metric;
@@ -259,6 +319,76 @@ The report contains:
 - bottleneck candidates for scenarios containing measured duration phases;
 - parallel-stage run metrics, aggregated scenario statistics, and
   baseline-versus-candidate comparisons.
+
+### CSV summary
+
+`summary.csv` is a flat comparison table intended for spreadsheets,
+scripts, and further data processing.
+
+Its columns are:
+
+- `analysis_type`;
+- `analysis_id`;
+- `baseline_scenario`;
+- `candidate_scenario`;
+- `source_metric_id`;
+- `metric_id`;
+- `unit`;
+- `baseline_median`;
+- `candidate_median`;
+- `absolute_difference`;
+- `relative_difference_percent`.
+
+Ordinary comparisons use:
+
+```text
+analysis_type = comparison
+```
+
+Parallel-stage comparisons use:
+
+```text
+analysis_type = parallel_analysis
+```
+
+For an ordinary comparison, `source_metric_id` and `metric_id` refer to
+the same configured metric.
+
+For a parallel-stage comparison, `source_metric_id` identifies the
+configured branch-duration metric, while `metric_id` identifies one of the
+derived comparison metrics:
+
+- `critical_path_duration`;
+- `spread`;
+- `imbalance_ratio`.
+
+When the baseline median is zero and a relative difference cannot be
+calculated, the CSV field `relative_difference_percent` is empty.
+
+A simplified ordinary comparison looks like this:
+
+```csv
+analysis_type,analysis_id,baseline_scenario,candidate_scenario,source_metric_id,metric_id,unit,baseline_median,candidate_median,absolute_difference,relative_difference_percent
+comparison,cache-impact,baseline,optimized,total_duration,total_duration,milliseconds,54000.0,48000.0,-6000.0,-11.11111111111111
+```
+
+### Markdown report
+
+`report.md` is a human-readable report containing:
+
+- experiment overview;
+- scenario descriptive statistics;
+- ordinary comparisons;
+- local-versus-total impact classifications;
+- bottleneck candidates;
+- parallel-stage aggregate and run-level analysis;
+- warnings;
+- interpretation limitations.
+
+Numbers are formatted for readability. Relative differences are displayed
+as percentages, and unavailable relative changes are displayed as `N/A`.
+
+### Scenario statistics and comparisons
 
 Each scenario metric contains:
 
@@ -294,13 +424,18 @@ For duration metrics:
 - zero means that the median did not change.
 
 When the baseline median is zero, relative change cannot be calculated.
-The report represents this as:
+
+The JSON report represents this as:
 
 ```json
 {
   "relative_difference_percent": null
 }
 ```
+
+The corresponding CSV field is empty, and the Markdown report displays
+the value as `N/A`.
+
 ### Local-versus-total impact
 
 The report contains a `local_vs_total_impacts` section for duration
@@ -343,7 +478,6 @@ The classification fields have the following meaning:
 When a relative change cannot be calculated because the corresponding
 baseline median is zero, the affected classification is represented as
 `null`.
-
 
 ### Bottleneck candidates
 
@@ -617,4 +751,5 @@ small working increment
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE)
+file for details.
