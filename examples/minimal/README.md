@@ -4,14 +4,25 @@ This example demonstrates the smallest supported CI experiment analysis.
 
 It compares two scenarios:
 
-- `baseline`
-- `optimized`
+- `baseline`;
+- `optimized`.
 
-The input data is stored in CSV files. Column names are mapped to analyzer metrics through `experiment.yaml`.
+The input data is stored in CSV files. Column names are mapped to analyzer
+metrics through `experiment.yaml`.
+
+The example demonstrates:
+
+- configuration and input validation;
+- duration normalization;
+- scenario descriptive statistics;
+- baseline-versus-candidate comparison;
+- local-versus-total impact classification;
+- bottleneck candidate detection;
+- JSON, CSV, and Markdown report generation.
 
 ## Validate
 
-Validate both the experiment configuration and the referenced CSV data:
+Run the command from the repository root:
 
 ```powershell
 ci-analyzer validate `
@@ -30,9 +41,12 @@ Expected output:
 Configuration and data are valid: examples\minimal\experiment.yaml
 ```
 
+The exact path separators may differ between Windows and Unix-like
+systems.
+
 ## Analyze
 
-Execute from the repository root:
+Run the analysis from the repository root:
 
 ```powershell
 ci-analyzer analyze `
@@ -46,31 +60,100 @@ The same command on one line:
 ci-analyzer analyze --config examples/minimal/experiment.yaml --output .tmp/minimal-report
 ```
 
-The analyzer creates:
+Expected output:
+
+```text
+Analysis written to:
+- .tmp\minimal-report\analysis.json
+- .tmp\minimal-report\summary.csv
+- .tmp\minimal-report\report.md
+```
+
+The command creates:
 
 ```text
 .tmp/minimal-report/
-└── analysis.json
+|-- analysis.json
+|-- summary.csv
+`-- report.md
 ```
+
+The files serve different purposes:
+
+- `analysis.json` preserves the complete structured analysis;
+- `summary.csv` contains a flat table of configured comparison metrics;
+- `report.md` provides a human-readable experiment report.
+
+## Input data
+
+The example contains two CSV datasets:
+
+```text
+data/
+|-- baseline.csv
+`-- optimized.csv
+```
+
+Each row represents one CI run.
+
+The configured field mapping identifies the run ID:
+
+```yaml
+record_mapping:
+  run_id: run_id
+```
+
+The experiment defines two duration metrics:
+
+```yaml
+metrics:
+  - id: install_duration
+    field: install_seconds
+    type: duration
+    unit: seconds
+    role: phase
+
+  - id: total_duration
+    field: total_seconds
+    type: duration
+    unit: seconds
+    role: total
+```
+
+`install_duration` represents one measured pipeline phase.
+
+`total_duration` represents the complete measured pipeline duration.
 
 ## Duration normalization
 
-Duration metrics are normalized to milliseconds in `analysis.json`, regardless of the source unit configured in YAML.
+Duration metrics are normalized to milliseconds before statistics and
+comparisons are calculated.
 
 The supported duration units are:
 
-- `milliseconds`
-- `seconds`
-- `minutes`
+- `milliseconds`;
+- `seconds`;
+- `minutes`.
 
-The CSV files in this example contain values in seconds, while the resulting JSON report contains the corresponding values in milliseconds.
+The source CSV files in this example contain values in seconds. Generated
+reports contain the corresponding normalized values in milliseconds.
 
-## Expected medians
+For example:
+
+```text
+12 seconds -> 12000 milliseconds
+```
+
+## Expected scenario statistics
+
+The example contains five observations for each scenario.
+
+Expected medians:
 
 | Metric | Baseline | Optimized | Absolute difference | Relative difference |
-|---|---:|---:|---:|---:|
+| --- | ---: | ---: | ---: | ---: |
 | `install_duration` | 12000 ms | 9000 ms | -3000 ms | -25.0% |
-| `total_duration` | 54000 ms | 48000 ms | -6000 ms | -11.11% |
+| `total_duration` | 54000 ms | 48000 ms | -6000 ms | approximately -11.11% |
 
 The difference is calculated as:
 
@@ -78,32 +161,103 @@ The difference is calculated as:
 candidate - baseline
 ```
 
-A negative difference means that the candidate value is lower than the baseline value.
+For duration metrics:
 
-For duration metrics, a negative difference normally represents an improvement.
+- a negative value normally represents an improvement;
+- a positive value normally represents a regression;
+- zero means that the median did not change.
 
-## Generated analysis
+The generated reports also contain:
 
-The example produces:
-
-```text
-<output-directory>/analysis.json
-```
-
-The report includes descriptive statistics for both `baseline` and
-`optimized` scenarios:
-
-- number of observations;
-- median;
+- observation count;
 - arithmetic mean;
-- minimum and maximum;
+- minimum;
+- maximum;
 - sample standard deviation.
 
-It also compares the configured scenario medians and reports absolute and
-relative changes.
+## JSON report
 
-All duration values are represented in milliseconds in the generated
-report, even though the source CSV values are expressed in seconds.
+The complete structured result is written to:
+
+```text
+.tmp/minimal-report/analysis.json
+```
+
+The report contains:
+
+- experiment metadata;
+- scenario statistics;
+- configured comparisons;
+- local-versus-total impact classification;
+- bottleneck candidates;
+- parallel analyses.
+
+The final `parallel_analyses` section is empty because this example does
+not configure parallel-stage analysis:
+
+```json
+{
+  "parallel_analyses": []
+}
+```
+
+## CSV summary
+
+The flat comparison summary is written to:
+
+```text
+.tmp/minimal-report/summary.csv
+```
+
+It contains one row for each configured comparison metric.
+
+Expected metric rows:
+
+```text
+install_duration
+total_duration
+```
+
+A simplified representation is:
+
+```csv
+analysis_type,analysis_id,baseline_scenario,candidate_scenario,source_metric_id,metric_id,unit,baseline_median,candidate_median,absolute_difference,relative_difference_percent
+comparison,cache-impact,baseline,optimized,install_duration,install_duration,milliseconds,12000.0,9000.0,-3000.0,-25.0
+comparison,cache-impact,baseline,optimized,total_duration,total_duration,milliseconds,54000.0,48000.0,-6000.0,-11.11111111111111
+```
+
+For an ordinary comparison, `source_metric_id` and `metric_id` refer to
+the same configured metric.
+
+## Markdown report
+
+The human-readable report is written to:
+
+```text
+.tmp/minimal-report/report.md
+```
+
+It contains:
+
+- experiment overview;
+- scenario statistics;
+- comparison tables;
+- local-versus-total impact classification;
+- bottleneck candidates;
+- warnings;
+- interpretation limitations.
+
+Numbers are formatted for readability. For example, the full JSON value:
+
+```text
+-11.11111111111111
+```
+
+is displayed in Markdown as:
+
+```text
+-11.111111%
+```
 
 ## Local-versus-total impact
 
@@ -115,22 +269,24 @@ analysis:
   total_impact_threshold_pct: 5.0
 ```
 
-The `install_duration` metric has the `phase` role and improves from a
-median of `12000.0` milliseconds to `9000.0` milliseconds:
+The `install_duration` metric has `role: phase` and improves from a median
+of `12000.0` milliseconds to `9000.0` milliseconds:
 
 ```text
-relative improvement: 25.0%
+relative difference: -25.0%
 ```
 
-The `total_duration` metric has the `total` role and improves from a
-median of `54000.0` milliseconds to `48000.0` milliseconds:
+The `total_duration` metric has `role: total` and improves from a median
+of `54000.0` milliseconds to `48000.0` milliseconds:
 
 ```text
-relative improvement: approximately 11.11%
+relative difference: approximately -11.11%
 ```
 
-The local improvement exceeds the configured `10.0%` threshold, while
-the total improvement also exceeds the configured `5.0%` threshold.
+The local improvement exceeds the configured `10.0%` threshold.
+
+The total pipeline improvement also exceeds the configured `5.0%`
+threshold.
 
 The expected classification is therefore:
 
@@ -143,22 +299,23 @@ The expected classification is therefore:
 }
 ```
 
-This example demonstrates that the local optimization produces a
-meaningful end-to-end pipeline improvement.
+This result means that the local optimization is accompanied by a
+meaningful improvement in the measured total pipeline duration.
 
-## Bottleneck candidate
+## Bottleneck candidates
 
-The minimal experiment contains one measured phase metric:
+The minimal experiment contains one measured duration metric with
+`role: phase`:
 
 ```text
 install_duration
 ```
 
-The `total_duration` metric is not considered because it has `role: total`
-and represents the complete pipeline duration rather than an individual
+The `total_duration` metric is excluded because it has `role: total` and
+represents the complete pipeline duration rather than an individual
 phase.
 
-The expected bottleneck candidates are:
+Expected bottleneck candidates:
 
 ```json
 {
@@ -185,5 +342,9 @@ The expected bottleneck candidates are:
 }
 ```
 
-Because each scenario contains only one measured duration phase, that phase
-is selected as the candidate in both scenarios.
+Because each scenario contains only one measured duration phase, that
+phase is selected as the bottleneck candidate in both scenarios.
+
+The result is described as a candidate rather than a confirmed
+bottleneck because the analyzer compares measured phase durations without
+reconstructing the dependency graph of the complete CI pipeline.

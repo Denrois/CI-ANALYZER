@@ -14,7 +14,7 @@ from ci_experiment_analyzer.errors import (
     DataValidationError,
 )
 from ci_experiment_analyzer.readers import read_experiment_datasets
-from ci_experiment_analyzer.reports import write_analysis_report
+from ci_experiment_analyzer.reports import write_analysis_reports
 from ci_experiment_analyzer.validation import validate_config
 
 CommandHandler = Callable[[argparse.Namespace], int]
@@ -45,12 +45,15 @@ def _run_analyze(
 
     analysis_result = analyze_experiment(config)
 
-    report_path = write_analysis_report(
-        result=analysis_result,
-        output_directory=output_directory,
+    report_paths = write_analysis_reports(
+        analysis_result,
+        output_directory,
     )
 
-    print(f"Analysis written to: {report_path}")
+    print("Analysis written to:")
+    print(f"- {report_paths.analysis_json}")
+    print(f"- {report_paths.summary_csv}")
+    print(f"- {report_paths.report_markdown}")
 
     return 0
 
@@ -102,7 +105,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         required=True,
-        help="Directory where analysis.json will be written.",
+        help="Directory where analysis reports will be written.",
     )
     analyze_parser.set_defaults(handler=_run_analyze)
 
@@ -119,8 +122,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         return handler(args)
     except (
-            ConfigLoadError,
-            ConfigValidationError,
-            DataValidationError,
+        ConfigLoadError,
+        ConfigValidationError,
+        DataValidationError,
     ) as error:
         parser.error(str(error))
