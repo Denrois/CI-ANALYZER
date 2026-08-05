@@ -48,6 +48,9 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+      - name: Build package
+        run: python -m build
+
       - name: Validate minimal example
         run: >
           ci-analyzer validate
