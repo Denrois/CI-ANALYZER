@@ -150,6 +150,7 @@ def test_excludes_total_and_generic_number_metrics() -> None:
 
     assert result is None
 
+
 def test_reports_all_tied_longest_phases_in_stable_order() -> None:
     """All equally long phases should be returned in scenario order."""
     scenario = ScenarioResult(
@@ -224,6 +225,7 @@ def test_reports_all_tied_longest_phases_in_stable_order() -> None:
         unit="milliseconds",
         is_tie=True,
     )
+
 
 def test_returns_none_when_scenario_has_no_metrics() -> None:
     """A scenario without measured metrics has no bottleneck candidate."""

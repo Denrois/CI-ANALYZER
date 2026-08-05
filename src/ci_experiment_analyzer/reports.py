@@ -79,10 +79,7 @@ def _escape_markdown_cell(
     value: str,
 ) -> str:
     """Escape text used inside a Markdown table cell."""
-    return (
-        value.replace("\n", " ")
-        .replace("|", r"\|")
-    )
+    return value.replace("\n", " ").replace("|", r"\|")
 
 
 def _markdown_table(
@@ -91,21 +88,14 @@ def _markdown_table(
 ) -> list[str]:
     """Render a deterministic Markdown table."""
     header_line = "| " + " | ".join(headers) + " |"
-    separator_line = (
-        "| "
-        + " | ".join("---" for _ in headers)
-        + " |"
-    )
+    separator_line = "| " + " | ".join("---" for _ in headers) + " |"
 
     lines = [
         header_line,
         separator_line,
     ]
 
-    lines.extend(
-        "| " + " | ".join(row) + " |"
-        for row in rows
-    )
+    lines.extend("| " + " | ".join(row) + " |" for row in rows)
 
     return lines
 
@@ -118,10 +108,7 @@ def _analysis_warnings(
 
     for impact in result.local_total_impacts:
         if impact.warning is not None:
-            warnings.append(
-                f"Comparison {impact.comparison_id!r}: "
-                f"{impact.warning}"
-            )
+            warnings.append(f"Comparison {impact.comparison_id!r}: {impact.warning}")
 
     for analysis in result.parallel_analyses:
         parallel_scenarios = (
@@ -168,10 +155,7 @@ def _scenario_result_to_dict(
     """Convert one scenario result to a JSON-compatible mapping."""
     return {
         "id": scenario.scenario_id,
-        "metrics": [
-            _metric_stats_to_dict(metric)
-            for metric in scenario.metrics
-        ],
+        "metrics": [_metric_stats_to_dict(metric) for metric in scenario.metrics],
     }
 
 
@@ -185,9 +169,7 @@ def _metric_comparison_to_dict(
         "baseline_median": metric.baseline_median,
         "candidate_median": metric.candidate_median,
         "absolute_difference": metric.absolute_difference,
-        "relative_difference_percent": (
-            metric.relative_difference_percent
-        ),
+        "relative_difference_percent": (metric.relative_difference_percent),
     }
 
 
@@ -199,10 +181,7 @@ def _comparison_result_to_dict(
         "id": comparison.comparison_id,
         "baseline": comparison.baseline_scenario_id,
         "candidate": comparison.candidate_scenario_id,
-        "metrics": [
-            _metric_comparison_to_dict(metric)
-            for metric in comparison.metrics
-        ],
+        "metrics": [_metric_comparison_to_dict(metric) for metric in comparison.metrics],
     }
 
 
@@ -214,27 +193,13 @@ def _local_total_impact_to_dict(
         "comparison": impact.comparison_id,
         "phase_metric": impact.phase_metric_id,
         "total_metric": impact.total_metric_id,
-        "phase_relative_difference_percent": (
-            impact.phase_relative_difference_percent
-        ),
-        "total_relative_difference_percent": (
-            impact.total_relative_difference_percent
-        ),
-        "local_improvement_threshold_pct": (
-            impact.local_improvement_threshold_pct
-        ),
-        "total_impact_threshold_pct": (
-            impact.total_impact_threshold_pct
-        ),
-        "substantial_local_improvement": (
-            impact.substantial_local_improvement
-        ),
-        "limited_total_improvement": (
-            impact.limited_total_improvement
-        ),
-        "limited_end_to_end_impact": (
-            impact.limited_end_to_end_impact
-        ),
+        "phase_relative_difference_percent": (impact.phase_relative_difference_percent),
+        "total_relative_difference_percent": (impact.total_relative_difference_percent),
+        "local_improvement_threshold_pct": (impact.local_improvement_threshold_pct),
+        "total_impact_threshold_pct": (impact.total_impact_threshold_pct),
+        "substantial_local_improvement": (impact.substantial_local_improvement),
+        "limited_total_improvement": (impact.limited_total_improvement),
+        "limited_end_to_end_impact": (impact.limited_end_to_end_impact),
         "warning": impact.warning,
     }
 
@@ -245,9 +210,7 @@ def _bottleneck_candidate_to_dict(
     """Convert one bottleneck candidate to a report mapping."""
     return {
         "scenario": candidate.scenario_id,
-        "phase_metrics": list(
-            candidate.phase_metric_ids
-        ),
+        "phase_metrics": list(candidate.phase_metric_ids),
         "median": candidate.median,
         "unit": candidate.unit,
         "is_tie": candidate.is_tie,
@@ -275,20 +238,12 @@ def _parallel_run_metrics_to_dict(
     return {
         "run_id": run.run_id,
         "branch_count": run.branch_count,
-        "critical_path_duration": (
-            run.critical_path_duration
-        ),
-        "minimum_branch_duration": (
-            run.minimum_branch_duration
-        ),
-        "mean_branch_duration": (
-            run.mean_branch_duration
-        ),
+        "critical_path_duration": (run.critical_path_duration),
+        "minimum_branch_duration": (run.minimum_branch_duration),
+        "mean_branch_duration": (run.mean_branch_duration),
         "spread": run.spread,
         "imbalance_ratio": run.imbalance_ratio,
-        "slowest_branches": list(
-            run.slowest_branch_ids
-        ),
+        "slowest_branches": list(run.slowest_branch_ids),
         "is_slowest_tie": run.is_slowest_tie,
     }
 
@@ -303,27 +258,12 @@ def _parallel_scenario_result_to_dict(
         "branch_count": {
             "minimum": scenario.branch_count_minimum,
             "maximum": scenario.branch_count_maximum,
-            "consistent": (
-                scenario.branch_count_consistent
-            ),
+            "consistent": (scenario.branch_count_consistent),
         },
-        "runs": [
-            _parallel_run_metrics_to_dict(run)
-            for run in scenario.runs
-        ],
-        "critical_path_duration": (
-            _parallel_metric_stats_to_dict(
-                scenario.critical_path_duration
-            )
-        ),
-        "spread": _parallel_metric_stats_to_dict(
-            scenario.spread
-        ),
-        "imbalance_ratio": (
-            _parallel_metric_stats_to_dict(
-                scenario.imbalance_ratio
-            )
-        ),
+        "runs": [_parallel_run_metrics_to_dict(run) for run in scenario.runs],
+        "critical_path_duration": (_parallel_metric_stats_to_dict(scenario.critical_path_duration)),
+        "spread": _parallel_metric_stats_to_dict(scenario.spread),
+        "imbalance_ratio": (_parallel_metric_stats_to_dict(scenario.imbalance_ratio)),
     }
 
 
@@ -334,16 +274,9 @@ def _parallel_analysis_result_to_dict(
     return {
         "id": analysis.analysis_id,
         "duration_metric": analysis.duration_metric_id,
-        "baseline": _parallel_scenario_result_to_dict(
-            analysis.baseline
-        ),
-        "candidate": _parallel_scenario_result_to_dict(
-            analysis.candidate
-        ),
-        "metrics": [
-            _metric_comparison_to_dict(metric)
-            for metric in analysis.metrics
-        ],
+        "baseline": _parallel_scenario_result_to_dict(analysis.baseline),
+        "candidate": _parallel_scenario_result_to_dict(analysis.candidate),
+        "metrics": [_metric_comparison_to_dict(metric) for metric in analysis.metrics],
     }
 
 
@@ -367,9 +300,7 @@ def _comparison_summary_row(
         "baseline_median": metric.baseline_median,
         "candidate_median": metric.candidate_median,
         "absolute_difference": metric.absolute_difference,
-        "relative_difference_percent": (
-            metric.relative_difference_percent
-        ),
+        "relative_difference_percent": (metric.relative_difference_percent),
     }
 
 
@@ -385,12 +316,8 @@ def _comparison_summary_rows(
                 _comparison_summary_row(
                     analysis_type="comparison",
                     analysis_id=comparison.comparison_id,
-                    baseline_scenario_id=(
-                        comparison.baseline_scenario_id
-                    ),
-                    candidate_scenario_id=(
-                        comparison.candidate_scenario_id
-                    ),
+                    baseline_scenario_id=(comparison.baseline_scenario_id),
+                    candidate_scenario_id=(comparison.candidate_scenario_id),
                     source_metric_id=metric.metric_id,
                     metric=metric,
                 )
@@ -402,15 +329,9 @@ def _comparison_summary_rows(
                 _comparison_summary_row(
                     analysis_type="parallel_analysis",
                     analysis_id=analysis.analysis_id,
-                    baseline_scenario_id=(
-                        analysis.baseline.scenario_id
-                    ),
-                    candidate_scenario_id=(
-                        analysis.candidate.scenario_id
-                    ),
-                    source_metric_id=(
-                        analysis.duration_metric_id
-                    ),
+                    baseline_scenario_id=(analysis.baseline.scenario_id),
+                    candidate_scenario_id=(analysis.candidate.scenario_id),
+                    source_metric_id=(analysis.duration_metric_id),
                     metric=metric,
                 )
             )
@@ -428,27 +349,18 @@ def analysis_result_to_dict(
             "id": result.experiment.id,
             "title": result.experiment.title,
         },
-        "scenarios": [
-            _scenario_result_to_dict(scenario)
-            for scenario in result.scenarios
-        ],
+        "scenarios": [_scenario_result_to_dict(scenario) for scenario in result.scenarios],
         "comparisons": [
-            _comparison_result_to_dict(comparison)
-            for comparison in result.comparisons
+            _comparison_result_to_dict(comparison) for comparison in result.comparisons
         ],
         "local_vs_total_impacts": [
-            _local_total_impact_to_dict(impact)
-            for impact in result.local_total_impacts
+            _local_total_impact_to_dict(impact) for impact in result.local_total_impacts
         ],
         "bottleneck_candidates": [
-            _bottleneck_candidate_to_dict(candidate)
-            for candidate in result.bottleneck_candidates
+            _bottleneck_candidate_to_dict(candidate) for candidate in result.bottleneck_candidates
         ],
         "parallel_analyses": [
-            _parallel_analysis_result_to_dict(
-                analysis
-            )
-            for analysis in result.parallel_analyses
+            _parallel_analysis_result_to_dict(analysis) for analysis in result.parallel_analyses
         ],
     }
 
@@ -466,9 +378,7 @@ def comparison_summary_to_csv(
     )
 
     writer.writeheader()
-    writer.writerows(
-        _comparison_summary_rows(result)
-    )
+    writer.writerows(_comparison_summary_rows(result))
 
     return stream.getvalue()
 
@@ -480,10 +390,7 @@ def analysis_result_to_markdown(
     lines: list[str] = [
         f"# {_escape_markdown_cell(result.experiment.title)}",
         "",
-        (
-            "Experiment ID: "
-            f"`{_escape_markdown_cell(result.experiment.id)}`"
-        ),
+        (f"Experiment ID: `{_escape_markdown_cell(result.experiment.id)}`"),
         "",
         "## Overview",
         "",
@@ -507,10 +414,7 @@ def analysis_result_to_markdown(
         for scenario in result.scenarios:
             lines.extend(
                 [
-                    (
-                        "### "
-                        f"`{_escape_markdown_cell(scenario.scenario_id)}`"
-                    ),
+                    (f"### `{_escape_markdown_cell(scenario.scenario_id)}`"),
                     "",
                 ]
             )
@@ -525,9 +429,7 @@ def analysis_result_to_markdown(
                     _format_report_number(metric.mean),
                     _format_report_number(metric.minimum),
                     _format_report_number(metric.maximum),
-                    _format_report_number(
-                        metric.standard_deviation
-                    ),
+                    _format_report_number(metric.standard_deviation),
                 )
                 for metric in scenario.metrics
             )
@@ -568,24 +470,11 @@ def analysis_result_to_markdown(
         for comparison in result.comparisons:
             lines.extend(
                 [
-                    (
-                        "### "
-                        f"`{_escape_markdown_cell(comparison.comparison_id)}`"
-                    ),
+                    (f"### `{_escape_markdown_cell(comparison.comparison_id)}`"),
                     "",
-                    (
-                        "Baseline: "
-                        f"`{_escape_markdown_cell(
-                            comparison.baseline_scenario_id
-                        )}`"
-                    ),
+                    (f"Baseline: `{_escape_markdown_cell(comparison.baseline_scenario_id)}`"),
                     "",
-                    (
-                        "Candidate: "
-                        f"`{_escape_markdown_cell(
-                            comparison.candidate_scenario_id
-                        )}`"
-                    ),
+                    (f"Candidate: `{_escape_markdown_cell(comparison.candidate_scenario_id)}`"),
                     "",
                 ]
             )
@@ -594,18 +483,10 @@ def analysis_result_to_markdown(
                 (
                     _escape_markdown_cell(metric.metric_id),
                     _escape_markdown_cell(metric.unit),
-                    _format_report_number(
-                        metric.baseline_median
-                    ),
-                    _format_report_number(
-                        metric.candidate_median
-                    ),
-                    _format_report_number(
-                        metric.absolute_difference
-                    ),
-                    _format_report_percent(
-                        metric.relative_difference_percent
-                    ),
+                    _format_report_number(metric.baseline_median),
+                    _format_report_number(metric.candidate_median),
+                    _format_report_number(metric.absolute_difference),
+                    _format_report_percent(metric.relative_difference_percent),
                 )
                 for metric in comparison.metrics
             )
@@ -635,40 +516,21 @@ def analysis_result_to_markdown(
     if not result.local_total_impacts:
         lines.extend(
             [
-                (
-                    "No local-versus-total impact "
-                    "classifications were produced."
-                ),
+                ("No local-versus-total impact classifications were produced."),
                 "",
             ]
         )
     else:
         impact_rows = tuple(
             (
-                _escape_markdown_cell(
-                    impact.comparison_id
-                ),
-                _escape_markdown_cell(
-                    impact.phase_metric_id
-                ),
-                _escape_markdown_cell(
-                    impact.total_metric_id
-                ),
-                _format_report_percent(
-                    impact.phase_relative_difference_percent
-                ),
-                _format_report_percent(
-                    impact.total_relative_difference_percent
-                ),
-                _format_report_boolean(
-                    impact.substantial_local_improvement
-                ),
-                _format_report_boolean(
-                    impact.limited_total_improvement
-                ),
-                _format_report_boolean(
-                    impact.limited_end_to_end_impact
-                ),
+                _escape_markdown_cell(impact.comparison_id),
+                _escape_markdown_cell(impact.phase_metric_id),
+                _escape_markdown_cell(impact.total_metric_id),
+                _format_report_percent(impact.phase_relative_difference_percent),
+                _format_report_percent(impact.total_relative_difference_percent),
+                _format_report_boolean(impact.substantial_local_improvement),
+                _format_report_boolean(impact.limited_total_improvement),
+                _format_report_boolean(impact.limited_end_to_end_impact),
             )
             for impact in result.local_total_impacts
         )
@@ -707,19 +569,11 @@ def analysis_result_to_markdown(
     else:
         bottleneck_rows = tuple(
             (
-                _escape_markdown_cell(
-                    candidate.scenario_id
-                ),
-                _escape_markdown_cell(
-                    ", ".join(
-                        candidate.phase_metric_ids
-                    )
-                ),
+                _escape_markdown_cell(candidate.scenario_id),
+                _escape_markdown_cell(", ".join(candidate.phase_metric_ids)),
                 _format_report_number(candidate.median),
                 _escape_markdown_cell(candidate.unit),
-                _format_report_boolean(
-                    candidate.is_tie
-                ),
+                _format_report_boolean(candidate.is_tie),
             )
             for candidate in result.bottleneck_candidates
         )
@@ -756,16 +610,11 @@ def analysis_result_to_markdown(
         for analysis in result.parallel_analyses:
             lines.extend(
                 [
-                    (
-                        "### "
-                        f"`{_escape_markdown_cell(analysis.analysis_id)}`"
-                    ),
+                    (f"### `{_escape_markdown_cell(analysis.analysis_id)}`"),
                     "",
                     (
                         "Source duration metric: "
-                        f"`{_escape_markdown_cell(
-                            analysis.duration_metric_id
-                        )}`"
+                        f"`{_escape_markdown_cell(analysis.duration_metric_id)}`"
                     ),
                     "",
                 ]
@@ -774,28 +623,13 @@ def analysis_result_to_markdown(
             scenario_rows = tuple(
                 (
                     scenario_role,
-                    _escape_markdown_cell(
-                        parallel_scenario.scenario_id
-                    ),
-                    str(
-                        parallel_scenario.branch_count_minimum
-                    ),
-                    str(
-                        parallel_scenario.branch_count_maximum
-                    ),
-                    _format_report_boolean(
-                        parallel_scenario.branch_count_consistent
-                    ),
-                    _format_report_number(
-                        parallel_scenario
-                        .critical_path_duration.median
-                    ),
-                    _format_report_number(
-                        parallel_scenario.spread.median
-                    ),
-                    _format_report_number(
-                        parallel_scenario.imbalance_ratio.median
-                    ),
+                    _escape_markdown_cell(parallel_scenario.scenario_id),
+                    str(parallel_scenario.branch_count_minimum),
+                    str(parallel_scenario.branch_count_maximum),
+                    _format_report_boolean(parallel_scenario.branch_count_consistent),
+                    _format_report_number(parallel_scenario.critical_path_duration.median),
+                    _format_report_number(parallel_scenario.spread.median),
+                    _format_report_number(parallel_scenario.imbalance_ratio.median),
                 )
                 for scenario_role, parallel_scenario in (
                     ("Baseline", analysis.baseline),
@@ -831,18 +665,10 @@ def analysis_result_to_markdown(
                 (
                     _escape_markdown_cell(metric.metric_id),
                     _escape_markdown_cell(metric.unit),
-                    _format_report_number(
-                        metric.baseline_median
-                    ),
-                    _format_report_number(
-                        metric.candidate_median
-                    ),
-                    _format_report_number(
-                        metric.absolute_difference
-                    ),
-                    _format_report_percent(
-                        metric.relative_difference_percent
-                    ),
+                    _format_report_number(metric.baseline_median),
+                    _format_report_number(metric.candidate_median),
+                    _format_report_number(metric.absolute_difference),
+                    _format_report_percent(metric.relative_difference_percent),
                 )
                 for metric in analysis.metrics
             )
@@ -863,16 +689,14 @@ def analysis_result_to_markdown(
             lines.append("")
 
             for scenario_role, parallel_scenario in (
-                    ("Baseline", analysis.baseline),
-                    ("Candidate", analysis.candidate),
+                ("Baseline", analysis.baseline),
+                ("Candidate", analysis.candidate),
             ):
                 lines.extend(
                     [
                         (
                             f"#### {scenario_role} runs: "
-                            f"`{_escape_markdown_cell(
-                                parallel_scenario.scenario_id
-                            )}`"
+                            f"`{_escape_markdown_cell(parallel_scenario.scenario_id)}`"
                         ),
                         "",
                     ]
@@ -891,27 +715,13 @@ def analysis_result_to_markdown(
                     (
                         _escape_markdown_cell(run.run_id),
                         str(run.branch_count),
-                        _format_report_number(
-                            run.critical_path_duration
-                        ),
-                        _format_report_number(
-                            run.minimum_branch_duration
-                        ),
-                        _format_report_number(
-                            run.mean_branch_duration
-                        ),
+                        _format_report_number(run.critical_path_duration),
+                        _format_report_number(run.minimum_branch_duration),
+                        _format_report_number(run.mean_branch_duration),
                         _format_report_number(run.spread),
-                        _format_report_number(
-                            run.imbalance_ratio
-                        ),
-                        _escape_markdown_cell(
-                            ", ".join(
-                                run.slowest_branch_ids
-                            )
-                        ),
-                        _format_report_boolean(
-                            run.is_slowest_tie
-                        ),
+                        _format_report_number(run.imbalance_ratio),
+                        _escape_markdown_cell(", ".join(run.slowest_branch_ids)),
+                        _format_report_boolean(run.is_slowest_tie),
                     )
                     for run in parallel_scenario.runs
                 )
@@ -944,10 +754,7 @@ def analysis_result_to_markdown(
     warnings = _analysis_warnings(result)
 
     if warnings:
-        lines.extend(
-            f"- {_escape_markdown_cell(warning)}"
-            for warning in warnings
-        )
+        lines.extend(f"- {_escape_markdown_cell(warning)}" for warning in warnings)
         lines.append("")
     else:
         lines.extend(
@@ -962,18 +769,9 @@ def analysis_result_to_markdown(
             "## Limitations",
             "",
             "- Comparisons use scenario medians.",
-            (
-                "- Bottleneck candidates are based only on "
-                "configured measured phase durations."
-            ),
-            (
-                "- Parallel critical-path duration covers only "
-                "the configured parallel stage."
-            ),
-            (
-                "- The report does not reconstruct the dependency "
-                "graph of the complete CI pipeline."
-            ),
+            ("- Bottleneck candidates are based only on configured measured phase durations."),
+            ("- Parallel critical-path duration covers only the configured parallel stage."),
+            ("- The report does not reconstruct the dependency graph of the complete CI pipeline."),
         ]
     )
 

@@ -64,9 +64,7 @@ comparisons:
     assert len(config.scenarios) == 2
     assert config.scenarios[0].id == "baseline"
     assert config.scenarios[0].source.format == "csv"
-    assert config.scenarios[0].source.path == (
-        tmp_path / "data" / "baseline.csv"
-    ).resolve()
+    assert config.scenarios[0].source.path == (tmp_path / "data" / "baseline.csv").resolve()
 
     assert config.record_mapping["run_id"] == "run_id"
 
@@ -83,6 +81,7 @@ comparisons:
     )
 
     assert config.parallel_analyses == ()
+
 
 def test_load_config_uses_default_analysis_thresholds(
     tmp_path: Path,
@@ -111,14 +110,9 @@ comparisons: []
 
     config = load_config(config_path)
 
-    assert (
-        config.analysis.local_improvement_threshold_pct
-        == 10.0
-    )
-    assert (
-        config.analysis.total_impact_threshold_pct
-        == 5.0
-    )
+    assert config.analysis.local_improvement_threshold_pct == 10.0
+    assert config.analysis.total_impact_threshold_pct == 5.0
+
 
 def test_load_config_reads_analysis_thresholds(
     tmp_path: Path,
@@ -151,14 +145,8 @@ comparisons: []
 
     config = load_config(config_path)
 
-    assert (
-        config.analysis.local_improvement_threshold_pct
-        == 15.0
-    )
-    assert (
-        config.analysis.total_impact_threshold_pct
-        == 2.5
-    )
+    assert config.analysis.local_improvement_threshold_pct == 15.0
+    assert config.analysis.total_impact_threshold_pct == 2.5
 
 
 def test_load_config_reads_parallel_analysis(
@@ -222,7 +210,4 @@ parallel_analyses:
     assert parallel_analysis.id == "test-sharding"
     assert parallel_analysis.baseline == "baseline"
     assert parallel_analysis.candidate == "timing-based"
-    assert (
-        parallel_analysis.duration_metric
-        == "shard_duration"
-    )
+    assert parallel_analysis.duration_metric == "shard_duration"

@@ -84,9 +84,7 @@ class ExperimentConfig:
         ParallelAnalysisConfig,
         ...,
     ] = ()
-    analysis: AnalysisConfig = field(
-        default_factory=AnalysisConfig
-    )
+    analysis: AnalysisConfig = field(default_factory=AnalysisConfig)
 
 
 @dataclass(frozen=True, slots=True)

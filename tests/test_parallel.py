@@ -96,13 +96,9 @@ def _parallel_scenario_result(
         branch_count_minimum=4,
         branch_count_maximum=4,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            critical_path_duration
-        ),
+        critical_path_duration=_parallel_stats(critical_path_duration),
         spread=_parallel_stats(spread),
-        imbalance_ratio=_parallel_stats(
-            imbalance_ratio
-        ),
+        imbalance_ratio=_parallel_stats(imbalance_ratio),
     )
 
 
@@ -189,10 +185,7 @@ def test_rejects_duplicate_branch_within_run() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "duplicate parallel branch 'shard-1' "
-            "for run 'run-1'"
-        ),
+        match=("duplicate parallel branch 'shard-1' for run 'run-1'"),
     ):
         group_parallel_runs(
             dataset=dataset,
@@ -215,10 +208,7 @@ def test_rejects_parallel_record_without_branch_id() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "run 'run-1' contains a parallel record "
-            "without a branch identifier"
-        ),
+        match=("run 'run-1' contains a parallel record without a branch identifier"),
     ):
         group_parallel_runs(
             dataset=dataset,
@@ -243,10 +233,7 @@ def test_rejects_record_without_parallel_duration_metric() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "branch 'shard-1' does not contain metric "
-            "'branch_duration'"
-        ),
+        match=("branch 'shard-1' does not contain metric 'branch_duration'"),
     ):
         group_parallel_runs(
             dataset=dataset,
@@ -277,10 +264,7 @@ def test_allows_same_branch_id_in_different_runs() -> None:
         duration_metric_id="branch_duration",
     )
 
-    assert tuple(
-        group.run_id
-        for group in result
-    ) == (
+    assert tuple(group.run_id for group in result) == (
         "run-1",
         "run-2",
     )
@@ -298,24 +282,16 @@ def test_calculates_parallel_run_metrics() -> None:
         ),
     )
 
-    result = calculate_parallel_run_metrics(
-        run_group
-    )
+    result = calculate_parallel_run_metrics(run_group)
 
     assert result.run_id == "run-1"
     assert result.branch_count == 4
     assert result.critical_path_duration == 42_000.0
     assert result.minimum_branch_duration == 35_000.0
-    assert result.mean_branch_duration == pytest.approx(
-        38_750.0
-    )
+    assert result.mean_branch_duration == pytest.approx(38_750.0)
     assert result.spread == 7_000.0
-    assert result.imbalance_ratio == pytest.approx(
-        42_000.0 / 38_750.0
-    )
-    assert result.slowest_branch_ids == (
-        "shard-3",
-    )
+    assert result.imbalance_ratio == pytest.approx(42_000.0 / 38_750.0)
+    assert result.slowest_branch_ids == ("shard-3",)
     assert result.is_slowest_tie is False
 
 
@@ -330,21 +306,15 @@ def test_reports_tied_slowest_branches_in_stable_order() -> None:
         ),
     )
 
-    result = calculate_parallel_run_metrics(
-        run_group
-    )
+    result = calculate_parallel_run_metrics(run_group)
 
     assert result.run_id == "run-1"
     assert result.branch_count == 3
     assert result.critical_path_duration == 40_000.0
     assert result.minimum_branch_duration == 30_000.0
-    assert result.mean_branch_duration == pytest.approx(
-        110_000.0 / 3
-    )
+    assert result.mean_branch_duration == pytest.approx(110_000.0 / 3)
     assert result.spread == 10_000.0
-    assert result.imbalance_ratio == pytest.approx(
-        40_000.0 / (110_000.0 / 3)
-    )
+    assert result.imbalance_ratio == pytest.approx(40_000.0 / (110_000.0 / 3))
     assert result.slowest_branch_ids == (
         "shard-1",
         "shard-3",
@@ -363,9 +333,7 @@ def test_calculates_balanced_parallel_run() -> None:
         ),
     )
 
-    result = calculate_parallel_run_metrics(
-        run_group
-    )
+    result = calculate_parallel_run_metrics(run_group)
 
     assert result.critical_path_duration == 25_000.0
     assert result.minimum_branch_duration == 25_000.0
@@ -390,9 +358,7 @@ def test_zero_duration_branches_are_treated_as_balanced() -> None:
         ),
     )
 
-    result = calculate_parallel_run_metrics(
-        run_group
-    )
+    result = calculate_parallel_run_metrics(run_group)
 
     assert result.critical_path_duration == 0.0
     assert result.minimum_branch_duration == 0.0
@@ -411,34 +377,23 @@ def test_rejects_parallel_run_without_branches() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "Parallel run 'empty-run' does not contain "
-            "any branches"
-        ),
+        match=("Parallel run 'empty-run' does not contain any branches"),
     ):
-        calculate_parallel_run_metrics(
-            run_group
-        )
+        calculate_parallel_run_metrics(run_group)
 
 
 def test_rejects_invalid_parallel_branch_duration() -> None:
     """Parallel run calculation requires valid durations."""
     run_group = _parallel_run_group(
         run_id="invalid-run",
-        branches=(
-            ("shard-1", -1.0),
-        ),
+        branches=(("shard-1", -1.0),),
     )
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "branch 'shard-1' contains invalid duration"
-        ),
+        match=("branch 'shard-1' contains invalid duration"),
     ):
-        calculate_parallel_run_metrics(
-            run_group
-        )
+        calculate_parallel_run_metrics(run_group)
 
 
 def test_aggregates_parallel_scenario_statistics() -> None:
@@ -490,9 +445,7 @@ def test_aggregates_parallel_scenario_statistics() -> None:
     assert critical_path.mean == 41_500.0
     assert critical_path.minimum == 41_000.0
     assert critical_path.maximum == 42_000.0
-    assert critical_path.standard_deviation == pytest.approx(
-        707.1067811865476
-    )
+    assert critical_path.standard_deviation == pytest.approx(707.1067811865476)
 
     spread = result.spread
 
@@ -501,43 +454,23 @@ def test_aggregates_parallel_scenario_statistics() -> None:
     assert spread.mean == 6_000.0
     assert spread.minimum == 5_000.0
     assert spread.maximum == 7_000.0
-    assert spread.standard_deviation == pytest.approx(
-        1_414.213562373095
-    )
+    assert spread.standard_deviation == pytest.approx(1_414.213562373095)
 
     first_ratio = 42_000.0 / 38_750.0
     second_ratio = 41_000.0 / 38_250.0
-    expected_ratio_mean = (
-        first_ratio + second_ratio
-    ) / 2
+    expected_ratio_mean = (first_ratio + second_ratio) / 2
 
     imbalance = result.imbalance_ratio
 
     assert imbalance.count == 2
-    assert imbalance.median == pytest.approx(
-        expected_ratio_mean
-    )
-    assert imbalance.mean == pytest.approx(
-        expected_ratio_mean
-    )
-    assert imbalance.minimum == pytest.approx(
-        min(first_ratio, second_ratio)
-    )
-    assert imbalance.maximum == pytest.approx(
-        max(first_ratio, second_ratio)
-    )
+    assert imbalance.median == pytest.approx(expected_ratio_mean)
+    assert imbalance.mean == pytest.approx(expected_ratio_mean)
+    assert imbalance.minimum == pytest.approx(min(first_ratio, second_ratio))
+    assert imbalance.maximum == pytest.approx(max(first_ratio, second_ratio))
 
-    expected_ratio_standard_deviation = (
-        abs(first_ratio - second_ratio)
-        / (2 ** 0.5)
-    )
+    expected_ratio_standard_deviation = abs(first_ratio - second_ratio) / (2**0.5)
 
-    assert (
-        imbalance.standard_deviation
-        == pytest.approx(
-            expected_ratio_standard_deviation
-        )
-    )
+    assert imbalance.standard_deviation == pytest.approx(expected_ratio_standard_deviation)
 
 
 def test_detects_inconsistent_parallel_branch_counts() -> None:
@@ -585,16 +518,9 @@ def test_single_parallel_run_uses_zero_standard_deviation() -> None:
         duration_unit="milliseconds",
     )
 
-    assert (
-        result.critical_path_duration
-        .standard_deviation
-        == 0.0
-    )
+    assert result.critical_path_duration.standard_deviation == 0.0
     assert result.spread.standard_deviation == 0.0
-    assert (
-        result.imbalance_ratio.standard_deviation
-        == 0.0
-    )
+    assert result.imbalance_ratio.standard_deviation == 0.0
 
     assert result.branch_count_minimum == 2
     assert result.branch_count_maximum == 2
@@ -605,10 +531,7 @@ def test_rejects_parallel_scenario_without_runs() -> None:
     """A scenario result requires at least one analyzed run."""
     with pytest.raises(
         DataValidationError,
-        match=(
-            "Parallel scenario 'empty' does not contain "
-            "any analyzed runs"
-        ),
+        match=("Parallel scenario 'empty' does not contain any analyzed runs"),
     ):
         calculate_parallel_scenario_result(
             scenario_id="empty",
@@ -629,9 +552,7 @@ def test_rejects_duplicate_parallel_run_results() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "contains duplicate analyzed run 'run-1'"
-        ),
+        match=("contains duplicate analyzed run 'run-1'"),
     ):
         calculate_parallel_scenario_result(
             scenario_id="baseline",
@@ -672,37 +593,26 @@ def test_compares_parallel_scenario_medians() -> None:
         candidate=candidate,
     )
 
-    assert tuple(
-        metric.metric_id
-        for metric in result.metrics
-    ) == (
-               "critical_path_duration",
-               "spread",
-               "imbalance_ratio",
-           )
+    assert tuple(metric.metric_id for metric in result.metrics) == (
+        "critical_path_duration",
+        "spread",
+        "imbalance_ratio",
+    )
 
     assert result.analysis_id == "test-sharding"
     assert result.duration_metric_id == "branch_duration"
     assert result.baseline is baseline
     assert result.candidate is candidate
 
-    metrics_by_id = {
-        metric.metric_id: metric
-        for metric in result.metrics
-    }
+    metrics_by_id = {metric.metric_id: metric for metric in result.metrics}
 
-    critical_path = metrics_by_id[
-        "critical_path_duration"
-    ]
+    critical_path = metrics_by_id["critical_path_duration"]
 
     assert critical_path.unit == "milliseconds"
     assert critical_path.baseline_median == 42_000.0
     assert critical_path.candidate_median == 36_000.0
     assert critical_path.absolute_difference == -6_000.0
-    assert (
-        critical_path.relative_difference_percent
-        == pytest.approx(-14.2857142857)
-    )
+    assert critical_path.relative_difference_percent == pytest.approx(-14.2857142857)
 
     spread = metrics_by_id["spread"]
 
@@ -710,27 +620,15 @@ def test_compares_parallel_scenario_medians() -> None:
     assert spread.baseline_median == 8_000.0
     assert spread.candidate_median == 3_000.0
     assert spread.absolute_difference == -5_000.0
-    assert (
-        spread.relative_difference_percent
-        == pytest.approx(-62.5)
-    )
+    assert spread.relative_difference_percent == pytest.approx(-62.5)
 
     imbalance = metrics_by_id["imbalance_ratio"]
 
     assert imbalance.unit == "ratio"
-    assert imbalance.baseline_median == pytest.approx(
-        1.15
-    )
-    assert imbalance.candidate_median == pytest.approx(
-        1.035
-    )
-    assert imbalance.absolute_difference == pytest.approx(
-        -0.115
-    )
-    assert (
-        imbalance.relative_difference_percent
-        == pytest.approx(-10.0)
-    )
+    assert imbalance.baseline_median == pytest.approx(1.15)
+    assert imbalance.candidate_median == pytest.approx(1.035)
+    assert imbalance.absolute_difference == pytest.approx(-0.115)
+    assert imbalance.relative_difference_percent == pytest.approx(-10.0)
 
 
 def test_parallel_comparison_handles_zero_baseline_median() -> None:
@@ -762,10 +660,7 @@ def test_parallel_comparison_handles_zero_baseline_median() -> None:
         candidate=candidate,
     )
 
-    metrics_by_id = {
-        metric.metric_id: metric
-        for metric in result.metrics
-    }
+    metrics_by_id = {metric.metric_id: metric for metric in result.metrics}
 
     spread = metrics_by_id["spread"]
 
@@ -800,10 +695,7 @@ def test_parallel_comparison_rejects_wrong_baseline() -> None:
 
     with pytest.raises(
         DataValidationError,
-        match=(
-            "expected baseline scenario 'baseline', "
-            "but received 'other'"
-        ),
+        match=("expected baseline scenario 'baseline', but received 'other'"),
     ):
         compare_parallel_scenarios(
             analysis=analysis,
@@ -885,18 +777,12 @@ def test_analyzes_parallel_scenario_from_dataset() -> None:
     assert result.scenario_id == "baseline"
     assert result.duration_unit == "milliseconds"
 
-    assert tuple(
-        run.run_id
-        for run in result.runs
-    ) == (
+    assert tuple(run.run_id for run in result.runs) == (
         "run-1",
         "run-2",
     )
 
-    assert (
-        result.critical_path_duration.median
-        == 35_000.0
-    )
+    assert result.critical_path_duration.median == 35_000.0
     assert result.spread.median == 20_000.0
     assert result.branch_count_minimum == 2
     assert result.branch_count_maximum == 2

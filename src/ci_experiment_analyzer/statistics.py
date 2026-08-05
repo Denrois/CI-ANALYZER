@@ -19,17 +19,14 @@ def _require_values(
     """Reject an empty metric value sequence."""
     if not values:
         raise ValueError(
-            f"Cannot calculate statistics for metric "
-            f"{metric_id!r} from an empty sequence."
+            f"Cannot calculate statistics for metric {metric_id!r} from an empty sequence."
         )
 
 
 def calculate_median(values: Sequence[float]) -> float:
     """Calculate the median of a non-empty numeric sequence."""
     if not values:
-        raise ValueError(
-            "Cannot calculate median for an empty sequence."
-        )
+        raise ValueError("Cannot calculate median for an empty sequence.")
 
     return float(median(values))
 
@@ -43,10 +40,7 @@ def calculate_standard_deviation(
     sample standard deviation requires at least two observations.
     """
     if not values:
-        raise ValueError(
-            "Cannot calculate standard deviation "
-            "for an empty sequence."
-        )
+        raise ValueError("Cannot calculate standard deviation for an empty sequence.")
 
     if len(values) == 1:
         return 0.0
@@ -82,10 +76,7 @@ def _metric_values(
     metric_id: str,
 ) -> tuple[float, ...]:
     """Extract values of one metric from a scenario dataset."""
-    return tuple(
-        record.metric_values[metric_id]
-        for record in dataset.records
-    )
+    return tuple(record.metric_values[metric_id] for record in dataset.records)
 
 
 def calculate_scenario_result(

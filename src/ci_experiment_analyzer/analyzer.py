@@ -25,10 +25,7 @@ def analyze_experiment(
     """Analyze an already validated experiment configuration."""
     datasets = read_experiment_datasets(config)
 
-    metrics_by_id = {
-        metric.id: metric
-        for metric in config.metrics
-    }
+    metrics_by_id = {metric.id: metric for metric in config.metrics}
 
     scenario_results = tuple(
         calculate_scenario_result(
@@ -38,9 +35,7 @@ def analyze_experiment(
         for scenario in config.scenarios
     )
 
-    bottleneck_candidates: list[
-        BottleneckCandidateResult
-    ] = []
+    bottleneck_candidates: list[BottleneckCandidateResult] = []
 
     for scenario_result in scenario_results:
         candidate = identify_bottleneck_candidate(
@@ -70,28 +65,18 @@ def analyze_experiment(
         )
     )
 
-    parallel_analysis_results: list[
-        ParallelAnalysisResult
-    ] = []
+    parallel_analysis_results: list[ParallelAnalysisResult] = []
 
     for parallel_analysis in config.parallel_analyses:
         baseline_result = analyze_parallel_scenario(
-            dataset=datasets[
-                parallel_analysis.baseline
-            ],
-            duration_metric_id=(
-                parallel_analysis.duration_metric
-            ),
+            dataset=datasets[parallel_analysis.baseline],
+            duration_metric_id=(parallel_analysis.duration_metric),
             duration_unit="milliseconds",
         )
 
         candidate_result = analyze_parallel_scenario(
-            dataset=datasets[
-                parallel_analysis.candidate
-            ],
-            duration_metric_id=(
-                parallel_analysis.duration_metric
-            ),
+            dataset=datasets[parallel_analysis.candidate],
+            duration_metric_id=(parallel_analysis.duration_metric),
             duration_unit="milliseconds",
         )
 
@@ -109,10 +94,6 @@ def analyze_experiment(
         scenarios=scenario_results,
         comparisons=comparison_results,
         local_total_impacts=local_total_impacts,
-        bottleneck_candidates=tuple(
-            bottleneck_candidates
-        ),
-        parallel_analyses=tuple(
-            parallel_analysis_results
-        ),
+        bottleneck_candidates=tuple(bottleneck_candidates),
+        parallel_analyses=tuple(parallel_analysis_results),
     )

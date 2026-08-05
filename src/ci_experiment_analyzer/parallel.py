@@ -30,10 +30,7 @@ def group_parallel_runs(
     seen_branches: set[tuple[str, str]] = set()
 
     for record in dataset.records:
-        if (
-            record.branch_id is None
-            or not record.branch_id.strip()
-        ):
+        if record.branch_id is None or not record.branch_id.strip():
             raise DataValidationError(
                 f"Scenario {dataset.scenario_id!r}, "
                 f"run {record.run_id!r} contains a "
@@ -54,9 +51,7 @@ def group_parallel_runs(
             )
 
         try:
-            duration = record.metric_values[
-                duration_metric_id
-            ]
+            duration = record.metric_values[duration_metric_id]
         except KeyError as error:
             raise DataValidationError(
                 f"Scenario {dataset.scenario_id!r}, "
@@ -92,25 +87,18 @@ def calculate_parallel_run_metrics(
     """Calculate duration and imbalance metrics for one parallel run."""
     if not run_group.branches:
         raise DataValidationError(
-            f"Parallel run {run_group.run_id!r} "
-            "does not contain any branches."
+            f"Parallel run {run_group.run_id!r} does not contain any branches."
         )
 
     for branch in run_group.branches:
-        if (
-            not math.isfinite(branch.duration)
-            or branch.duration < 0.0
-        ):
+        if not math.isfinite(branch.duration) or branch.duration < 0.0:
             raise DataValidationError(
                 f"Parallel run {run_group.run_id!r}, "
                 f"branch {branch.branch_id!r} contains "
                 f"invalid duration {branch.duration!r}."
             )
 
-    durations = tuple(
-        branch.duration
-        for branch in run_group.branches
-    )
+    durations = tuple(branch.duration for branch in run_group.branches)
 
     critical_path_duration = max(durations)
     minimum_branch_duration = min(durations)
@@ -130,10 +118,7 @@ def calculate_parallel_run_metrics(
     if mean_branch_duration == 0.0:
         imbalance_ratio = 1.0
     else:
-        imbalance_ratio = (
-            critical_path_duration
-            / mean_branch_duration
-        )
+        imbalance_ratio = critical_path_duration / mean_branch_duration
 
     return ParallelRunMetrics(
         run_id=run_group.run_id,
@@ -141,10 +126,7 @@ def calculate_parallel_run_metrics(
         critical_path_duration=critical_path_duration,
         minimum_branch_duration=minimum_branch_duration,
         mean_branch_duration=mean_branch_duration,
-        spread=(
-            critical_path_duration
-            - minimum_branch_duration
-        ),
+        spread=(critical_path_duration - minimum_branch_duration),
         imbalance_ratio=imbalance_ratio,
         slowest_branch_ids=slowest_branch_ids,
         is_slowest_tie=len(slowest_branch_ids) > 1,
@@ -157,33 +139,19 @@ def _calculate_parallel_metric_stats(
 ) -> ParallelMetricStats:
     """Calculate descriptive statistics for parallel run values."""
     if not values:
-        raise DataValidationError(
-            f"{context} does not contain any values."
-        )
+        raise DataValidationError(f"{context} does not contain any values.")
 
-    normalized_values = tuple(
-        float(value)
-        for value in values
-    )
+    normalized_values = tuple(float(value) for value in values)
 
     for value in normalized_values:
         if not math.isfinite(value):
-            raise DataValidationError(
-                f"{context} contains non-finite value "
-                f"{value!r}."
-            )
+            raise DataValidationError(f"{context} contains non-finite value {value!r}.")
 
-    standard_deviation = (
-        stdev(normalized_values)
-        if len(normalized_values) > 1
-        else 0.0
-    )
+    standard_deviation = stdev(normalized_values) if len(normalized_values) > 1 else 0.0
 
     return ParallelMetricStats(
         count=len(normalized_values),
-        median=float(
-            median(normalized_values)
-        ),
+        median=float(median(normalized_values)),
         mean=fmean(normalized_values),
         minimum=min(normalized_values),
         maximum=max(normalized_values),
@@ -201,14 +169,12 @@ def calculate_parallel_scenario_result(
 
     if not runs:
         raise DataValidationError(
-            f"Parallel scenario {scenario_id!r} "
-            "does not contain any analyzed runs."
+            f"Parallel scenario {scenario_id!r} does not contain any analyzed runs."
         )
 
     if not duration_unit.strip():
         raise DataValidationError(
-            f"Parallel scenario {scenario_id!r} "
-            "must define a non-empty duration unit."
+            f"Parallel scenario {scenario_id!r} must define a non-empty duration unit."
         )
 
     seen_run_ids: set[str] = set()
@@ -216,32 +182,18 @@ def calculate_parallel_scenario_result(
     for run in runs:
         if run.run_id in seen_run_ids:
             raise DataValidationError(
-                f"Parallel scenario {scenario_id!r} "
-                f"contains duplicate analyzed run "
-                f"{run.run_id!r}."
+                f"Parallel scenario {scenario_id!r} contains duplicate analyzed run {run.run_id!r}."
             )
 
         seen_run_ids.add(run.run_id)
 
-    branch_counts = tuple(
-        run.branch_count
-        for run in runs
-    )
+    branch_counts = tuple(run.branch_count for run in runs)
 
-    critical_path_values = tuple(
-        run.critical_path_duration
-        for run in runs
-    )
+    critical_path_values = tuple(run.critical_path_duration for run in runs)
 
-    spread_values = tuple(
-        run.spread
-        for run in runs
-    )
+    spread_values = tuple(run.spread for run in runs)
 
-    imbalance_ratio_values = tuple(
-        run.imbalance_ratio
-        for run in runs
-    )
+    imbalance_ratio_values = tuple(run.imbalance_ratio for run in runs)
 
     branch_count_minimum = min(branch_counts)
     branch_count_maximum = max(branch_counts)
@@ -252,32 +204,20 @@ def calculate_parallel_scenario_result(
         runs=runs,
         branch_count_minimum=branch_count_minimum,
         branch_count_maximum=branch_count_maximum,
-        branch_count_consistent=(
-            branch_count_minimum
-            == branch_count_maximum
-        ),
+        branch_count_consistent=(branch_count_minimum == branch_count_maximum),
         critical_path_duration=(
             _calculate_parallel_metric_stats(
                 values=critical_path_values,
-                context=(
-                    f"Parallel scenario {scenario_id!r} "
-                    "critical path duration"
-                ),
+                context=(f"Parallel scenario {scenario_id!r} critical path duration"),
             )
         ),
         spread=_calculate_parallel_metric_stats(
             values=spread_values,
-            context=(
-                f"Parallel scenario {scenario_id!r} "
-                "spread"
-            ),
+            context=(f"Parallel scenario {scenario_id!r} spread"),
         ),
         imbalance_ratio=_calculate_parallel_metric_stats(
             values=imbalance_ratio_values,
-            context=(
-                f"Parallel scenario {scenario_id!r} "
-                "imbalance ratio"
-            ),
+            context=(f"Parallel scenario {scenario_id!r} imbalance ratio"),
         ),
     )
 
@@ -289,19 +229,10 @@ def _compare_parallel_metric(
     candidate: ParallelMetricStats,
 ) -> MetricComparisonResult:
     """Compare one aggregated parallel metric using scenario medians."""
-    absolute_difference = (
-        candidate.median
-        - baseline.median
-    )
+    absolute_difference = candidate.median - baseline.median
 
     relative_difference_percent = (
-        None
-        if baseline.median == 0.0
-        else (
-            absolute_difference
-            / baseline.median
-            * 100.0
-        )
+        None if baseline.median == 0.0 else (absolute_difference / baseline.median * 100.0)
     )
 
     return MetricComparisonResult(
@@ -310,9 +241,7 @@ def _compare_parallel_metric(
         baseline_median=baseline.median,
         candidate_median=candidate.median,
         absolute_difference=absolute_difference,
-        relative_difference_percent=(
-            relative_difference_percent
-        ),
+        relative_difference_percent=(relative_difference_percent),
     )
 
 
@@ -327,10 +256,7 @@ def analyze_parallel_scenario(
         duration_metric_id=duration_metric_id,
     )
 
-    run_metrics = tuple(
-        calculate_parallel_run_metrics(run_group)
-        for run_group in run_groups
-    )
+    run_metrics = tuple(calculate_parallel_run_metrics(run_group) for run_group in run_groups)
 
     return calculate_parallel_scenario_result(
         scenario_id=dataset.scenario_id,

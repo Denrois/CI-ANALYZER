@@ -26,15 +26,11 @@ def _require_mapping(
 ) -> RawMapping:
     """Require a YAML value to be a string-keyed mapping."""
     if not isinstance(value, dict):
-        raise ConfigLoadError(
-            f"{context} must be a mapping."
-        )
+        raise ConfigLoadError(f"{context} must be a mapping.")
 
     for key in value:
         if not isinstance(key, str):
-            raise ConfigLoadError(
-                f"{context} must contain only string keys."
-            )
+            raise ConfigLoadError(f"{context} must contain only string keys.")
 
     return cast(RawMapping, value)
 
@@ -45,9 +41,7 @@ def _require_list(
 ) -> list[Any]:
     """Require a YAML value to be a list."""
     if not isinstance(value, list):
-        raise ConfigLoadError(
-            f"{context} must be a list."
-        )
+        raise ConfigLoadError(f"{context} must be a list.")
 
     return value
 
@@ -59,9 +53,7 @@ def _require_field(
 ) -> Any:
     """Return a required mapping field."""
     if field not in data:
-        raise ConfigLoadError(
-            f"{context} is missing required field {field!r}."
-        )
+        raise ConfigLoadError(f"{context} is missing required field {field!r}.")
 
     return data[field]
 
@@ -79,9 +71,7 @@ def _require_string(
     )
 
     if not isinstance(value, str):
-        raise ConfigLoadError(
-            f"{context} field {field!r} must be a string."
-        )
+        raise ConfigLoadError(f"{context} field {field!r} must be a string.")
 
     return value
 
@@ -99,9 +89,7 @@ def _require_integer(
     )
 
     if isinstance(value, bool) or not isinstance(value, int):
-        raise ConfigLoadError(
-            f"{context} field {field!r} must be an integer."
-        )
+        raise ConfigLoadError(f"{context} field {field!r} must be an integer.")
 
     return value
 
@@ -122,9 +110,7 @@ def _optional_number(
         value,
         (int, float),
     ):
-        raise ConfigLoadError(
-            f"{context} field {field!r} must be a number."
-        )
+        raise ConfigLoadError(f"{context} field {field!r} must be a number.")
 
     return float(value)
 
@@ -139,9 +125,7 @@ def _require_string_list(
 
     for index, item in enumerate(items):
         if not isinstance(item, str):
-            raise ConfigLoadError(
-                f"{context}[{index}] must be a string."
-            )
+            raise ConfigLoadError(f"{context}[{index}] must be a string.")
 
         result.append(item)
 
@@ -165,9 +149,7 @@ def _load_source(
     )
 
     if not source_path.is_absolute():
-        source_path = (
-            base_directory / source_path
-        ).resolve()
+        source_path = (base_directory / source_path).resolve()
 
     return SourceConfig(
         format=_require_string(
@@ -322,10 +304,7 @@ def _load_record_mapping(
 
     for key, mapped_field in data.items():
         if not isinstance(mapped_field, str):
-            raise ConfigLoadError(
-                f"record_mapping field {key!r} "
-                "must map to a string value."
-            )
+            raise ConfigLoadError(f"record_mapping field {key!r} must map to a string value.")
 
         result[key] = mapped_field
 
@@ -368,18 +347,12 @@ def load_config(path: str | Path) -> ExperimentConfig:
             encoding="utf-8",
         )
     except OSError as error:
-        raise ConfigLoadError(
-            f"Cannot read configuration file "
-            f"{config_path}: {error}"
-        ) from error
+        raise ConfigLoadError(f"Cannot read configuration file {config_path}: {error}") from error
 
     try:
         raw_data: Any = yaml.safe_load(raw_text)
     except yaml.YAMLError as error:
-        raise ConfigLoadError(
-            f"Cannot parse YAML configuration "
-            f"{config_path}: {error}"
-        ) from error
+        raise ConfigLoadError(f"Cannot parse YAML configuration {config_path}: {error}") from error
 
     data = _require_mapping(
         raw_data,
@@ -474,15 +447,11 @@ def load_config(path: str | Path) -> ExperimentConfig:
             value=item,
             index=index,
         )
-        for index, item in enumerate(
-            parallel_analysis_items
-        )
+        for index, item in enumerate(parallel_analysis_items)
     )
 
     if "analysis" in data:
-        analysis = _load_analysis_config(
-            data["analysis"]
-        )
+        analysis = _load_analysis_config(data["analysis"])
     else:
         analysis = AnalysisConfig()
 

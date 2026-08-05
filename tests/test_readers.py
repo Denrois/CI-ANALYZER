@@ -56,11 +56,7 @@ def test_read_csv_scenario_uses_configured_field_names(
     csv_path = tmp_path / "baseline.csv"
 
     csv_path.write_text(
-        (
-            "execution,dependency_time,total_time\n"
-            "run-1,10.5,50.0\n"
-            "run-2,12.5,54.0\n"
-        ),
+        ("execution,dependency_time,total_time\nrun-1,10.5,50.0\nrun-2,12.5,54.0\n"),
         encoding="utf-8",
     )
 

@@ -73,10 +73,8 @@ comparisons:
     )
 
     assert exit_code == 0
-    assert (
-            "Configuration and data are valid:"
-            in capsys.readouterr().out
-    )
+    assert "Configuration and data are valid:" in capsys.readouterr().out
+
 
 def test_validate_command_reports_config_load_error(
     tmp_path: Path,
@@ -86,8 +84,7 @@ def test_validate_command_reports_config_load_error(
     config_path = tmp_path / "invalid.yaml"
 
     config_path.write_text(
-        "version: 1\n"
-        "scenarios: [\n",
+        "version: 1\nscenarios: [\n",
         encoding="utf-8",
     )
 
