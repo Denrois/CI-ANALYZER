@@ -19,21 +19,13 @@ def test_analyze_command_writes_all_report_formats(
 
     baseline_path = data_directory / "baseline.csv"
     baseline_path.write_text(
-        (
-            "run_id,install_seconds,total_seconds\n"
-            "baseline-1,10.0,50.0\n"
-            "baseline-2,14.0,60.0\n"
-        ),
+        ("run_id,install_seconds,total_seconds\nbaseline-1,10.0,50.0\nbaseline-2,14.0,60.0\n"),
         encoding="utf-8",
     )
 
     optimized_path = data_directory / "optimized.csv"
     optimized_path.write_text(
-        (
-            "run_id,install_seconds,total_seconds\n"
-            "optimized-1,8.0,45.0\n"
-            "optimized-2,10.0,51.0\n"
-        ),
+        ("run_id,install_seconds,total_seconds\noptimized-1,8.0,45.0\noptimized-2,10.0,51.0\n"),
         encoding="utf-8",
     )
 
@@ -110,9 +102,7 @@ comparisons:
     assert summary_path.is_file()
     assert markdown_path.is_file()
 
-    report = json.loads(
-        report_path.read_text(encoding="utf-8")
-    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
 
     assert report["version"] == 1
     assert report["experiment"] == {
@@ -134,35 +124,19 @@ comparisons:
 
     assert install_result["id"] == "install_duration"
     assert install_result["unit"] == "milliseconds"
-    assert install_result["baseline_median"] == pytest.approx(
-        12_000.0
-    )
-    assert install_result["candidate_median"] == pytest.approx(
-        9_000.0
-    )
-    assert install_result["absolute_difference"] == pytest.approx(
-        -3_000.0
-    )
-    assert install_result[
-        "relative_difference_percent"
-    ] == pytest.approx(-25.0)
+    assert install_result["baseline_median"] == pytest.approx(12_000.0)
+    assert install_result["candidate_median"] == pytest.approx(9_000.0)
+    assert install_result["absolute_difference"] == pytest.approx(-3_000.0)
+    assert install_result["relative_difference_percent"] == pytest.approx(-25.0)
 
     total_result = comparison["metrics"][1]
 
     assert total_result["id"] == "total_duration"
     assert total_result["unit"] == "milliseconds"
-    assert total_result["baseline_median"] == pytest.approx(
-        55_000.0
-    )
-    assert total_result["candidate_median"] == pytest.approx(
-        48_000.0
-    )
-    assert total_result["absolute_difference"] == pytest.approx(
-        -7_000.0
-    )
-    assert total_result[
-        "relative_difference_percent"
-    ] == pytest.approx(-12.7272727273)
+    assert total_result["baseline_median"] == pytest.approx(55_000.0)
+    assert total_result["candidate_median"] == pytest.approx(48_000.0)
+    assert total_result["absolute_difference"] == pytest.approx(-7_000.0)
+    assert total_result["relative_difference_percent"] == pytest.approx(-12.7272727273)
 
     assert len(report["local_vs_total_impacts"]) == 1
 
@@ -172,33 +146,19 @@ comparisons:
     assert impact_result["phase_metric"] == "install_duration"
     assert impact_result["total_metric"] == "total_duration"
 
-    assert impact_result[
-               "phase_relative_difference_percent"
-           ] == pytest.approx(-25.0)
+    assert impact_result["phase_relative_difference_percent"] == pytest.approx(-25.0)
 
-    assert impact_result[
-               "total_relative_difference_percent"
-           ] == pytest.approx(-12.7272727273)
+    assert impact_result["total_relative_difference_percent"] == pytest.approx(-12.7272727273)
 
-    assert impact_result[
-               "local_improvement_threshold_pct"
-           ] == pytest.approx(10.0)
+    assert impact_result["local_improvement_threshold_pct"] == pytest.approx(10.0)
 
-    assert impact_result[
-               "total_impact_threshold_pct"
-           ] == pytest.approx(15.0)
+    assert impact_result["total_impact_threshold_pct"] == pytest.approx(15.0)
 
-    assert impact_result[
-               "substantial_local_improvement"
-           ] is True
+    assert impact_result["substantial_local_improvement"] is True
 
-    assert impact_result[
-               "limited_total_improvement"
-           ] is True
+    assert impact_result["limited_total_improvement"] is True
 
-    assert impact_result[
-               "limited_end_to_end_impact"
-           ] is True
+    assert impact_result["limited_end_to_end_impact"] is True
 
     assert impact_result["warning"] == (
         "The local phase improved substantially, but the total pipeline "
@@ -207,43 +167,29 @@ comparisons:
 
     assert len(report["bottleneck_candidates"]) == 2
 
-    baseline_candidate = report[
-        "bottleneck_candidates"
-    ][0]
+    baseline_candidate = report["bottleneck_candidates"][0]
 
     assert baseline_candidate["scenario"] == "baseline"
     assert baseline_candidate["phase_metrics"] == [
         "install_duration",
     ]
-    assert baseline_candidate["median"] == pytest.approx(
-        12_000.0
-    )
+    assert baseline_candidate["median"] == pytest.approx(12_000.0)
     assert baseline_candidate["unit"] == "milliseconds"
     assert baseline_candidate["is_tie"] is False
 
-    optimized_candidate = report[
-        "bottleneck_candidates"
-    ][1]
+    optimized_candidate = report["bottleneck_candidates"][1]
 
     assert optimized_candidate["scenario"] == "optimized"
     assert optimized_candidate["phase_metrics"] == [
         "install_duration",
     ]
-    assert optimized_candidate["median"] == pytest.approx(
-        9_000.0
-    )
+    assert optimized_candidate["median"] == pytest.approx(9_000.0)
     assert optimized_candidate["unit"] == "milliseconds"
     assert optimized_candidate["is_tie"] is False
 
     assert report["parallel_analyses"] == []
 
-    summary_rows = list(
-        csv.DictReader(
-            summary_path.read_text(
-                encoding="utf-8"
-            ).splitlines()
-        )
-    )
+    summary_rows = list(csv.DictReader(summary_path.read_text(encoding="utf-8").splitlines()))
 
     assert summary_rows == [
         {
@@ -270,19 +216,13 @@ comparisons:
             "baseline_median": "55000.0",
             "candidate_median": "48000.0",
             "absolute_difference": "-7000.0",
-            "relative_difference_percent": (
-                "-12.727272727272727"
-            ),
+            "relative_difference_percent": ("-12.727272727272727"),
         },
     ]
 
-    markdown = markdown_path.read_text(
-        encoding="utf-8"
-    )
+    markdown = markdown_path.read_text(encoding="utf-8")
 
-    assert markdown.startswith(
-        "# Minimal cache experiment\n"
-    )
+    assert markdown.startswith("# Minimal cache experiment\n")
 
     assert "## Overview" in markdown
     assert "## Scenario statistics" in markdown
@@ -295,15 +235,9 @@ comparisons:
 
     assert "`cache-impact`" in markdown
 
-    assert (
-               "| install_duration | milliseconds | "
-               "12000 | 9000 | -3000 | -25% |"
-           ) in markdown
+    assert ("| install_duration | milliseconds | 12000 | 9000 | -3000 | -25% |") in markdown
 
-    assert (
-               "| total_duration | milliseconds | "
-               "55000 | 48000 | -7000 | -12.727273% |"
-           ) in markdown
+    assert ("| total_duration | milliseconds | 55000 | 48000 | -7000 | -12.727273% |") in markdown
 
     assert "No parallel analyses were configured." in markdown
 
@@ -324,19 +258,13 @@ def test_analyze_handles_single_run_and_zero_baseline(
 
     baseline_path = data_directory / "baseline.csv"
     baseline_path.write_text(
-        (
-            "run_id,total_seconds\n"
-            "baseline-1,0.0\n"
-        ),
+        ("run_id,total_seconds\nbaseline-1,0.0\n"),
         encoding="utf-8",
     )
 
     optimized_path = data_directory / "optimized.csv"
     optimized_path.write_text(
-        (
-            "run_id,total_seconds\n"
-            "optimized-1,1.0\n"
-        ),
+        ("run_id,total_seconds\noptimized-1,1.0\n"),
         encoding="utf-8",
     )
 
@@ -402,9 +330,7 @@ comparisons:
     assert summary_path.is_file()
     assert markdown_path.is_file()
 
-    report = json.loads(
-        report_path.read_text(encoding="utf-8")
-    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
 
     baseline_metric = report["scenarios"][0]["metrics"][0]
     optimized_metric = report["scenarios"][1]["metrics"][0]
@@ -450,36 +376,23 @@ comparisons:
 
     assert report["parallel_analyses"] == []
 
-    summary_rows = list(
-        csv.DictReader(
-            summary_path.read_text(
-                encoding="utf-8"
-            ).splitlines()
-        )
-    )
+    summary_rows = list(csv.DictReader(summary_path.read_text(encoding="utf-8").splitlines()))
 
     assert len(summary_rows) == 1
 
     summary_row = summary_rows[0]
 
     assert summary_row["analysis_type"] == "comparison"
-    assert summary_row["analysis_id"] == (
-        "zero-baseline-impact"
-    )
+    assert summary_row["analysis_id"] == ("zero-baseline-impact")
     assert summary_row["metric_id"] == "total_duration"
     assert summary_row["baseline_median"] == "0.0"
     assert summary_row["candidate_median"] == "1000.0"
     assert summary_row["absolute_difference"] == "1000.0"
     assert summary_row["relative_difference_percent"] == ""
 
-    markdown = markdown_path.read_text(
-        encoding="utf-8"
-    )
+    markdown = markdown_path.read_text(encoding="utf-8")
 
-    assert (
-               "| total_duration | milliseconds | "
-               "0 | 1000 | 1000 | N/A |"
-           ) in markdown
+    assert ("| total_duration | milliseconds | 0 | 1000 | 1000 | N/A |") in markdown
 
 
 def test_analyze_command_writes_parallel_report_formats(
@@ -580,9 +493,7 @@ parallel_analyses:
     assert summary_path.is_file()
     assert markdown_path.is_file()
 
-    report = json.loads(
-        report_path.read_text(encoding="utf-8")
-    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
 
     assert report["experiment"] == {
         "id": "parallel-stage-example",
@@ -598,10 +509,7 @@ parallel_analyses:
     parallel_analysis = report["parallel_analyses"][0]
 
     assert parallel_analysis["id"] == "test-sharding"
-    assert (
-        parallel_analysis["duration_metric"]
-        == "shard_duration"
-    )
+    assert parallel_analysis["duration_metric"] == "shard_duration"
 
     baseline = parallel_analysis["baseline"]
     candidate = parallel_analysis["candidate"]
@@ -630,23 +538,11 @@ parallel_analyses:
 
     assert first_baseline_run["run_id"] == "baseline-1"
     assert first_baseline_run["branch_count"] == 2
-    assert (
-        first_baseline_run["critical_path_duration"]
-        == 40_000.0
-    )
-    assert (
-        first_baseline_run["minimum_branch_duration"]
-        == 20_000.0
-    )
-    assert (
-        first_baseline_run["mean_branch_duration"]
-        == 30_000.0
-    )
+    assert first_baseline_run["critical_path_duration"] == 40_000.0
+    assert first_baseline_run["minimum_branch_duration"] == 20_000.0
+    assert first_baseline_run["mean_branch_duration"] == 30_000.0
     assert first_baseline_run["spread"] == 20_000.0
-    assert (
-        first_baseline_run["imbalance_ratio"]
-        == pytest.approx(4.0 / 3.0)
-    )
+    assert first_baseline_run["imbalance_ratio"] == pytest.approx(4.0 / 3.0)
     assert first_baseline_run["slowest_branches"] == [
         "shard-1",
     ]
@@ -655,10 +551,7 @@ parallel_analyses:
     first_candidate_run = candidate["runs"][0]
 
     assert first_candidate_run["run_id"] == "candidate-1"
-    assert (
-        first_candidate_run["critical_path_duration"]
-        == 30_000.0
-    )
+    assert first_candidate_run["critical_path_duration"] == 30_000.0
     assert first_candidate_run["spread"] == 0.0
     assert first_candidate_run["imbalance_ratio"] == 1.0
     assert first_candidate_run["slowest_branches"] == [
@@ -667,52 +560,30 @@ parallel_analyses:
     ]
     assert first_candidate_run["is_slowest_tie"] is True
 
-    assert (
-        baseline["critical_path_duration"]["median"]
-        == 35_000.0
-    )
-    assert (
-        candidate["critical_path_duration"]["median"]
-        == 25_000.0
-    )
+    assert baseline["critical_path_duration"]["median"] == 35_000.0
+    assert candidate["critical_path_duration"]["median"] == 25_000.0
 
     assert baseline["spread"]["median"] == 20_000.0
     assert candidate["spread"]["median"] == 0.0
 
-    assert (
-        baseline["imbalance_ratio"]["median"]
-        == pytest.approx(17.0 / 12.0)
-    )
+    assert baseline["imbalance_ratio"]["median"] == pytest.approx(17.0 / 12.0)
     assert candidate["imbalance_ratio"]["median"] == 1.0
 
-    assert tuple(
-        metric["id"]
-        for metric in parallel_analysis["metrics"]
-    ) == (
+    assert tuple(metric["id"] for metric in parallel_analysis["metrics"]) == (
         "critical_path_duration",
         "spread",
         "imbalance_ratio",
     )
 
-    metrics_by_id = {
-        metric["id"]: metric
-        for metric in parallel_analysis["metrics"]
-    }
+    metrics_by_id = {metric["id"]: metric for metric in parallel_analysis["metrics"]}
 
-    critical_path = metrics_by_id[
-        "critical_path_duration"
-    ]
+    critical_path = metrics_by_id["critical_path_duration"]
 
     assert critical_path["unit"] == "milliseconds"
     assert critical_path["baseline_median"] == 35_000.0
     assert critical_path["candidate_median"] == 25_000.0
-    assert critical_path["absolute_difference"] == (
-        -10_000.0
-    )
-    assert (
-        critical_path["relative_difference_percent"]
-        == pytest.approx(-28.5714285714)
-    )
+    assert critical_path["absolute_difference"] == (-10_000.0)
+    assert critical_path["relative_difference_percent"] == pytest.approx(-28.5714285714)
 
     spread = metrics_by_id["spread"]
 
@@ -725,114 +596,59 @@ parallel_analyses:
     imbalance = metrics_by_id["imbalance_ratio"]
 
     assert imbalance["unit"] == "ratio"
-    assert (
-        imbalance["baseline_median"]
-        == pytest.approx(17.0 / 12.0)
-    )
+    assert imbalance["baseline_median"] == pytest.approx(17.0 / 12.0)
     assert imbalance["candidate_median"] == 1.0
-    assert (
-        imbalance["absolute_difference"]
-        == pytest.approx(-5.0 / 12.0)
-    )
-    assert (
-        imbalance["relative_difference_percent"]
-        == pytest.approx(-500.0 / 17.0)
-    )
+    assert imbalance["absolute_difference"] == pytest.approx(-5.0 / 12.0)
+    assert imbalance["relative_difference_percent"] == pytest.approx(-500.0 / 17.0)
 
-    summary_rows = list(
-        csv.DictReader(
-            summary_path.read_text(
-                encoding="utf-8"
-            ).splitlines()
-        )
-    )
+    summary_rows = list(csv.DictReader(summary_path.read_text(encoding="utf-8").splitlines()))
 
     assert len(summary_rows) == 3
 
-    assert [
-               row["metric_id"]
-               for row in summary_rows
-           ] == [
-               "critical_path_duration",
-               "spread",
-               "imbalance_ratio",
-           ]
-
-    for row in summary_rows:
-        assert row["analysis_type"] == (
-            "parallel_analysis"
-        )
-        assert row["analysis_id"] == "test-sharding"
-        assert row["baseline_scenario"] == "baseline"
-        assert row["candidate_scenario"] == (
-            "timing-based"
-        )
-        assert row["source_metric_id"] == (
-            "shard_duration"
-        )
-
-    summary_by_metric = {
-        row["metric_id"]: row
-        for row in summary_rows
-    }
-
-    critical_path_summary = summary_by_metric[
-        "critical_path_duration"
+    assert [row["metric_id"] for row in summary_rows] == [
+        "critical_path_duration",
+        "spread",
+        "imbalance_ratio",
     ]
 
+    for row in summary_rows:
+        assert row["analysis_type"] == ("parallel_analysis")
+        assert row["analysis_id"] == "test-sharding"
+        assert row["baseline_scenario"] == "baseline"
+        assert row["candidate_scenario"] == ("timing-based")
+        assert row["source_metric_id"] == ("shard_duration")
+
+    summary_by_metric = {row["metric_id"]: row for row in summary_rows}
+
+    critical_path_summary = summary_by_metric["critical_path_duration"]
+
     assert critical_path_summary["unit"] == "milliseconds"
-    assert critical_path_summary["baseline_median"] == (
-        "35000.0"
+    assert critical_path_summary["baseline_median"] == ("35000.0")
+    assert critical_path_summary["candidate_median"] == ("25000.0")
+    assert critical_path_summary["absolute_difference"] == ("-10000.0")
+    assert float(critical_path_summary["relative_difference_percent"]) == pytest.approx(
+        -28.5714285714
     )
-    assert critical_path_summary["candidate_median"] == (
-        "25000.0"
-    )
-    assert critical_path_summary["absolute_difference"] == (
-        "-10000.0"
-    )
-    assert float(
-        critical_path_summary[
-            "relative_difference_percent"
-        ]
-    ) == pytest.approx(-28.5714285714)
 
     spread_summary = summary_by_metric["spread"]
 
     assert spread_summary["unit"] == "milliseconds"
     assert spread_summary["baseline_median"] == "20000.0"
     assert spread_summary["candidate_median"] == "0.0"
-    assert spread_summary["absolute_difference"] == (
-        "-20000.0"
-    )
-    assert spread_summary[
-               "relative_difference_percent"
-           ] == "-100.0"
+    assert spread_summary["absolute_difference"] == ("-20000.0")
+    assert spread_summary["relative_difference_percent"] == "-100.0"
 
-    imbalance_summary = summary_by_metric[
-        "imbalance_ratio"
-    ]
+    imbalance_summary = summary_by_metric["imbalance_ratio"]
 
     assert imbalance_summary["unit"] == "ratio"
-    assert float(
-        imbalance_summary["baseline_median"]
-    ) == pytest.approx(17.0 / 12.0)
+    assert float(imbalance_summary["baseline_median"]) == pytest.approx(17.0 / 12.0)
     assert imbalance_summary["candidate_median"] == "1.0"
-    assert float(
-        imbalance_summary["absolute_difference"]
-    ) == pytest.approx(-5.0 / 12.0)
-    assert float(
-        imbalance_summary[
-            "relative_difference_percent"
-        ]
-    ) == pytest.approx(-500.0 / 17.0)
+    assert float(imbalance_summary["absolute_difference"]) == pytest.approx(-5.0 / 12.0)
+    assert float(imbalance_summary["relative_difference_percent"]) == pytest.approx(-500.0 / 17.0)
 
-    markdown = markdown_path.read_text(
-        encoding="utf-8"
-    )
+    markdown = markdown_path.read_text(encoding="utf-8")
 
-    assert markdown.startswith(
-        "# Parallel stage example\n"
-    )
+    assert markdown.startswith("# Parallel stage example\n")
 
     assert "## Parallel-stage analysis" in markdown
     assert "`test-sharding`" in markdown
@@ -846,19 +662,12 @@ parallel_analyses:
     assert "shard-1, shard-2" in markdown
 
     assert (
-               "| critical_path_duration | milliseconds | "
-               "35000 | 25000 | -10000 | -28.571429% |"
-           ) in markdown
+        "| critical_path_duration | milliseconds | 35000 | 25000 | -10000 | -28.571429% |"
+    ) in markdown
 
-    assert (
-               "| spread | milliseconds | "
-               "20000 | 0 | -20000 | -100% |"
-           ) in markdown
+    assert ("| spread | milliseconds | 20000 | 0 | -20000 | -100% |") in markdown
 
-    assert (
-               "| imbalance_ratio | ratio | "
-               "1.416667 | 1 | -0.416667 | -29.411765% |"
-           ) in markdown
+    assert ("| imbalance_ratio | ratio | 1.416667 | 1 | -0.416667 | -29.411765% |") in markdown
 
     output = capsys.readouterr().out
 

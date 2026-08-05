@@ -74,11 +74,7 @@ def _write_records(
 
     if source_format == "jsonl":
         path.write_text(
-            "\n".join(
-                json.dumps(record)
-                for record in records
-            )
-            + "\n",
+            "\n".join(json.dumps(record) for record in records) + "\n",
             encoding="utf-8",
         )
         return
@@ -284,9 +280,7 @@ comparisons:
 
         assert report_path.is_file()
 
-        reports[source_format] = json.loads(
-            report_path.read_text(encoding="utf-8")
-        )
+        reports[source_format] = json.loads(report_path.read_text(encoding="utf-8"))
 
     assert reports["json"] == reports["csv"]
     assert reports["jsonl"] == reports["csv"]

@@ -21,21 +21,13 @@ def test_analyze_experiment_builds_complete_result(
     """Analysis should contain scenario statistics and comparisons."""
     baseline_path = tmp_path / "baseline.csv"
     baseline_path.write_text(
-        (
-            "run_id,total_seconds\n"
-            "baseline-1,10.0\n"
-            "baseline-2,14.0\n"
-        ),
+        ("run_id,total_seconds\nbaseline-1,10.0\nbaseline-2,14.0\n"),
         encoding="utf-8",
     )
 
     optimized_path = tmp_path / "optimized.csv"
     optimized_path.write_text(
-        (
-            "run_id,total_seconds\n"
-            "optimized-1,8.0\n"
-            "optimized-2,10.0\n"
-        ),
+        ("run_id,total_seconds\noptimized-1,8.0\noptimized-2,10.0\n"),
         encoding="utf-8",
     )
 
@@ -84,7 +76,7 @@ def test_analyze_experiment_builds_complete_result(
     )
 
     result = analyze_experiment(config)
-    
+
     assert result.parallel_analyses == ()
     assert result.bottleneck_candidates == ()
 
@@ -101,9 +93,7 @@ def test_analyze_experiment_builds_complete_result(
     assert baseline_stats.mean == 12_000.0
     assert baseline_stats.minimum == 10_000.0
     assert baseline_stats.maximum == 14_000.0
-    assert baseline_stats.standard_deviation == pytest.approx(
-        2_828.42712474619
-    )
+    assert baseline_stats.standard_deviation == pytest.approx(2_828.42712474619)
 
     optimized_stats = result.scenarios[1].metrics[0]
 

@@ -63,8 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ci-analyzer",
         description=(
-            "Analyze CI pipeline optimization experiments "
-            "and generate reproducible reports."
+            "Analyze CI pipeline optimization experiments and generate reproducible reports."
         ),
     )
 

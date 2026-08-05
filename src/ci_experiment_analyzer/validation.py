@@ -36,13 +36,7 @@ def _find_duplicates(values: Sequence[str]) -> tuple[str, ...]:
     """Return duplicate non-empty identifiers."""
     counts = Counter(values)
 
-    return tuple(
-        sorted(
-            value
-            for value, count in counts.items()
-            if value and count > 1
-        )
-    )
+    return tuple(sorted(value for value, count in counts.items() if value and count > 1))
 
 
 def validate_config(config: ExperimentConfig) -> None:
@@ -85,35 +79,24 @@ def validate_config(config: ExperimentConfig) -> None:
 
         if not scenario.source.path.is_file():
             errors.append(
-                f"source file for scenario {scenario.id!r} does not exist: "
-                f"{scenario.source.path}"
+                f"source file for scenario {scenario.id!r} does not exist: {scenario.source.path}"
             )
 
     run_id_field = config.record_mapping.get("run_id")
 
     if run_id_field is None or not run_id_field.strip():
-        errors.append(
-            "record_mapping must contain a non-empty 'run_id' field"
-        )
+        errors.append("record_mapping must contain a non-empty 'run_id' field")
 
-    branch_id_field = config.record_mapping.get(
-        "branch_id"
-    )
+    branch_id_field = config.record_mapping.get("branch_id")
 
     if config.parallel_analyses:
-        if (
-                branch_id_field is None
-                or not branch_id_field.strip()
-        ):
+        if branch_id_field is None or not branch_id_field.strip():
             errors.append(
                 "record_mapping must contain a non-empty "
                 "'branch_id' field when parallel analyses "
                 "are configured"
             )
-        elif (
-                run_id_field is not None
-                and branch_id_field == run_id_field
-        ):
+        elif run_id_field is not None and branch_id_field == run_id_field:
             errors.append(
                 "record_mapping fields 'run_id' and "
                 "'branch_id' must reference different "
@@ -133,15 +116,10 @@ def validate_config(config: ExperimentConfig) -> None:
             errors.append("metric id must not be empty")
 
         if not metric.field.strip():
-            errors.append(
-                f"metric {metric.id!r} must define a non-empty source field"
-            )
+            errors.append(f"metric {metric.id!r} must define a non-empty source field")
 
         if metric.metric_type not in SUPPORTED_METRIC_TYPES:
-            errors.append(
-                f"metric {metric.id!r} uses unsupported type "
-                f"{metric.metric_type!r}"
-            )
+            errors.append(f"metric {metric.id!r} uses unsupported type {metric.metric_type!r}")
 
         if metric.role not in SUPPORTED_METRIC_ROLES:
             errors.append(
@@ -150,47 +128,27 @@ def validate_config(config: ExperimentConfig) -> None:
                 f"{sorted(SUPPORTED_METRIC_ROLES)}"
             )
 
-        if (
-            metric.metric_type == "duration"
-            and metric.unit not in SUPPORTED_DURATION_UNITS
-        ):
-            errors.append(
-                f"duration metric {metric.id!r} uses unsupported unit "
-                f"{metric.unit!r}"
-            )
+        if metric.metric_type == "duration" and metric.unit not in SUPPORTED_DURATION_UNITS:
+            errors.append(f"duration metric {metric.id!r} uses unsupported unit {metric.unit!r}")
 
-    comparison_ids = tuple(
-        comparison.id for comparison in config.comparisons
-    )
+    comparison_ids = tuple(comparison.id for comparison in config.comparisons)
 
     parallel_analysis_ids = tuple(
-        parallel_analysis.id
-        for parallel_analysis in config.parallel_analyses
+        parallel_analysis.id for parallel_analysis in config.parallel_analyses
     )
 
     if not comparison_ids and not parallel_analysis_ids:
-        errors.append(
-            "at least one comparison or parallel analysis "
-            "must be configured"
-        )
+        errors.append("at least one comparison or parallel analysis must be configured")
 
     for duplicate_id in _find_duplicates(comparison_ids):
         errors.append(f"duplicate comparison id: {duplicate_id!r}")
 
-    for duplicate_id in _find_duplicates(
-            parallel_analysis_ids
-    ):
-        errors.append(
-            f"duplicate parallel analysis id: "
-            f"{duplicate_id!r}"
-        )
+    for duplicate_id in _find_duplicates(parallel_analysis_ids):
+        errors.append(f"duplicate parallel analysis id: {duplicate_id!r}")
 
     scenario_id_set = set(scenario_ids)
     metric_id_set = set(metric_ids)
-    metrics_by_id = {
-        metric.id: metric
-        for metric in config.metrics
-    }
+    metrics_by_id = {metric.id: metric for metric in config.metrics}
 
     for comparison in config.comparisons:
         if not comparison.id.strip():
@@ -210,28 +168,21 @@ def validate_config(config: ExperimentConfig) -> None:
 
         if comparison.baseline == comparison.candidate:
             errors.append(
-                f"comparison {comparison.id!r} must use different baseline "
-                "and candidate scenarios"
+                f"comparison {comparison.id!r} must use different baseline and candidate scenarios"
             )
 
         if not comparison.metrics:
-            errors.append(
-                f"comparison {comparison.id!r} must reference at least "
-                "one metric"
-            )
+            errors.append(f"comparison {comparison.id!r} must reference at least one metric")
 
         for metric_id in comparison.metrics:
             if metric_id not in metric_id_set:
                 errors.append(
-                    f"comparison {comparison.id!r} references unknown metric "
-                    f"{metric_id!r}"
+                    f"comparison {comparison.id!r} references unknown metric {metric_id!r}"
                 )
 
     for parallel_analysis in config.parallel_analyses:
         if not parallel_analysis.id.strip():
-            errors.append(
-                "parallel analysis id must not be empty"
-            )
+            errors.append("parallel analysis id must not be empty")
 
         if parallel_analysis.baseline not in scenario_id_set:
             errors.append(
@@ -249,19 +200,14 @@ def validate_config(config: ExperimentConfig) -> None:
                 f"{parallel_analysis.candidate!r}"
             )
 
-        if (
-                parallel_analysis.baseline
-                == parallel_analysis.candidate
-        ):
+        if parallel_analysis.baseline == parallel_analysis.candidate:
             errors.append(
                 f"parallel analysis "
                 f"{parallel_analysis.id!r} must use "
                 "different baseline and candidate scenarios"
             )
 
-        duration_metric = metrics_by_id.get(
-            parallel_analysis.duration_metric
-        )
+        duration_metric = metrics_by_id.get(parallel_analysis.duration_metric)
 
         if duration_metric is None:
             errors.append(
@@ -272,10 +218,7 @@ def validate_config(config: ExperimentConfig) -> None:
             )
             continue
 
-        if (
-                duration_metric.metric_type != "duration"
-                or duration_metric.role != "parallel_branch"
-        ):
+        if duration_metric.metric_type != "duration" or duration_metric.role != "parallel_branch":
             errors.append(
                 f"parallel analysis "
                 f"{parallel_analysis.id!r} must reference "
@@ -284,29 +227,17 @@ def validate_config(config: ExperimentConfig) -> None:
             )
 
     analysis_thresholds = {
-        "local_improvement_threshold_pct": (
-            config.analysis.local_improvement_threshold_pct
-        ),
-        "total_impact_threshold_pct": (
-            config.analysis.total_impact_threshold_pct
-        ),
+        "local_improvement_threshold_pct": (config.analysis.local_improvement_threshold_pct),
+        "total_impact_threshold_pct": (config.analysis.total_impact_threshold_pct),
     }
 
-    for threshold_name, threshold_value in (
-        analysis_thresholds.items()
-    ):
+    for threshold_name, threshold_value in analysis_thresholds.items():
         if not math.isfinite(threshold_value):
-            errors.append(
-                f"analysis threshold {threshold_name!r} "
-                "must be finite"
-            )
+            errors.append(f"analysis threshold {threshold_name!r} must be finite")
             continue
 
         if not 0.0 <= threshold_value <= 100.0:
-            errors.append(
-                f"analysis threshold {threshold_name!r} "
-                "must be between 0 and 100"
-            )
+            errors.append(f"analysis threshold {threshold_name!r} must be between 0 and 100")
 
     if errors:
         raise ConfigValidationError(errors)

@@ -125,10 +125,7 @@ def test_validate_config_rejects_unknown_comparison_metric(
     with pytest.raises(ConfigValidationError) as exc_info:
         validate_config(invalid_config)
 
-    assert (
-        "references unknown metric 'unknown-duration'"
-        in str(exc_info.value)
-    )
+    assert "references unknown metric 'unknown-duration'" in str(exc_info.value)
 
 
 def test_validate_config_rejects_missing_source_file(
@@ -220,10 +217,7 @@ def test_validate_config_accepts_jsonl_source_format(
 
     jsonl_path = tmp_path / "baseline.jsonl"
     jsonl_path.write_text(
-        (
-            '{"run_id":"baseline-1",'
-            '"duration":10.0}\n'
-        ),
+        ('{"run_id":"baseline-1","duration":10.0}\n'),
         encoding="utf-8",
     )
 
@@ -245,6 +239,7 @@ def test_validate_config_accepts_jsonl_source_format(
     )
 
     validate_config(jsonl_config)
+
 
 def test_validate_config_rejects_unsupported_metric_role(
     tmp_path: Path,
@@ -270,6 +265,7 @@ def test_validate_config_rejects_unsupported_metric_role(
         match="uses unsupported role 'pipeline'",
     ):
         validate_config(invalid_config)
+
 
 @pytest.mark.parametrize(
     "role",
@@ -301,6 +297,7 @@ def test_validate_config_accepts_supported_metric_roles(
 
     validate_config(valid_config)
 
+
 def test_validate_config_rejects_negative_analysis_threshold(
     tmp_path: Path,
 ) -> None:
@@ -317,12 +314,10 @@ def test_validate_config_rejects_negative_analysis_threshold(
 
     with pytest.raises(
         ConfigValidationError,
-        match=(
-            "local_improvement_threshold_pct.*"
-            "must be between 0 and 100"
-        ),
+        match=("local_improvement_threshold_pct.*must be between 0 and 100"),
     ):
         validate_config(invalid_config)
+
 
 def test_validate_config_rejects_analysis_threshold_above_100(
     tmp_path: Path,
@@ -340,12 +335,10 @@ def test_validate_config_rejects_analysis_threshold_above_100(
 
     with pytest.raises(
         ConfigValidationError,
-        match=(
-            "total_impact_threshold_pct.*"
-            "must be between 0 and 100"
-        ),
+        match=("total_impact_threshold_pct.*must be between 0 and 100"),
     ):
         validate_config(invalid_config)
+
 
 def test_validate_config_rejects_non_finite_analysis_threshold(
     tmp_path: Path,
@@ -363,9 +356,7 @@ def test_validate_config_rejects_non_finite_analysis_threshold(
 
     with pytest.raises(
         ConfigValidationError,
-        match=(
-            "local_improvement_threshold_pct.*must be finite"
-        ),
+        match=("local_improvement_threshold_pct.*must be finite"),
     ):
         validate_config(invalid_config)
 
@@ -431,10 +422,7 @@ def test_validate_config_requires_parallel_branch_mapping(
 
     with pytest.raises(
         ConfigValidationError,
-        match=(
-            "record_mapping must contain a non-empty "
-            "'branch_id' field"
-        ),
+        match=("record_mapping must contain a non-empty 'branch_id' field"),
     ):
         validate_config(invalid_config)
 
@@ -463,9 +451,6 @@ def test_validate_config_rejects_non_branch_parallel_metric(
 
     with pytest.raises(
         ConfigValidationError,
-        match=(
-            "must reference a duration metric with role "
-            "'parallel_branch'"
-        ),
+        match=("must reference a duration metric with role 'parallel_branch'"),
     ):
         validate_config(invalid_config)

@@ -129,37 +129,23 @@ def test_write_analysis_reports_writes_all_formats(
         output_directory,
     )
 
-    assert report_paths.analysis_json == (
-        output_directory / "analysis.json"
-    )
-    assert report_paths.summary_csv == (
-        output_directory / "summary.csv"
-    )
-    assert report_paths.report_markdown == (
-        output_directory / "report.md"
-    )
+    assert report_paths.analysis_json == (output_directory / "analysis.json")
+    assert report_paths.summary_csv == (output_directory / "summary.csv")
+    assert report_paths.report_markdown == (output_directory / "report.md")
 
     assert report_paths.analysis_json.is_file()
     assert report_paths.summary_csv.is_file()
     assert report_paths.report_markdown.is_file()
 
-    json_content = json.loads(
-        report_paths.analysis_json.read_text(
-            encoding="utf-8"
-        )
-    )
+    json_content = json.loads(report_paths.analysis_json.read_text(encoding="utf-8"))
 
-    assert json_content == analysis_result_to_dict(
+    assert json_content == analysis_result_to_dict(result)
+
+    assert report_paths.summary_csv.read_text(encoding="utf-8") == comparison_summary_to_csv(result)
+
+    assert report_paths.report_markdown.read_text(encoding="utf-8") == analysis_result_to_markdown(
         result
     )
-
-    assert report_paths.summary_csv.read_text(
-        encoding="utf-8"
-    ) == comparison_summary_to_csv(result)
-
-    assert report_paths.report_markdown.read_text(
-        encoding="utf-8"
-    ) == analysis_result_to_markdown(result)
 
 
 def test_analysis_result_has_stable_json_structure() -> None:
@@ -216,9 +202,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                         baseline_median=55_000.0,
                         candidate_median=48_000.0,
                         absolute_difference=-7_000.0,
-                        relative_difference_percent=(
-                            -12.727272727272727
-                        ),
+                        relative_difference_percent=(-12.727272727272727),
                     ),
                 ),
             ),
@@ -229,9 +213,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 phase_metric_id="install_duration",
                 total_metric_id="total_duration",
                 phase_relative_difference_percent=-25.0,
-                total_relative_difference_percent=(
-                    -12.727272727272727
-                ),
+                total_relative_difference_percent=(-12.727272727272727),
                 local_improvement_threshold_pct=10.0,
                 total_impact_threshold_pct=5.0,
                 substantial_local_improvement=True,
@@ -243,9 +225,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
         bottleneck_candidates=(
             BottleneckCandidateResult(
                 scenario_id="baseline",
-                phase_metric_ids=(
-                    "install_duration",
-                ),
+                phase_metric_ids=("install_duration",),
                 median=12_000.0,
                 unit="milliseconds",
                 is_tie=False,
@@ -272,9 +252,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                         "mean": 55_000.0,
                         "minimum": 50_000.0,
                         "maximum": 60_000.0,
-                        "standard_deviation": (
-                            7_071.067811865475
-                        ),
+                        "standard_deviation": (7_071.067811865475),
                     }
                 ],
             },
@@ -290,9 +268,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                         "mean": 48_000.0,
                         "minimum": 45_000.0,
                         "maximum": 51_000.0,
-                        "standard_deviation": (
-                            4_242.640687119285
-                        ),
+                        "standard_deviation": (4_242.640687119285),
                     }
                 ],
             },
@@ -309,9 +285,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                         "baseline_median": 55_000.0,
                         "candidate_median": 48_000.0,
                         "absolute_difference": -7_000.0,
-                        "relative_difference_percent": (
-                            -12.727272727272727
-                        ),
+                        "relative_difference_percent": (-12.727272727272727),
                     }
                 ],
             }
@@ -322,9 +296,7 @@ def test_analysis_result_has_stable_json_structure() -> None:
                 "phase_metric": "install_duration",
                 "total_metric": "total_duration",
                 "phase_relative_difference_percent": -25.0,
-                "total_relative_difference_percent": (
-                    -12.727272727272727
-                ),
+                "total_relative_difference_percent": (-12.727272727272727),
                 "local_improvement_threshold_pct": 10.0,
                 "total_impact_threshold_pct": 5.0,
                 "substantial_local_improvement": True,
@@ -383,13 +355,9 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
         branch_count_minimum=2,
         branch_count_maximum=3,
         branch_count_consistent=False,
-        critical_path_duration=_parallel_stats(
-            40_000.0
-        ),
+        critical_path_duration=_parallel_stats(40_000.0),
         spread=_parallel_stats(20_000.0),
-        imbalance_ratio=_parallel_stats(
-            4.0 / 3.0
-        ),
+        imbalance_ratio=_parallel_stats(4.0 / 3.0),
     )
 
     candidate = ParallelScenarioResult(
@@ -414,9 +382,7 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
         branch_count_minimum=2,
         branch_count_maximum=2,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            30_000.0
-        ),
+        critical_path_duration=_parallel_stats(30_000.0),
         spread=_parallel_stats(0.0),
         imbalance_ratio=_parallel_stats(1.0),
     )
@@ -457,9 +423,7 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
                         baseline_median=55_000.0,
                         candidate_median=48_000.0,
                         absolute_difference=-7_000.0,
-                        relative_difference_percent=(
-                            -12.727272727272727
-                        ),
+                        relative_difference_percent=(-12.727272727272727),
                     ),
                 ),
             ),
@@ -477,8 +441,7 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
                 limited_total_improvement=True,
                 limited_end_to_end_impact=True,
                 warning=(
-                    "The local phase improved substantially, "
-                    "but total impact remained limited."
+                    "The local phase improved substantially, but total impact remained limited."
                 ),
             ),
         ),
@@ -502,9 +465,7 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
                 candidate=candidate,
                 metrics=(
                     MetricComparisonResult(
-                        metric_id=(
-                            "critical_path_duration"
-                        ),
+                        metric_id=("critical_path_duration"),
                         unit="milliseconds",
                         baseline_median=40_000.0,
                         candidate_median=30_000.0,
@@ -518,9 +479,7 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
 
     content = analysis_result_to_markdown(result)
 
-    assert content.startswith(
-        "# Markdown example\n"
-    )
+    assert content.startswith("# Markdown example\n")
 
     assert "## Scenario statistics" in content
     assert "total_duration" in content
@@ -543,23 +502,11 @@ def test_markdown_report_includes_all_analysis_sections() -> None:
     assert "shard-1, shard-2" in content
 
     assert "## Warnings" in content
-    assert (
-        "The local phase improved substantially, "
-        "but total impact remained limited."
-        in content
-    )
+    assert "The local phase improved substantially, but total impact remained limited." in content
     assert "branch count varies from 2 to 3" in content
 
-    assert content.index(
-        "## Scenario statistics"
-    ) < content.index(
-        "## Comparisons"
-    )
-    assert content.index(
-        "## Comparisons"
-    ) < content.index(
-        "## Parallel-stage analysis"
-    )
+    assert content.index("## Scenario statistics") < content.index("## Comparisons")
+    assert content.index("## Comparisons") < content.index("## Parallel-stage analysis")
 
 
 def test_comparison_summary_csv_flattens_all_comparisons() -> None:
@@ -571,13 +518,9 @@ def test_comparison_summary_csv_flattens_all_comparisons() -> None:
         branch_count_minimum=2,
         branch_count_maximum=2,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            40_000.0
-        ),
+        critical_path_duration=_parallel_stats(40_000.0),
         spread=_parallel_stats(20_000.0),
-        imbalance_ratio=_parallel_stats(
-            4.0 / 3.0
-        ),
+        imbalance_ratio=_parallel_stats(4.0 / 3.0),
     )
 
     candidate = ParallelScenarioResult(
@@ -587,9 +530,7 @@ def test_comparison_summary_csv_flattens_all_comparisons() -> None:
         branch_count_minimum=2,
         branch_count_maximum=2,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            30_000.0
-        ),
+        critical_path_duration=_parallel_stats(30_000.0),
         spread=_parallel_stats(0.0),
         imbalance_ratio=_parallel_stats(1.0),
     )
@@ -626,9 +567,7 @@ def test_comparison_summary_csv_flattens_all_comparisons() -> None:
                 candidate=candidate,
                 metrics=(
                     MetricComparisonResult(
-                        metric_id=(
-                            "critical_path_duration"
-                        ),
+                        metric_id=("critical_path_duration"),
                         unit="milliseconds",
                         baseline_median=40_000.0,
                         candidate_median=30_000.0,
@@ -649,11 +588,7 @@ def test_comparison_summary_csv_flattens_all_comparisons() -> None:
         "absolute_difference,relative_difference_percent"
     )
 
-    rows = list(
-        csv.DictReader(
-            StringIO(content)
-        )
-    )
+    rows = list(csv.DictReader(StringIO(content)))
 
     assert rows == [
         {
@@ -706,13 +641,9 @@ def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:
         branch_count_minimum=2,
         branch_count_maximum=2,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            40_000.0
-        ),
+        critical_path_duration=_parallel_stats(40_000.0),
         spread=_parallel_stats(20_000.0),
-        imbalance_ratio=_parallel_stats(
-            4.0 / 3.0
-        ),
+        imbalance_ratio=_parallel_stats(4.0 / 3.0),
     )
 
     candidate = ParallelScenarioResult(
@@ -737,9 +668,7 @@ def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:
         branch_count_minimum=2,
         branch_count_maximum=2,
         branch_count_consistent=True,
-        critical_path_duration=_parallel_stats(
-            30_000.0
-        ),
+        critical_path_duration=_parallel_stats(30_000.0),
         spread=_parallel_stats(0.0),
         imbalance_ratio=_parallel_stats(1.0),
     )
@@ -755,16 +684,12 @@ def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:
         parallel_analyses=(
             ParallelAnalysisResult(
                 analysis_id="test-sharding",
-                duration_metric_id=(
-                    "branch_duration"
-                ),
+                duration_metric_id=("branch_duration"),
                 baseline=baseline,
                 candidate=candidate,
                 metrics=(
                     MetricComparisonResult(
-                        metric_id=(
-                            "critical_path_duration"
-                        ),
+                        metric_id=("critical_path_duration"),
                         unit="milliseconds",
                         baseline_median=40_000.0,
                         candidate_median=30_000.0,
@@ -780,22 +705,15 @@ def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:
 
     assert len(report["parallel_analyses"]) == 1
 
-    parallel_analysis = report[
-        "parallel_analyses"
-    ][0]
+    parallel_analysis = report["parallel_analyses"][0]
 
     assert parallel_analysis["id"] == "test-sharding"
-    assert (
-        parallel_analysis["duration_metric"]
-        == "branch_duration"
-    )
+    assert parallel_analysis["duration_metric"] == "branch_duration"
 
     baseline_report = parallel_analysis["baseline"]
 
     assert baseline_report["scenario"] == "baseline"
-    assert baseline_report["duration_unit"] == (
-        "milliseconds"
-    )
+    assert baseline_report["duration_unit"] == ("milliseconds")
     assert baseline_report["branch_count"] == {
         "minimum": 2,
         "maximum": 2,
@@ -806,10 +724,7 @@ def test_analysis_result_to_dict_serializes_parallel_analysis() -> None:
 
     assert baseline_run["run_id"] == "run-1"
     assert baseline_run["branch_count"] == 2
-    assert (
-        baseline_run["critical_path_duration"]
-        == 40_000.0
-    )
+    assert baseline_run["critical_path_duration"] == 40_000.0
     assert baseline_run["slowest_branches"] == [
         "shard-1",
     ]

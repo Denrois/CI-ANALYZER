@@ -18,10 +18,7 @@ def _is_duration_phase(
     """Return whether a result represents a measured duration phase."""
     metric_config = metrics[metric.metric_id]
 
-    return (
-        metric_config.metric_type == "duration"
-        and metric_config.role == "phase"
-    )
+    return metric_config.metric_type == "duration" and metric_config.role == "phase"
 
 
 def identify_bottleneck_candidate(
@@ -41,10 +38,7 @@ def identify_bottleneck_candidate(
     if not phase_metrics:
         return None
 
-    longest_median = max(
-        metric.median
-        for metric in phase_metrics
-    )
+    longest_median = max(metric.median for metric in phase_metrics)
 
     candidate_metrics = tuple(
         metric
@@ -59,10 +53,7 @@ def identify_bottleneck_candidate(
 
     return BottleneckCandidateResult(
         scenario_id=scenario.scenario_id,
-        phase_metric_ids=tuple(
-            metric.metric_id
-            for metric in candidate_metrics
-        ),
+        phase_metric_ids=tuple(metric.metric_id for metric in candidate_metrics),
         median=longest_median,
         unit=candidate_metrics[0].unit,
         is_tie=len(candidate_metrics) > 1,

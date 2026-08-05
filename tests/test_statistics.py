@@ -86,9 +86,7 @@ def test_calculate_metric_stats() -> None:
     assert result.mean == pytest.approx(2_500.0)
     assert result.minimum == pytest.approx(1_000.0)
     assert result.maximum == pytest.approx(4_000.0)
-    assert result.standard_deviation == pytest.approx(
-        1_290.9944487358056
-    )
+    assert result.standard_deviation == pytest.approx(1_290.9944487358056)
 
 
 def test_single_value_has_zero_standard_deviation() -> None:
@@ -168,9 +166,7 @@ def test_calculate_scenario_result_for_all_metrics() -> None:
     assert install_stats.mean == pytest.approx(12_000.0)
     assert install_stats.minimum == pytest.approx(10_000.0)
     assert install_stats.maximum == pytest.approx(14_000.0)
-    assert install_stats.standard_deviation == pytest.approx(
-        2_828.42712474619
-    )
+    assert install_stats.standard_deviation == pytest.approx(2_828.42712474619)
 
     total_stats = result.metrics[1]
 
@@ -181,6 +177,4 @@ def test_calculate_scenario_result_for_all_metrics() -> None:
     assert total_stats.mean == pytest.approx(55_000.0)
     assert total_stats.minimum == pytest.approx(50_000.0)
     assert total_stats.maximum == pytest.approx(60_000.0)
-    assert total_stats.standard_deviation == pytest.approx(
-        7_071.067811865475
-    )
+    assert total_stats.standard_deviation == pytest.approx(7_071.067811865475)

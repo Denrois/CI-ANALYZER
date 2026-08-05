@@ -65,11 +65,7 @@ def test_read_jsonl_scenario_uses_configured_field_names(
     ]
 
     jsonl_path.write_text(
-        "\n".join(
-            json.dumps(record)
-            for record in records
-        )
-        + "\n",
+        "\n".join(json.dumps(record) for record in records) + "\n",
         encoding="utf-8",
     )
 
@@ -133,12 +129,7 @@ def test_jsonl_reader_rejects_malformed_line(
     jsonl_path = tmp_path / "malformed.jsonl"
 
     jsonl_path.write_text(
-        (
-            '{"execution":"run-1",'
-            '"dependency_time":10.0,'
-            '"total_time":50.0}\n'
-            '{"execution":"run-2",\n'
-        ),
+        ('{"execution":"run-1","dependency_time":10.0,"total_time":50.0}\n{"execution":"run-2",\n'),
         encoding="utf-8",
     )
 
@@ -160,12 +151,7 @@ def test_jsonl_reader_rejects_non_object_line(
     jsonl_path = tmp_path / "non-object.jsonl"
 
     jsonl_path.write_text(
-        (
-            '{"execution":"run-1",'
-            '"dependency_time":10.0,'
-            '"total_time":50.0}\n'
-            '"invalid-record"\n'
-        ),
+        ('{"execution":"run-1","dependency_time":10.0,"total_time":50.0}\n"invalid-record"\n'),
         encoding="utf-8",
     )
 
@@ -187,10 +173,7 @@ def test_jsonl_reader_rejects_missing_metric_field(
     jsonl_path = tmp_path / "missing-field.jsonl"
 
     jsonl_path.write_text(
-        (
-            '{"execution":"run-1",'
-            '"dependency_time":10.0}\n'
-        ),
+        ('{"execution":"run-1","dependency_time":10.0}\n'),
         encoding="utf-8",
     )
 

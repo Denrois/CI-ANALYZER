@@ -27,10 +27,7 @@ def _write_record(
 
     if source_format == "csv":
         path.write_text(
-            (
-                "run_id,value\n"
-                f"run-1,{value}\n"
-            ),
+            (f"run_id,value\nrun-1,{value}\n"),
             encoding="utf-8",
         )
         return
@@ -49,9 +46,7 @@ def _write_record(
         )
         return
 
-    raise AssertionError(
-        f"Unsupported test format: {source_format!r}"
-    )
+    raise AssertionError(f"Unsupported test format: {source_format!r}")
 
 
 def _read_metric_value(
@@ -72,11 +67,7 @@ def _read_metric_value(
         id="value",
         field="value",
         metric_type=metric_type,
-        unit=(
-            "seconds"
-            if metric_type == "duration"
-            else "count"
-        ),
+        unit=("seconds" if metric_type == "duration" else "count"),
         role="total",
     )
 

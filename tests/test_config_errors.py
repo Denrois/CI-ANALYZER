@@ -28,8 +28,7 @@ def test_load_config_rejects_malformed_yaml(
     config_path = tmp_path / "invalid.yaml"
 
     config_path.write_text(
-        "version: 1\n"
-        "scenarios: [\n",
+        "version: 1\nscenarios: [\n",
         encoding="utf-8",
     )
 
@@ -47,8 +46,7 @@ def test_load_config_rejects_non_mapping_root(
     config_path = tmp_path / "list-root.yaml"
 
     config_path.write_text(
-        "- value-one\n"
-        "- value-two\n",
+        "- value-one\n- value-two\n",
         encoding="utf-8",
     )
 
@@ -160,6 +158,7 @@ comparisons: []
     ):
         load_config(config_path)
 
+
 def test_load_config_rejects_non_numeric_analysis_threshold(
     tmp_path: Path,
 ) -> None:
@@ -190,10 +189,6 @@ comparisons: []
 
     with pytest.raises(
         ConfigLoadError,
-        match=(
-            "analysis field "
-            "'local_improvement_threshold_pct' "
-            "must be a number"
-        ),
+        match=("analysis field 'local_improvement_threshold_pct' must be a number"),
     ):
         load_config(config_path)

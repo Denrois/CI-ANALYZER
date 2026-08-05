@@ -44,8 +44,7 @@ def test_reader_rejects_missing_metric_column(
     csv_path = tmp_path / "missing-column.csv"
 
     csv_path.write_text(
-        "run_id,other_value\n"
-        "run-1,10.0\n",
+        "run_id,other_value\nrun-1,10.0\n",
         encoding="utf-8",
     )
 
@@ -67,8 +66,7 @@ def test_reader_rejects_non_numeric_metric_value(
     csv_path = tmp_path / "non-numeric.csv"
 
     csv_path.write_text(
-        "run_id,duration_seconds\n"
-        "run-1,unknown\n",
+        "run_id,duration_seconds\nrun-1,unknown\n",
         encoding="utf-8",
     )
 
@@ -90,8 +88,7 @@ def test_reader_rejects_empty_run_id(
     csv_path = tmp_path / "empty-run-id.csv"
 
     csv_path.write_text(
-        "run_id,duration_seconds\n"
-        ",10.0\n",
+        "run_id,duration_seconds\n,10.0\n",
         encoding="utf-8",
     )
 
@@ -113,8 +110,7 @@ def test_reader_rejects_non_finite_metric_value(
     csv_path = tmp_path / "non-finite.csv"
 
     csv_path.write_text(
-        "run_id,duration_seconds\n"
-        "run-1,NaN\n",
+        "run_id,duration_seconds\nrun-1,NaN\n",
         encoding="utf-8",
     )
 
@@ -158,8 +154,7 @@ def test_reader_normalizes_seconds_to_milliseconds(
     csv_path = tmp_path / "duration.csv"
 
     csv_path.write_text(
-        "run_id,duration_seconds\n"
-        "run-1,1.5\n",
+        "run_id,duration_seconds\nrun-1,1.5\n",
         encoding="utf-8",
     )
 
@@ -171,7 +166,4 @@ def test_reader_normalizes_seconds_to_milliseconds(
 
     assert len(dataset.records) == 1
     assert dataset.records[0].run_id == "run-1"
-    assert (
-        dataset.records[0].metric_values["duration"]
-        == 1_500.0
-    )
+    assert dataset.records[0].metric_values["duration"] == 1_500.0

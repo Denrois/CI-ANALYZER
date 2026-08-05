@@ -29,10 +29,7 @@ def _metric_values(
     metric_id: str,
 ) -> tuple[float, ...]:
     """Extract all values of one metric from a scenario dataset."""
-    return tuple(
-        record.metric_values[metric_id]
-        for record in dataset.records
-    )
+    return tuple(record.metric_values[metric_id] for record in dataset.records)
 
 
 def compare_metric(
@@ -41,12 +38,8 @@ def compare_metric(
     candidate_dataset: ScenarioDataset,
 ) -> MetricComparisonResult:
     """Compare median values of one metric."""
-    baseline_median = calculate_median(
-        _metric_values(baseline_dataset, metric.id)
-    )
-    candidate_median = calculate_median(
-        _metric_values(candidate_dataset, metric.id)
-    )
+    baseline_median = calculate_median(_metric_values(baseline_dataset, metric.id))
+    candidate_median = calculate_median(_metric_values(candidate_dataset, metric.id))
 
     return MetricComparisonResult(
         metric_id=metric.id,

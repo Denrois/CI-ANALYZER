@@ -26,8 +26,7 @@ def _parse_numeric_value(
     """Validate and normalize one numeric metric value."""
     if isinstance(raw_value, bool):
         raise DataValidationError(
-            f"{location}, field {metric.field!r} contains non-numeric "
-            f"value {raw_value!r}."
+            f"{location}, field {metric.field!r} contains non-numeric value {raw_value!r}."
         )
 
     if isinstance(raw_value, str):
@@ -42,8 +41,7 @@ def _parse_numeric_value(
             numeric_value = float(value_text)
         except ValueError as error:
             raise DataValidationError(
-                f"{location}, field {metric.field!r} contains non-numeric "
-                f"value {raw_value!r}."
+                f"{location}, field {metric.field!r} contains non-numeric value {raw_value!r}."
             ) from error
 
     elif isinstance(raw_value, (int, float)):
@@ -51,14 +49,12 @@ def _parse_numeric_value(
 
     else:
         raise DataValidationError(
-            f"{location}, field {metric.field!r} contains non-numeric "
-            f"value {raw_value!r}."
+            f"{location}, field {metric.field!r} contains non-numeric value {raw_value!r}."
         )
 
     if not math.isfinite(numeric_value):
         raise DataValidationError(
-            f"{location}, field {metric.field!r} must contain a finite "
-            "numeric value."
+            f"{location}, field {metric.field!r} must contain a finite numeric value."
         )
 
     if metric.metric_type == "duration" and numeric_value < 0:
@@ -105,9 +101,7 @@ def _validate_csv_columns(
 ) -> None:
     """Check that a CSV header contains every configured field."""
     if fieldnames is None:
-        raise DataValidationError(
-            f"CSV file {source_path} does not contain a header."
-        )
+        raise DataValidationError(f"CSV file {source_path} does not contain a header.")
 
     required_fields = {run_id_field}
 
@@ -119,14 +113,10 @@ def _validate_csv_columns(
     missing_fields = sorted(required_fields.difference(fieldnames))
 
     if missing_fields:
-        formatted_fields = ", ".join(
-            repr(field)
-            for field in missing_fields
-        )
+        formatted_fields = ", ".join(repr(field) for field in missing_fields)
 
         raise DataValidationError(
-            f"CSV file {source_path} is missing required field(s): "
-            f"{formatted_fields}."
+            f"CSV file {source_path} is missing required field(s): {formatted_fields}."
         )
 
 
@@ -148,9 +138,7 @@ def read_csv_scenario(
             newline="",
         )
     except OSError as error:
-        raise DataValidationError(
-            f"Cannot read CSV file {source_path}: {error}"
-        ) from error
+        raise DataValidationError(f"Cannot read CSV file {source_path}: {error}") from error
 
     try:
         with stream:
@@ -166,9 +154,7 @@ def read_csv_scenario(
 
             for row in reader:
                 line_number = reader.line_num
-                location = (
-                    f"CSV file {source_path}, line {line_number}"
-                )
+                location = f"CSV file {source_path}, line {line_number}"
 
                 run_id = _require_csv_value(
                     row=row,
@@ -211,18 +197,12 @@ def read_csv_scenario(
                     )
                 )
     except UnicodeError as error:
-        raise DataValidationError(
-            f"Cannot decode CSV file {source_path} as UTF-8."
-        ) from error
+        raise DataValidationError(f"Cannot decode CSV file {source_path} as UTF-8.") from error
     except csv.Error as error:
-        raise DataValidationError(
-            f"Cannot parse CSV file {source_path}: {error}"
-        ) from error
+        raise DataValidationError(f"Cannot parse CSV file {source_path}: {error}") from error
 
     if not records:
-        raise DataValidationError(
-            f"CSV file {source_path} does not contain any data records."
-        )
+        raise DataValidationError(f"CSV file {source_path} does not contain any data records.")
 
     return ScenarioDataset(
         scenario_id=scenario.id,
@@ -244,13 +224,9 @@ def _load_json_document(source_path: Path) -> object:
             f"line {error.lineno}, column {error.colno}: {error.msg}."
         ) from error
     except UnicodeError as error:
-        raise DataValidationError(
-            f"Cannot decode JSON file {source_path} as UTF-8."
-        ) from error
+        raise DataValidationError(f"Cannot decode JSON file {source_path} as UTF-8.") from error
     except OSError as error:
-        raise DataValidationError(
-            f"Cannot read JSON file {source_path}: {error}"
-        ) from error
+        raise DataValidationError(f"Cannot read JSON file {source_path}: {error}") from error
 
     return raw_data
 
@@ -261,17 +237,13 @@ def _require_record(
 ) -> dict[str, object]:
     """Require one input record to be an object."""
     if not isinstance(value, dict):
-        raise DataValidationError(
-            f"{location} must be an object."
-        )
+        raise DataValidationError(f"{location} must be an object.")
 
     record: dict[str, object] = {}
 
     for key, item in value.items():
         if not isinstance(key, str):
-            raise DataValidationError(
-                f"{location} must contain only string field names."
-            )
+            raise DataValidationError(f"{location} must contain only string field names.")
 
         record[key] = item
 
@@ -285,16 +257,12 @@ def _require_record_field(
 ) -> object:
     """Return a required field from one structured record."""
     if field not in record:
-        raise DataValidationError(
-            f"{location} does not contain field {field!r}."
-        )
+        raise DataValidationError(f"{location} does not contain field {field!r}.")
 
     value = record[field]
 
     if value is None:
-        raise DataValidationError(
-            f"{location} contains an empty value for field {field!r}."
-        )
+        raise DataValidationError(f"{location} contains an empty value for field {field!r}.")
 
     return value
 
@@ -309,16 +277,13 @@ def _parse_identifier(
         identifier = raw_value.strip()
 
         if not identifier:
-            raise DataValidationError(
-                f"{location} contains an empty value for field {field!r}."
-            )
+            raise DataValidationError(f"{location} contains an empty value for field {field!r}.")
 
         return identifier
 
     if isinstance(raw_value, bool):
         raise DataValidationError(
-            f"{location} field {field!r} must contain a string or "
-            "numeric identifier."
+            f"{location} field {field!r} must contain a string or numeric identifier."
         )
 
     if isinstance(raw_value, int):
@@ -327,15 +292,13 @@ def _parse_identifier(
     if isinstance(raw_value, float):
         if not math.isfinite(raw_value):
             raise DataValidationError(
-                f"{location} field {field!r} must contain a finite "
-                "identifier."
+                f"{location} field {field!r} must contain a finite identifier."
             )
 
         return str(raw_value)
 
     raise DataValidationError(
-        f"{location} field {field!r} must contain a string or "
-        "numeric identifier."
+        f"{location} field {field!r} must contain a string or numeric identifier."
     )
 
 
@@ -352,8 +315,7 @@ def read_json_scenario(
 
     if not isinstance(raw_data, list):
         raise DataValidationError(
-            f"JSON file {source_path} must contain a top-level list "
-            "of records."
+            f"JSON file {source_path} must contain a top-level list of records."
         )
 
     records: list[RunRecord] = []
@@ -362,9 +324,7 @@ def read_json_scenario(
         raw_data,
         start=1,
     ):
-        location = (
-            f"JSON file {source_path}, record {record_number}"
-        )
+        location = f"JSON file {source_path}, record {record_number}"
 
         record = _require_record(
             value=raw_record,
@@ -418,9 +378,7 @@ def read_json_scenario(
         )
 
     if not records:
-        raise DataValidationError(
-            f"JSON file {source_path} does not contain any data records."
-        )
+        raise DataValidationError(f"JSON file {source_path} does not contain any data records.")
 
     return ScenarioDataset(
         scenario_id=scenario.id,
@@ -453,9 +411,7 @@ def read_jsonl_scenario(
                 if not line:
                     continue
 
-                location = (
-                    f"JSONL file {source_path}, line {line_number}"
-                )
+                location = f"JSONL file {source_path}, line {line_number}"
 
                 try:
                     raw_record: object = json.loads(line)
@@ -518,18 +474,12 @@ def read_jsonl_scenario(
                 )
 
     except UnicodeError as error:
-        raise DataValidationError(
-            f"Cannot decode JSONL file {source_path} as UTF-8."
-        ) from error
+        raise DataValidationError(f"Cannot decode JSONL file {source_path} as UTF-8.") from error
     except OSError as error:
-        raise DataValidationError(
-            f"Cannot read JSONL file {source_path}: {error}"
-        ) from error
+        raise DataValidationError(f"Cannot read JSONL file {source_path}: {error}") from error
 
     if not records:
-        raise DataValidationError(
-            f"JSONL file {source_path} does not contain any data records."
-        )
+        raise DataValidationError(f"JSONL file {source_path} does not contain any data records.")
 
     return ScenarioDataset(
         scenario_id=scenario.id,
@@ -564,9 +514,7 @@ def read_scenario(
             record_mapping=record_mapping,
         )
 
-    raise DataValidationError(
-        f"Unsupported source format: {scenario.source.format!r}."
-    )
+    raise DataValidationError(f"Unsupported source format: {scenario.source.format!r}.")
 
 
 def read_experiment_datasets(

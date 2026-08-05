@@ -31,8 +31,7 @@ def _classify_local_total_impact(
     else:
         substantial_local_improvement = (
             phase_relative_difference_percent < 0.0
-            and -phase_relative_difference_percent
-            >= analysis.local_improvement_threshold_pct
+            and -phase_relative_difference_percent >= analysis.local_improvement_threshold_pct
         )
 
     if total_relative_difference_percent is None:
@@ -40,28 +39,17 @@ def _classify_local_total_impact(
     else:
         meaningful_total_improvement = (
             total_relative_difference_percent < 0.0
-            and -total_relative_difference_percent
-            >= analysis.total_impact_threshold_pct
+            and -total_relative_difference_percent >= analysis.total_impact_threshold_pct
         )
 
         limited_total_improvement = not meaningful_total_improvement
 
-    if (
-        substantial_local_improvement is None
-        or limited_total_improvement is None
-    ):
+    if substantial_local_improvement is None or limited_total_improvement is None:
         limited_end_to_end_impact = None
     else:
-        limited_end_to_end_impact = (
-            substantial_local_improvement
-            and limited_total_improvement
-        )
+        limited_end_to_end_impact = substantial_local_improvement and limited_total_improvement
 
-    warning = (
-        LIMITED_END_TO_END_IMPACT_WARNING
-        if limited_end_to_end_impact is True
-        else None
-    )
+    warning = LIMITED_END_TO_END_IMPACT_WARNING if limited_end_to_end_impact is True else None
 
     return (
         substantial_local_improvement,
@@ -105,12 +93,8 @@ def calculate_local_total_impacts(
                 limited_end_to_end_impact,
                 warning,
             ) = _classify_local_total_impact(
-                phase_relative_difference_percent=(
-                    phase_result.relative_difference_percent
-                ),
-                total_relative_difference_percent=(
-                    total_result.relative_difference_percent
-                ),
+                phase_relative_difference_percent=(phase_result.relative_difference_percent),
+                total_relative_difference_percent=(total_result.relative_difference_percent),
                 analysis=analysis,
             )
 
@@ -119,27 +103,13 @@ def calculate_local_total_impacts(
                     comparison_id=comparison.comparison_id,
                     phase_metric_id=phase_result.metric_id,
                     total_metric_id=total_result.metric_id,
-                    phase_relative_difference_percent=(
-                        phase_result.relative_difference_percent
-                    ),
-                    total_relative_difference_percent=(
-                        total_result.relative_difference_percent
-                    ),
-                    local_improvement_threshold_pct=(
-                        analysis.local_improvement_threshold_pct
-                    ),
-                    total_impact_threshold_pct=(
-                        analysis.total_impact_threshold_pct
-                    ),
-                    substantial_local_improvement=(
-                        substantial_local_improvement
-                    ),
-                    limited_total_improvement=(
-                        limited_total_improvement
-                    ),
-                    limited_end_to_end_impact=(
-                        limited_end_to_end_impact
-                    ),
+                    phase_relative_difference_percent=(phase_result.relative_difference_percent),
+                    total_relative_difference_percent=(total_result.relative_difference_percent),
+                    local_improvement_threshold_pct=(analysis.local_improvement_threshold_pct),
+                    total_impact_threshold_pct=(analysis.total_impact_threshold_pct),
+                    substantial_local_improvement=(substantial_local_improvement),
+                    limited_total_improvement=(limited_total_improvement),
+                    limited_end_to_end_impact=(limited_end_to_end_impact),
                     warning=warning,
                 )
             )
